@@ -45,7 +45,7 @@ class SocialiteController extends Controller
                 ]);
 
                 Auth::login($dbUser);
-                return redirect()->route('welcome');
+                return redirect()->route('dashboard');
             }
 
             $dbUser->update([
@@ -55,7 +55,7 @@ class SocialiteController extends Controller
             ]);
 
             Auth::login($dbUser);
-            return redirect()->route('welcome');
+            return redirect()->route('dashboard');
         }
 
         $user->update([
@@ -65,6 +65,6 @@ class SocialiteController extends Controller
         ]);
 
         Auth::login($user);
-        return redirect()->route('welcome');
+        return redirect()->route('dashboard');
     }
 }
