@@ -14,7 +14,7 @@ Route::post('/sign-up', [RegisterController::class, 'register'])->name('register
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('welcome');
-    })->name('welcome');
+    })->name('dashboard');
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

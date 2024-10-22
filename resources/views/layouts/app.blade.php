@@ -13,8 +13,10 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body>
-        <main>
+    <body class="flex bg-gray-100 font-poppins">
+        <x-navigation/>
+
+        <main class="flex-1 p-6">
             {{ $slot }}
         </main>
     </body>

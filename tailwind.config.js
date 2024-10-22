@@ -21,6 +21,7 @@ export default {
                 'peach': '#FAD7B2',
                 'deep-black': '#0B0F12',
                 'lavender-purple': '#7965AB',
+                'sky-blue': '#00A8E8',
             },
         },
     },
