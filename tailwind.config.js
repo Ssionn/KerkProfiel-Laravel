@@ -12,7 +12,15 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                // sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                poppins: ['Poppins', 'sans-serif']
+            },
+            colors: {
+                'midnight-blue': '#282239',
+                'pure-white': '#FFFFFF',
+                'peach': '#FAD7B2',
+                'deep-black': '#0B0F12',
+                'lavender-purple': '#7965AB',
             },
         },
     },
