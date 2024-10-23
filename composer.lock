@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4dabc88e0fc3b22d30c000f485a52b91",
+    "content-hash": "4d8fff6693a3ac78f66155f7ea8fe37f",
     "packages": [
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -2286,6 +2286,60 @@
                 }
             ],
             "time": "2024-06-28T09:40:51+00:00"
+        },
+        {
+            "name": "nejcc/php-datatypes",
+            "version": "v1.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nejcc/php-datatypes.git",
+                "reference": "918b122f742c08beb623d649c90e87a9ebda835d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nejcc/php-datatypes/zipball/918b122f742c08beb623d649c90e87a9ebda835d",
+                "reference": "918b122f742c08beb623d649c90e87a9ebda835d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "ext-ctype": "*",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11.4.2"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Nejcc\\PhpDatatypes\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nejc Cotic",
+                    "email": "nejc.cotic@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Data types",
+            "homepage": "https://github.com/nejcc/php-datatypes",
+            "keywords": [
+                "nejcc",
+                "php-datatypes"
+            ],
+            "support": {
+                "issues": "https://github.com/Nejcc/php-datatypes/issues",
+                "source": "https://github.com/Nejcc/php-datatypes/tree/v1.0.8"
+            },
+            "time": "2024-10-23T06:26:20+00:00"
         },
         {
             "name": "nesbot/carbon",
