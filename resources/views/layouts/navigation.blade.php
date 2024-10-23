@@ -1,7 +1,7 @@
 <aside x-data="{ open: false }" :class="open ? 'w-60' : 'w-16'"
     class="z-50 h-screen p-2 text-black bg-white rounded-tr-lg rounded-br-lg shadow-md transition-all duration-300">
 
-    <div class="flex items-center justify-between p-2">
+    <div class="flex items-center justify-between relative p-2">
         <div class="flex items-center">
             <img x-show="open" src="{{ asset('/storage/images/logos/kp-logo.jpeg') }}" alt="Logo" class="w-auto h-8">
         </div>
@@ -26,5 +26,11 @@
                 title="Dashboard" icon="heroicon-s-home" class="flex items-center w-full" />
         </ul>
     </div>
-</aside>
 
+    <div class="absolute bottom-4 left-4" :class="open ? 'w-52' : 'justify-center hover:text-white'">
+        <ul :class="open ? 'w-full' : ''">
+            <x-sidebar-tab href="" title="Settings" icon="heroicon-s-cog-6-tooth"
+                class="flex items-center w-full" />
+        </ul>
+    </div>
+</aside>

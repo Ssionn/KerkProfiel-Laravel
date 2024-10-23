@@ -8,7 +8,7 @@
 
 <li>
     <a href="{{ $href }}" {{ $attributes->merge(['class' => $classes]) }}>
-        <x-icon name="{{ $icon }}" class="w-5 h-5 text-white"/>
+        <x-icon name="{{ $icon }}" class="w-5 h-5 hover:text-white"/>
         <span x-show="open" class="text-sm semibold">{{ $title }}</span>
     </a>
 </li>
