@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Nejcc\PhpDatatypes\Composite\Dictionary;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolesSeeder extends Seeder
 {
-    private readonly Dictionary $rolesWithPermissions;
+    private array $rolesWithPermissions;
 
     public function __construct()
     {
-        $this->rolesWithPermissions = dictionary(config('custom-permission.roles'));
+        $this->rolesWithPermissions = config('custom-permission.roles');
     }
 
     public function run(): void
@@ -29,7 +29,7 @@ class RolesSeeder extends Seeder
 
     private function createRole(string $roleName): Role
     {
-        return Role::firstOrCreate(['name' => $roleName]);
+        return Role::firstOrCreate(['name' => $roleName, 'team_id' => null]);
     }
 
     private function assignPermissionsToRole(array $permissions, Role $roleCreated): void

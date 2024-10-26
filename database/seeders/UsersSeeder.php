@@ -16,30 +16,28 @@ class UsersSeeder extends Seeder
                 'username' => 'Ivano Baptista',
                 'email' => 'ivano@houseofhope.com',
                 'password' => Hash::make('password'),
-                'role' => 'admin',
                 'email_verified_at' => now(),
             ],
             [
                 'username' => 'Andy Hoang',
                 'email' => 'andy@houseofhope.com',
                 'password' => Hash::make('password'),
-                'role' => 'admin',
                 'email_verified_at' => now(),
             ],
             [
                 'username' => 'Casper Kizewski',
                 'email' => 'casper@houseofhope.com',
                 'password' => Hash::make('password'),
-                'role' => 'admin',
                 'email_verified_at' => now(),
             ]
         ];
 
         foreach ($users as $user) {
-            User::created([
+            User::create([
                 'username' => $user['username'],
                 'email' => $user['email'],
                 'password' => $user['password'],
+                'email_verified_at' => $user['email_verified_at']
             ]);
         }
     }

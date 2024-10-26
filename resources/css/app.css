@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .masonry {
+        @apply columns-1 gap-6;
+    }
+
+    @screen sm {
+        .masonry {
+            @apply columns-2;
+        }
+    }
+
+    @screen lg {
+        .masonry {
+            @apply columns-3;
+        }
+    }
+
+    .break-inside {
+        @apply break-inside-avoid-column;
+    }
+
+    .masonry-item {
+        @apply inline-block w-full;
+    }
+}
+

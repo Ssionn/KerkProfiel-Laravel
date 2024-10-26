@@ -3,6 +3,7 @@
 return [
     'roles' => [
         'admin' => [
+            'view teams',
             'create team',
             'edit team',
             'delete team',
@@ -12,15 +13,18 @@ return [
             'edit survey',
             'remove survey',
         ],
-        'team' => [
+        'teamleader' => [
             'view teams',
             'edit own team',
             'view surveys',
         ],
         'member' => [
-            'create team',
             'view teams',
             'take surveys',
+        ],
+        'guest' => [
+            'create teams',
+            'view surveys',
         ],
     ],
 ];

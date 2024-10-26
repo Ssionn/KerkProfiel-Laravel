@@ -4,8 +4,66 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d8fff6693a3ac78f66155f7ea8fe37f",
+    "content-hash": "5c369d21c4d95b80c985c86d3b22d701",
     "packages": [
+        {
+            "name": "andreiio/blade-remix-icon",
+            "version": "3.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/andreiio/blade-remix-icon.git",
+                "reference": "391954a5e0e5b6edbd80393cfbed94a590491bce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/andreiio/blade-remix-icon/zipball/391954a5e0e5b6edbd80393cfbed94a590491bce",
+                "reference": "391954a5e0e5b6edbd80393cfbed94a590491bce",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-icons": "^1.0",
+                "php": "^7.4|^8.0|^8.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0|^7.0|^8.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "AndreiIonita\\BladeRemixIcon\\BladeRemixIconServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "AndreiIonita\\BladeRemixIcon\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrei Ioniță",
+                    "homepage": "https://andrei.io"
+                }
+            ],
+            "description": "A package to easily make use of Remix Icon in your Laravel Blade views.",
+            "support": {
+                "issues": "https://github.com/andreiio/blade-remix-icon/issues",
+                "source": "https://github.com/andreiio/blade-remix-icon/tree/3.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/code4romania",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-10-23T12:33:26+00:00"
+        },
         {
             "name": "blade-ui-kit/blade-heroicons",
             "version": "2.4.0",

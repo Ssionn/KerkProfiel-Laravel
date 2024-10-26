@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,6 +15,12 @@ return new class extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->longText('description');
+            $table->string('avatar')->nullable();
+            $table->foreignIdFor(User::class, 'leader_id')
+                ->nullable()
+                ->constrained('users')
+                ->onDelete('set null');
             $table->timestamps();
         });
     }

@@ -4,25 +4,26 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Contracts\User as ContractsUser;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller
 {
     const GOOGLE = 'google';
 
-    public function redirect()
+    public function redirect(): RedirectResponse
     {
         return Socialite::driver(self::GOOGLE)->redirect();
     }
 
-    public function socialiteUser()
+    public function socialiteUser(): ContractsUser
     {
         return Socialite::driver(self::GOOGLE)->user();
     }
 
-    public function updateUser()
+    public function updateUser(): RedirectResponse
     {
         $socialiteUser = $this->socialiteUser();
 
@@ -43,6 +44,8 @@ class SocialiteController extends Controller
                     'provider_token' => $socialiteUser->token,
                     'email_verified_at' => now(),
                 ]);
+
+                $user->assignRole('admin');
 
                 Auth::login($dbUser);
                 return redirect()->route('dashboard');

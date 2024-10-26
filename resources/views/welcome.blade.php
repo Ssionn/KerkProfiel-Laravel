@@ -1,4 +1,6 @@
 <x-app-layout>
+    <x-header title="Dashboard"/>
+
     <h1 class="text-xl font-semibold">
         {{ __('Logged in as: ' . auth()->user()->username) }}
     </h1>

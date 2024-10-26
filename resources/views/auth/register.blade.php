@@ -5,6 +5,11 @@
                 <h1 class="text-xl font-medium">{{ __('Creëer je account') }}</h1>
             </div>
             <div class="p-2">
+                @if ($errors->has('registration_failed'))
+                    <span class="font-semibold text-red-500">
+                        {{ $message }}
+                    </span>
+                @endif
                 <div class="inline-flex items-center justify-center w-full space-x-2">
                     <a href="#" class="w-full">
                         <button

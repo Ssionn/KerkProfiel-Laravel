@@ -24,13 +24,15 @@
         <ul class="space-y-2" :class="open ? 'w-full' : ''">
             <x-sidebar-tab href="{{ route('dashboard') }}" active="{{ request()->routeIs('dashboard') }}"
                 title="Dashboard" icon="heroicon-s-home" class="flex items-center w-full" />
+            <x-sidebar-tab href="{{ route('teams.index') }}" active="{{ request()->routeIs('teams.index') }}"
+                title="Teams" icon="ri-team-fill" class="flex items-center w-full" />
         </ul>
     </div>
 
-    <div class="absolute bottom-4 left-4" :class="open ? 'w-52' : 'justify-center hover:text-white'">
+    <div class="absolute bottom-4 left-4" :class="open ? 'w-52' : 'justify-center'">
         <ul :class="open ? 'w-full' : ''">
             <x-sidebar-tab href="" title="Settings" icon="heroicon-s-cog-6-tooth"
-                class="flex items-center w-full" />
+                class="flex items-center w-full hover:text-white" />
         </ul>
     </div>
 </aside>

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,6 +18,9 @@ class UserRepository
             'email' => $email,
             'password' => Hash::make($password),
         ]);
+
+        setPermissionsTeamId($user->id);
+        $user->assignRole('guest');
 
         $user->save();
 

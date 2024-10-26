@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Team;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,11 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('team_user', function (Blueprint $table) {
-            $table->unsignedBigInteger('team_id');
-            $table->unsignedBigInteger('user_id');
-
-            $table->primary(['team_id', 'user_id']);
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignIdFor(Team::class)
+                ->after('password')
+                ->nullable()
+                ->constrained()
+                ->onDelete('set null');
         });
     }
 
@@ -24,6 +26,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('team_user');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

@@ -4,7 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -51,8 +52,18 @@ class User extends Authenticatable
         ];
     }
 
-    public function teams(): BelongsToMany
+    public function team(): BelongsTo
     {
-        return $this->belongsToMany(Team::class);
+        return $this->belongsTo(Team::class);
+    }
+
+    public function leadingTeam(): HasOne
+    {
+        return $this->hasOne(Team::class, 'leader_id');
+    }
+
+    public function isTeamLeader(): bool
+    {
+        return $this->leadingTeam()->exists();
     }
 }
