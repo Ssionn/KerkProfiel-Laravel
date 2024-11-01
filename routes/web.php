@@ -26,6 +26,10 @@ Route::middleware('auth')->group(function () {
             Route::post('/create', [TeamsController::class, 'store'])
                 ->name('teams.store');
         });
+
+        Route::delete('/{user}/remove', [TeamsController::class, 'destroy'])
+            ->name('team.members.destroy');
+
         Route::post('uploads/process', [ImageHolder::class, 'store']);
     });
 

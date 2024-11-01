@@ -15,14 +15,19 @@ class TeamsController extends Controller
 {
     public function index(): View|RedirectResponse
     {
-        $team = Auth::user()->load('role.permissions')->team;
+        $team = Auth::user()->load(['role.permissions', 'team'])->team;
 
         if (! $team) {
             return redirect()->route('teams.create');
         }
 
+        $users = Auth::user()->team->users->sortBy(function ($user) {
+            return $user->role->name !== 'teamleader';
+        });
+
         return view('teams.index', [
             'team' => $team,
+            'users' => $users,
         ]);
     }
 
@@ -47,13 +52,25 @@ class TeamsController extends Controller
         $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();
 
         if ($tempFile) {
-            $team->addMedia(storage_path('app/public/avatars/tmp/' . $tempFile->folder . '/' . $tempFile->fileName))
+            $team->addMedia(storage_path('app/public/avatars/tmp/' . $request->folder . '/' . $tempFile->fileName))
                 ->toMediaCollection('avatars');
 
             rmdir(storage_path('app/public/avatars/tmp/' . $request->team_avatar));
 
             $tempFile->delete();
         }
+
+        return redirect()->route('teams');
+    }
+
+    public function destroy(int $userId): RedirectResponse
+    {
+        $user = User::find($userId);
+
+        $user->role_id = Role::where('name', 'guest')->pluck('id')->first();
+        $user->team_id = null;
+
+        $user->save();
 
         return redirect()->route('teams');
     }

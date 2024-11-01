@@ -1,5 +1,4 @@
 <x-app-layout>
-    {{-- Team header --}}
     <div class="bg-white rounded-lg shadow-sm p-4 max-w-lg">
         <div class="flex items-center space-x-3">
             <div class="flex-shrink-0">
@@ -20,20 +19,96 @@
         </div>
     </div>
 
-    {{-- Team members table --}}
     <div class="mt-8 bg-white rounded-lg shadow-sm px-4 py-2">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-medium text-gray-900">Team Leden</h2>
             <div class="flex items-center space-x-2">
                 @can('edit team')
-                    <button type="button" class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-midnight-blue">
-                        Team Bewerken
+                    <form method="GET" action="{{ request()->url() }}">
+                        @if (request()->has('edit'))
+                            <button type="submit" x-cloak
+                                class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-sky-blue">
+                                Klaar
+                            </button>
+                        @else
+                            <input type="hidden" name="edit" value="true">
+                            <button type="submit" x-cloak
+                                class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-midnight-blue">
+                                Team Bewerken
+                            </button>
+                        @endif
+                    </form>
+                @endcan
+                @can('add people')
+                    <button type="button"
+                        class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-midnight-blue">
+                        Uitnodigen
                     </button>
                 @endcan
-                <button type="button" class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-midnight-blue">
-                    Uitnodigen
-                </button>
             </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Naam
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status</th>
+                        @if (request()->has('edit'))
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Verwijderen
+                            </th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach ($users as $user)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="text-sm font-medium text-gray-900">{{ $user->username }}</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ $user->email }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ ucfirst($user->role->name) }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Actief
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <div class="flex items-center justify-end space-x-3">
+                                    @if (request()->has('edit'))
+                                        @can('remove people')
+                                            <form method="POST" action="{{ route('team.members.destroy', $user->id) }}"
+                                                onsubmit="return confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')"
+                                                class="flex items-center">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-900"
+                                                    {{ $user->id === auth()->id() ? 'disabled' : '' }}>
+                                                    Verwijder
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </x-app-layout>
