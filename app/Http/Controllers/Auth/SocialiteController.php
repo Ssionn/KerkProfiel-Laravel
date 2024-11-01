@@ -42,6 +42,8 @@ class SocialiteController extends Controller
                     'provider_id' => $socialiteUser->id,
                     'provider_token' => $socialiteUser->token,
                     'email_verified_at' => now(),
+                    'role_id' => 4,
+                    'team_id' => null,
                 ]);
 
                 Auth::login($dbUser);

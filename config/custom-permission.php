@@ -12,15 +12,25 @@ return [
             'edit survey',
             'remove survey',
         ],
-        'team' => [
+        'teamleader' => [
             'view teams',
-            'edit own team',
+            'edit team',
+            'delete team',
+            'add people',
+            'remove people',
             'view surveys',
+            'create survey',
+            'edit survey',
+            'remove survey',
         ],
         'member' => [
-            'create team',
             'view teams',
+            'view surveys',
             'take surveys',
         ],
+        'guest' => [
+            'view teams',
+            'create team',
+        ]
     ],
 ];

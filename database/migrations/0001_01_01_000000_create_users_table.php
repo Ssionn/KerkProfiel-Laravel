@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Role;
+use App\Models\Team;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,6 +22,7 @@ return new class extends Migration
             $table->string('provider')->nullable();
             $table->string('provider_id')->nullable();
             $table->string('provider_token')->nullable();
+            $table->foreignIdFor(Role::class, 'role_id')->default(null);
             $table->rememberToken();
             $table->timestamps();
         });

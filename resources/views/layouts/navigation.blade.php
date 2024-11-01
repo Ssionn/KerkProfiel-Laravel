@@ -24,6 +24,11 @@
         <ul class="space-y-2" :class="open ? 'w-full' : ''">
             <x-sidebar-tab href="{{ route('dashboard') }}" active="{{ request()->routeIs('dashboard') }}"
                 title="Dashboard" icon="heroicon-s-home" class="flex items-center w-full" />
+
+            @can('view teams')
+                <x-sidebar-tab href="{{ route('teams') }}" active="{{ request()->routeIs('teams') }}" title="Teams"
+                    icon="heroicon-s-users" class="flex items-center w-full" />
+            @endcan
         </ul>
     </div>
 
