@@ -28,10 +28,6 @@ class TeamsController extends Controller
 
     public function create(): View|RedirectResponse
     {
-        if (! Auth::user()->hasPermission('create team')) {
-            return redirect()->route('teams');
-        }
-
         return view('teams.create');
     }
 
