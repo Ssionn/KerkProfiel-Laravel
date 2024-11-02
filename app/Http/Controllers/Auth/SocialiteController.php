@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -31,10 +30,10 @@ class SocialiteController extends Controller
             'provider_id' => $socialiteUser->id,
         ])->first();
 
-        if (!$user) {
+        if (! $user) {
             $dbUser = User::where('email', $socialiteUser->getEmail())->first();
 
-            if (!$dbUser) {
+            if (! $dbUser) {
                 $dbUser = User::create([
                     'username' => $socialiteUser->getName(),
                     'email' => $socialiteUser->getEmail(),
@@ -47,6 +46,7 @@ class SocialiteController extends Controller
                 ]);
 
                 Auth::login($dbUser);
+
                 return redirect()->route('dashboard');
             }
 
@@ -57,6 +57,7 @@ class SocialiteController extends Controller
             ]);
 
             Auth::login($dbUser);
+
             return redirect()->route('dashboard');
         }
 
@@ -67,6 +68,7 @@ class SocialiteController extends Controller
         ]);
 
         Auth::login($user);
+
         return redirect()->route('dashboard');
     }
 }

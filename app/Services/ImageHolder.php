@@ -10,19 +10,24 @@ class ImageHolder
     public function store(Request $request)
     {
         if ($request->hasFile('team_avatar')) {
-            $tempFile = $request->file('team_avatar');
-            $fileName = $tempFile->getClientOriginalName();
-            $folder = uniqid() . '-' . now()->timestamp;
-            $tempFile->storeAs('avatars/tmp/' . $folder, $fileName, 'public');
+            try {
+                $tempFile = $request->file('team_avatar');
+                $fileName = $tempFile->getClientOriginalName();
+                $folder = uniqid() . '-' . now()->timestamp;
+                $path = 'avatars/tmp/' . $folder;
 
-            TemporaryImage::create([
-                'folder' => $folder,
-                'filename' => $fileName,
-            ]);
+                if ($tempFile->storeAs($path, $fileName, 'public')) {
+                    TemporaryImage::create([
+                        'folder' => $folder,
+                        'filename' => $fileName,
+                    ]);
 
-            return $folder;
+                    return $folder;
+                }
+            } catch (\Exception $e) {
+                throw new \Exception('Error storing temporary image: ' . $e->getMessage());
+            }
         }
-
         return '';
     }
 }

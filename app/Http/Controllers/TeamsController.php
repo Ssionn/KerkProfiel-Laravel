@@ -9,6 +9,7 @@ use App\Models\TemporaryImage;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class TeamsController extends Controller
@@ -52,12 +53,22 @@ class TeamsController extends Controller
         $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();
 
         if ($tempFile) {
-            $team->addMedia(storage_path('app/public/avatars/tmp/' . $request->folder . '/' . $tempFile->fileName))
-                ->toMediaCollection('avatars');
+            try {
+                $filePath = storage_path('app/public/avatars/tmp/' . $request->team_avatar . '/' . $tempFile->filename);
 
-            rmdir(storage_path('app/public/avatars/tmp/' . $request->team_avatar));
+                if (file_exists($filePath)) {
+                    $team->addMedia($filePath)
+                        ->toMediaCollection('avatars', 'public');
 
-            $tempFile->delete();
+                    Storage::disk('public')->deleteDirectory('avatars/tmp/'.$request->team_avatar);
+
+                    $tempFile->delete();
+                } else {
+                    throw new \Exception('Team avatar file not found: ' . $filePath);
+                }
+            } catch (\Exception $e) {
+                throw new \Exception('Error uploading team avatar: ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('teams');

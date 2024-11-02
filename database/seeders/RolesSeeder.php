@@ -12,6 +12,7 @@ use Illuminate\Database\Seeder;
 class RolesSeeder extends Seeder
 {
     private readonly array $rolesWithPermissions;
+
     private readonly array $users;
 
     public function __construct()

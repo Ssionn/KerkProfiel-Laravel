@@ -31,6 +31,6 @@ return [
         'guest' => [
             'view teams',
             'create team',
-        ]
+        ],
     ],
 ];

@@ -14,23 +14,23 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        "username",
-        "email",
-        "password",
-        "provider",
-        "provider_id",
-        "provider_token",
-        "team_id",
-        "role_id",
+        'username',
+        'email',
+        'password',
+        'provider',
+        'provider_id',
+        'provider_token',
+        'team_id',
+        'role_id',
     ];
 
-    protected $hidden = ["password", "remember_token"];
+    protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
     {
         return [
-            "email_verified_at" => "datetime",
-            "password" => "hashed",
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
         ];
     }
 

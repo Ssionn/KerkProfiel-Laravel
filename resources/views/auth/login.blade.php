@@ -35,7 +35,8 @@
                             class="w-full p-2 rounded-lg text-xs placeholder:text-gray-200 placeholder:text-sm border-[1px] focus:ring-lavender-purple" />
                     </div>
                     <div class="mt-2">
-                        <button type="submit" class="w-full py-1 text-sm font-semibold text-center text-white rounded-lg bg-midnight-blue">
+                        <button type="submit"
+                            class="w-full py-1 text-sm font-semibold text-center text-white rounded-lg bg-midnight-blue">
                             {{ __('Inloggen') }}
                         </button>
                     </div>

@@ -10,7 +10,7 @@ class Role extends Model
 {
     protected $fillable = [
         'name',
-        'team_id'
+        'team_id',
     ];
 
     public function user(): BelongsTo

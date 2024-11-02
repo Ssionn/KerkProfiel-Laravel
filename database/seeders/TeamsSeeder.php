@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Team;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TeamsSeeder extends Seeder
@@ -23,7 +22,7 @@ class TeamsSeeder extends Seeder
             'name' => 'Development Team',
             'description' => 'The team which develops this product',
             'avatar' => null,
-            'user_id' => User::where('email', 'casper@houseofhope.com')->value('id')
+            'user_id' => User::where('email', 'casper@houseofhope.com')->value('id'),
         ]);
 
         User::query()

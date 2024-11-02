@@ -37,9 +37,9 @@ class Team extends Model implements HasMedia
     public function getTeamAvatar(): string
     {
         if ($this->avatar) {
-            return asset('storage/avatars/' . $this->avatar);
+            return asset('storage/avatars/'.$this->avatar);
         }
 
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->username);
+        return 'https://ui-avatars.com/api/?name='.urlencode($this->username);
     }
 }

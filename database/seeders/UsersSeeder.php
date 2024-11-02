@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -35,7 +34,7 @@ class UsersSeeder extends Seeder
                 'email_verified_at' => now(),
                 'role_id' => 2,
                 'team_id' => 1,
-            ]
+            ],
         ];
 
         foreach ($users as $user) {

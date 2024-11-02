@@ -28,12 +28,12 @@
                         <label class="ml-1 text-xs font-semibold text-gray-600" for="team_avatar">
                             {{ __('Team avatar') }}
                         </label>
-                        <input type="file" name="team_avatar" id="team_avatar"
-                            class="w-full filepond" />
+                        <input type="file" name="team_avatar" id="team_avatar" class="w-full filepond" />
                     </div>
 
                     <div class="mt-2 mb-2">
-                        <button type="submit" class="w-full py-1 text-sm font-semibold text-center text-white rounded-lg bg-midnight-blue">
+                        <button type="submit"
+                            class="w-full py-1 text-sm font-semibold text-center text-white rounded-lg bg-midnight-blue">
                             {{ __('Aanmaken') }}
                         </button>
                     </div>
