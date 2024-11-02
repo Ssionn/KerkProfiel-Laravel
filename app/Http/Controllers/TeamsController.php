@@ -46,9 +46,9 @@ class TeamsController extends Controller
         ]);
 
         $user = User::find(Auth::user()->id);
-        $user->associate($team);
-        $user->role_id = Role::where('name', 'teamleader')->pluck('id')->first();
-        $user->save();
+
+        $user->associateTeamToUser($team);
+        $user->associateRoleToUser('teamleader');
 
         $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();
 
@@ -56,16 +56,16 @@ class TeamsController extends Controller
             try {
                 $filePath = storage_path('app/public/avatars/tmp/' . $request->team_avatar . '/' . $tempFile->filename);
 
-                if (file_exists($filePath)) {
-                    $team->addMedia($filePath)
-                        ->toMediaCollection('avatars', 'public');
-
-                    Storage::disk('public')->deleteDirectory('avatars/tmp/'.$request->team_avatar);
-
-                    $tempFile->delete();
-                } else {
+                if (! file_exists($filePath)) {
                     throw new \Exception('Team avatar file not found: ' . $filePath);
                 }
+
+                $team->addMedia($filePath)
+                    ->toMediaCollection('avatars', 'public');
+
+                Storage::disk('public')->deleteDirectory('avatars/tmp/' . $request->team_avatar);
+
+                $tempFile->delete();
             } catch (\Exception $e) {
                 throw new \Exception('Error uploading team avatar: ' . $e->getMessage());
             }
@@ -78,8 +78,7 @@ class TeamsController extends Controller
     {
         $user = User::find($userId);
 
-        $user->role_id = Role::where('name', 'guest')->pluck('id')->first();
-        $user->team_id = null;
+        $user->guestify();
 
         $user->save();
 
