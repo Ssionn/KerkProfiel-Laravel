@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "alpinejs": "^3.14.3",
-        "filepond": "^4.32.0"
+        "filepond": "^4.32.0",
+        "flowbite": "^2.5.2"
     }
 }

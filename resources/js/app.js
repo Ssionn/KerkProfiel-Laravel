@@ -2,6 +2,7 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 import * as FilePond from 'filepond';
 import 'filepond/dist/filepond.min.css';
+import 'flowbite';
 
 window.Alpine = Alpine
 
@@ -17,4 +18,8 @@ FilePond.create(inputElement).setOptions({
             'X-CSRF-TOKEN': csrfToken,
         }
     }
+});
+
+new Modal(document.getElementById('uitnodigen-modal'), {
+    backdropClasses: 'bg-transparent'
 });

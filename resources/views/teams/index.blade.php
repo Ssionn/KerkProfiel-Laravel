@@ -32,6 +32,7 @@
                             </button>
                         @else
                             <input type="hidden" name="edit" value="true">
+
                             <button type="submit" x-cloak
                                 class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-midnight-blue">
                                 Team Bewerken
@@ -40,13 +41,23 @@
                     </form>
                 @endcan
                 @can('add people')
-                    <button type="button"
+                    <button type="button" data-modal-toggle="uitnodigen-modal"
                         class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-midnight-blue">
                         Uitnodigen
                     </button>
                 @endcan
             </div>
         </div>
+
+        <x-modal modalId="uitnodigen-modal" modalHeader="Uitnodigen" modalButton="Uitnodigen" formAction="">
+            <div class="flex flex-col items-start space-y-2">
+                <label class="ml-1 text-sm font-semibold text-gray-600" for="invite_email">
+                    {{ __('Email') }}
+                </label>
+                <input type="text" name="team_name" id="invite_email" required
+                    class="w-full p-2 rounded-lg text-sm placeholder:text-gray-200 placeholder:text-sm border-[1px] focus:ring-sky-blue" />
+            </div>
+        </x-modal>
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
