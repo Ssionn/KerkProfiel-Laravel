@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\MediaLibrary\HasMedia;
@@ -37,9 +38,14 @@ class Team extends Model implements HasMedia
     public function getTeamAvatar(): string
     {
         if ($this->avatar) {
-            return asset('storage/avatars/'.$this->avatar);
+            return asset('storage/avatars/' . $this->avatar);
         }
 
-        return 'https://ui-avatars.com/api/?name='.urlencode($this->username);
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->username);
+    }
+
+    public function invitation(): BelongsTo
+    {
+        return $this->belongsTo(Invitation::class);
     }
 }

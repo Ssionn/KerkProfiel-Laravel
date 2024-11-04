@@ -1,9 +1,12 @@
 @props(['modalId', 'modalHeader', 'modalButton', 'formAction'])
 
 <div id="{{ $modalId }}" tabindex="-1" aria-hidden="true"
-    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    class="fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full hidden">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-300 ease-out opacity-0"
+        data-modal-backdrop="{{ $modalId }}"></div>
     <div class="relative py-2 px-4 w-full max-w-md max-h-full">
-        <div class="relative bg-white rounded-lg shadow">
+        <div class="relative bg-white rounded-lg shadow transform transition-all duration-300 ease-out opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            data-modal-content="{{ $modalId }}">
             <div class="flex items-center justify-between p-2 rounded-t">
                 <h3 class="text-xl font-semibold text-gray-900">
                     {{ $modalHeader }}
@@ -31,3 +34,48 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const showModalButtons = document.querySelectorAll('[data-modal-toggle]');
+        showModalButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const modalId = this.getAttribute('data-modal-toggle');
+                const modal = document.getElementById(modalId);
+                const backdrop = modal.querySelector(`[data-modal-backdrop="${modalId}"]`);
+                const content = modal.querySelector(`[data-modal-content="${modalId}"]`);
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+
+                requestAnimationFrame(() => {
+                    backdrop.classList.remove('opacity-0');
+                    content.classList.remove('opacity-0', 'translate-y-4',
+                        'sm:translate-y-0', 'sm:scale-95');
+                    content.classList.add('opacity-100', 'translate-y-0',
+                        'sm:scale-100');
+                });
+            });
+        });
+
+        const hideModalButtons = document.querySelectorAll('[data-modal-hide]');
+        hideModalButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const modalId = this.getAttribute('data-modal-hide');
+                const modal = document.getElementById(modalId);
+                const backdrop = modal.querySelector(`[data-modal-backdrop="${modalId}"]`);
+                const content = modal.querySelector(`[data-modal-content="${modalId}"]`);
+
+                backdrop.classList.add('opacity-0');
+                content.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
+                content.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0',
+                    'sm:scale-95');
+
+                setTimeout(() => {
+                    modal.classList.remove('flex');
+                    modal.classList.add('hidden');
+                }, 300);
+            });
+        });
+    });
+</script>

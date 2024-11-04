@@ -47,7 +47,7 @@ class TeamsController extends Controller
 
         $user = User::find(Auth::user()->id);
 
-        $user->associateTeamToUser($team);
+        $user->associateTeamToUserByModel($team);
         $user->associateRoleToUser('teamleader');
 
         $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();

@@ -49,12 +49,12 @@
             </div>
         </div>
 
-        <x-modal modalId="uitnodigen-modal" modalHeader="Uitnodigen" modalButton="Uitnodigen" formAction="">
+        <x-modal modalId="uitnodigen-modal" modalHeader="Uitnodigen" modalButton="Uitnodigen" formAction="{{ route('teams.invite') }}">
             <div class="flex flex-col items-start space-y-2">
                 <label class="ml-1 text-sm font-semibold text-gray-600" for="invite_email">
                     {{ __('Email') }}
                 </label>
-                <input type="text" name="team_name" id="invite_email" required
+                <input type="text" name="invite_email" id="invite_email" required
                     class="w-full p-2 rounded-lg text-sm placeholder:text-gray-200 placeholder:text-sm border-[1px] focus:ring-sky-blue" />
             </div>
         </x-modal>

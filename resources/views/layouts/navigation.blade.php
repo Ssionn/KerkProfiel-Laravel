@@ -1,4 +1,4 @@
-<aside x-data="{ open: false }" :class="open ? 'w-60' : 'w-16'"
+<aside x-data="{ open: false }" x-cloak :class="open ? 'w-60' : 'w-16'"
     class="z-50 h-screen p-2 text-black bg-white rounded-tr-lg rounded-br-lg shadow-md transition-all duration-300">
 
     <div class="flex items-center justify-between relative p-2">
@@ -6,7 +6,7 @@
             <img x-show="open" src="{{ asset('/storage/images/logos/kp-logo.jpeg') }}" alt="Logo" class="w-auto h-8">
         </div>
 
-        <div class="flex items-center ml-auto" :class="open ? 'justify-end' : 'justify-center w-full'">
+        <div class="flex items-center ml-auto" x-cloak :class="open ? 'justify-end' : 'justify-center w-full'">
             <button @click="open = !open" class="text-black">
                 <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" class="w-6 h-6">

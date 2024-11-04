@@ -44,9 +44,16 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id');
     }
 
-    public function associateTeamToUser(Team $team): bool
+    public function associateTeamToUserByModel(Team $team): bool
     {
         $this->team_id = $team->id;
+
+        return $this->save();
+    }
+
+    public function associateTeamToUserByTeamId(int $teamId): bool
+    {
+        $this->team_id = $teamId;
 
         return $this->save();
     }

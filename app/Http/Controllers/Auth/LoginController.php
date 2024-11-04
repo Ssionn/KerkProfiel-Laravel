@@ -11,7 +11,7 @@ use Illuminate\View\View;
 
 class LoginController extends Controller
 {
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         return view('auth.login');
     }
