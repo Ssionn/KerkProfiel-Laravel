@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Invitation extends Model
 {
@@ -18,9 +18,9 @@ class Invitation extends Model
         'accepted_at' => 'datetime',
     ];
 
-    public function team(): HasMany
+    public function team(): BelongsTo
     {
-        return $this->hasMany(Team::class);
+        return $this->belongsTo(Team::class, 'team_id');
     }
 
     public function invitedByTeam(int $teamId): bool

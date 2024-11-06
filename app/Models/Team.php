@@ -44,8 +44,8 @@ class Team extends Model implements HasMedia
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->username);
     }
 
-    public function invitation(): BelongsTo
+    public function invitations(): HasMany
     {
-        return $this->belongsTo(Invitation::class);
+        return $this->hasMany(Invitation::class);
     }
 }
