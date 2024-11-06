@@ -4,12 +4,18 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller
 {
     const GOOGLE = 'google';
+
+    public function __construct(
+        protected UserRepository $userRepository
+    ) {
+    }
 
     public function redirect()
     {
@@ -45,6 +51,8 @@ class SocialiteController extends Controller
                     'team_id' => null,
                 ]);
 
+                $this->userRepository->makeUserActive($dbUser->id);
+
                 Auth::login($dbUser);
 
                 return redirect()->route('dashboard');
@@ -56,6 +64,8 @@ class SocialiteController extends Controller
                 'provider_token' => $socialiteUser->token,
             ]);
 
+            $this->userRepository->makeUserActive($dbUser->id);
+
             Auth::login($dbUser);
 
             return redirect()->route('dashboard');
@@ -66,6 +76,8 @@ class SocialiteController extends Controller
             'provider_id' => $socialiteUser->id,
             'provider_token' => $socialiteUser->token,
         ]);
+
+        $this->userRepository->makeUserActive($user->id);
 
         Auth::login($user);
 
