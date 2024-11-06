@@ -66,7 +66,7 @@ class TeamsController extends Controller
                 }
 
                 $team->addMedia($filePath)
-                    ->toMediaCollection('avatars', 'public');
+                    ->toMediaCollection('avatars', 'local');
 
                 Storage::disk('public')->deleteDirectory('avatars/tmp/' . $request->team_avatar);
 
