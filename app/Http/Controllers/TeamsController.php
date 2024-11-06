@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TeamCreation;
-use App\Models\Role;
-use App\Models\Team;
 use App\Models\TemporaryImage;
 use App\Models\User;
+use App\Repositories\TeamsRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -14,6 +14,12 @@ use Illuminate\View\View;
 
 class TeamsController extends Controller
 {
+    public function __construct(
+        protected TeamsRepository $teamsRepository,
+        protected UserRepository $userRepository
+    ) {
+    }
+
     public function index(): View|RedirectResponse
     {
         $team = Auth::user()->load(['role.permissions', 'team'])->team;
@@ -39,13 +45,12 @@ class TeamsController extends Controller
 
     public function store(TeamCreation $request): RedirectResponse
     {
-        $team = Team::create([
-            'name' => $request->team_name,
-            'description' => $request->team_description,
-            'user_id' => Auth::user()->id,
-        ]);
+        $team = $this->teamsRepository->createTeam(
+            $request->team_name,
+            $request->team_description
+        );
 
-        $user = User::find(Auth::user()->id);
+        $user = $this->userRepository->findUserById(Auth::user()->id);
 
         $user->associateTeamToUserByModel($team);
         $user->associateRoleToUser('teamleader');
@@ -76,11 +81,9 @@ class TeamsController extends Controller
 
     public function destroy(int $userId): RedirectResponse
     {
-        $user = User::find($userId);
+        $user = $this->userRepository->findUserById($userId);
 
         $user->guestify();
-
-        $user->save();
 
         return redirect()->route('teams');
     }

@@ -20,6 +20,13 @@ class UserRepository
 
         $user->save();
 
+        $user->guestify();
+
         return $user;
+    }
+
+    public function findUserById(int $id): User
+    {
+        return User::find($id);
     }
 }

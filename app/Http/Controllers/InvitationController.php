@@ -7,18 +7,24 @@ use App\Http\Requests\InviteRequest;
 use App\Mail\InviteUser;
 use App\Models\Invitation;
 use App\Models\Role;
-use App\Models\User;
+use App\Repositories\InvitationRepository;
+use App\Repositories\RolesRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class InvitationController extends Controller
 {
+    public function __construct(
+        protected UserRepository $userRepository,
+        protected InvitationRepository $invitationRepository,
+        protected RolesRepository $rolesRepository
+    ) {}
+
     public function sendInvite(InviteRequest $request): RedirectResponse
     {
-        $existingInvitation = Invitation::where('email', $request->invite_email)->first();
+        $existingInvitation = $this->invitationRepository->findInvitationByEmail($request->invite_email);
 
         if ($existingInvitation) {
             return redirect()->back()->with('toast', [
@@ -29,11 +35,11 @@ class InvitationController extends Controller
 
         $team = Auth::user()->team;
 
-        $invitation = Invitation::create([
-            'email' => $request->invite_email,
-            'token' => bin2hex(random_bytes(24)),
-            'team_id' => $team->id,
-        ]);
+        $invitation = $this->invitationRepository->createInvitation(
+            $request->invite_email,
+            bin2hex(random_bytes(24)),
+            $team->id
+        );
 
         Mail::to($request->invite_email)->queue(
             new InviteUser(
@@ -52,9 +58,14 @@ class InvitationController extends Controller
 
     public function acceptInvite(string $token)
     {
-        $invitation = Invitation::where('token', $token)
-            ->whereNull('accepted_at')
-            ->firstOrFail();
+        $invitation = $this->invitationRepository->findInvitationByNullableToken($token);
+
+        if (! $invitation) {
+            return redirect()->route('teams')->with('toast', [
+                'message' => 'Deze uitnodiging bestaat niet',
+                'type' => 'error',
+            ]);
+        }
 
         if (Auth::check()) {
             $user = Auth::user();
@@ -83,8 +94,8 @@ class InvitationController extends Controller
 
     public function acceptInvitePost(string $token, AcceptInviteRequest $request)
     {
-        $invitation = Invitation::where('token', $token)->first();
-        $memberRole = Role::where('name', 'member')->first();
+        $invitation = $this->invitationRepository->findInvitationByNullableToken($token);
+        $memberRole = $this->rolesRepository->findMemberRole();
 
         if ($invitation->accepted_at) {
             return redirect()->route('teams.accept', ['token' => $token])
@@ -94,13 +105,14 @@ class InvitationController extends Controller
                 ]);
         }
 
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'team_id' => $invitation->team_id,
-            'role_id' => $memberRole->id,
-        ]);
+        $user = $this->userRepository->createUser(
+            $request->username,
+            $request->email,
+            $request->password,
+        );
+
+        $user->associateTeamToUserByTeamId($invitation->team_id);
+        $user->associateRoleToUser($memberRole->name);
 
         $invitation->update(['accepted_at' => now()]);
 
