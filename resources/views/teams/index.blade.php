@@ -49,7 +49,8 @@
             </div>
         </div>
 
-        <x-modal modalId="uitnodigen-modal" modalHeader="Uitnodigen" modalButton="Uitnodigen" formAction="{{ route('teams.invite') }}">
+        <x-modal modalId="uitnodigen-modal" modalHeader="Uitnodigen" modalButton="Uitnodigen"
+            formAction="{{ route('teams.invite') }}">
             <div class="flex flex-col items-start space-y-2">
                 <label class="ml-1 text-sm font-semibold text-gray-600" for="invite_email">
                     {{ __('Email') }}
@@ -97,10 +98,17 @@
                                 <div class="text-sm text-gray-900">{{ ucfirst($user->role->name) }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    Actief
-                                </span>
+                                @if ($user->is_active)
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Actief
+                                    </span>
+                                @else
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        Inactief
+                                    </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end space-x-3">

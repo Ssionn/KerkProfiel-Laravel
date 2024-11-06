@@ -22,9 +22,9 @@ class InvitationRepository
         return $invitation;
     }
 
-    public function findInvitationByEmail(string $email): Invitation
+    public function findInvitationByEmail(string $email): Invitation|array
     {
-        return Invitation::where('email', $email)->first();
+        return Invitation::where('email', $email)->first() ?? [];
     }
 
     public function findInvitationByNullableToken(string $token): Invitation
