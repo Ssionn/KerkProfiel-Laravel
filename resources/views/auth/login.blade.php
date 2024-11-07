@@ -17,7 +17,16 @@
                         </button>
                     </a>
                 </div>
-                <form action="{{ route('login.authenticate') }}" method="POST" class="p-2 mt-2 space-y-2">
+
+                <div class="flex justify-center mt-2">
+                    @error('email')
+                        <p class="text-xs text-red-600">
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </div>
+
+                <form action="{{ route('login.authenticate') }}" method="POST" class="px-2 mt-2 space-y-2">
                     @csrf
 
                     <div class="flex flex-col items-start space-y-2">
@@ -41,7 +50,7 @@
                         </button>
                     </div>
                 </form>
-                <div class="flex justify-end px-2">
+                <div class="flex justify-end px-2 mt-2">
                     <a href="{{ route('register') }}" class="text-[10px] font-light underline">
                         {{ __('Geen account?') }}
                     </a>

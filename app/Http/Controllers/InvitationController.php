@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AcceptInviteRequest;
 use App\Http\Requests\InviteRequest;
 use App\Mail\InviteUser;
-use App\Models\Invitation;
-use App\Models\Role;
 use App\Repositories\InvitationRepository;
 use App\Repositories\RolesRepository;
 use App\Repositories\UserRepository;
@@ -72,7 +70,7 @@ class InvitationController extends Controller
 
             if ($user->role->name === 'teamleader') {
                 return redirect()->route('teams')->with('toast', [
-                    'message' => "Je bent op dit moment een teamleader van een team.\nJe kunt geen uitnodiging accepteren als je teamleader bent.",
+                    'message' => "Je kunt geen uitnodiging accepteren als je teamleader bent",
                     'type' => 'error',
                 ]);
             }
@@ -82,9 +80,11 @@ class InvitationController extends Controller
 
             $invitation->update(['accepted_at' => now()]);
 
+            $authUserTeam = $user->team;
+
             return redirect()->route('teams')
                 ->with('toast', [
-                    'message' => "Je bent toegevoegd aan {$invitation->team->name}",
+                    'message' => "Je bent toegevoegd aan {$authUserTeam->name}",
                     'type' => 'success'
                 ]);
         }
@@ -97,7 +97,7 @@ class InvitationController extends Controller
         $invitation = $this->invitationRepository->findInvitationByNullableToken($token);
         $memberRole = $this->rolesRepository->findMemberRole();
 
-        if ($invitation->accepted_at) {
+        if ($invitation->accepted_at !== null) {
             return redirect()->route('teams.accept', ['token' => $token])
                 ->with('toast', [
                     'message' => 'Deze uitnodiging is niet meer geldig',
@@ -122,7 +122,7 @@ class InvitationController extends Controller
 
         return redirect()->route('dashboard')
             ->with('toast', [
-                'message' => "Je bent toegevoegd aan {Auth::user()->team->name}",
+                'message' => "Je bent toegevoegd aan {$user->team->name}",
                 'type' => 'success'
             ]);
     }

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TeamCreation;
+use App\Http\Requests\TeamCreationRequest;
 use App\Models\TemporaryImage;
-use App\Models\User;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\RedirectResponse;
@@ -43,7 +42,7 @@ class TeamsController extends Controller
         return view('teams.create');
     }
 
-    public function store(TeamCreation $request): RedirectResponse
+    public function store(TeamCreationRequest $request): RedirectResponse
     {
         $team = $this->teamsRepository->createTeam(
             $request->team_name,
@@ -76,7 +75,10 @@ class TeamsController extends Controller
             }
         }
 
-        return redirect()->route('teams');
+        return redirect()->route('teams')->with('toast', [
+            'message' => "Team is aangemaakt",
+            'type' => 'success',
+        ]);
     }
 
     public function destroy(int $userId): RedirectResponse
@@ -85,6 +87,9 @@ class TeamsController extends Controller
 
         $user->guestify();
 
-        return redirect()->route('teams');
+        return redirect()->route('teams')->with('toast', [
+            'message' => "{$user->username} verwijderd",
+            'type' => 'success',
+        ]);
     }
 }
