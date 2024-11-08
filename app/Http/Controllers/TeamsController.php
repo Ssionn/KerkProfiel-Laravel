@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TeamCreation;
+use App\Http\Requests\TeamCreationRequest;
 use App\Models\TemporaryImage;
-use App\Models\User;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\RedirectResponse;
@@ -17,8 +16,7 @@ class TeamsController extends Controller
     public function __construct(
         protected TeamsRepository $teamsRepository,
         protected UserRepository $userRepository
-    ) {
-    }
+    ) {}
 
     public function index(): View|RedirectResponse
     {
@@ -28,9 +26,16 @@ class TeamsController extends Controller
             return redirect()->route('teams.create');
         }
 
-        $users = Auth::user()->team->users->sortBy(function ($user) {
-            return $user->role->name !== 'teamleader';
-        });
+        $users = $team->users()
+            ->when(request('role_type'), function ($query, $roleType) {
+                $query->whereHas('role', function ($query) use ($roleType) {
+                    $query->where('name', $roleType);
+                });
+            })
+            ->get()
+            ->sort(function ($user) {
+                return $user->role->name !== 'teamleader';
+            });
 
         return view('teams.index', [
             'team' => $team,
@@ -43,7 +48,7 @@ class TeamsController extends Controller
         return view('teams.create');
     }
 
-    public function store(TeamCreation $request): RedirectResponse
+    public function store(TeamCreationRequest $request): RedirectResponse
     {
         $team = $this->teamsRepository->createTeam(
             $request->team_name,
@@ -76,15 +81,28 @@ class TeamsController extends Controller
             }
         }
 
-        return redirect()->route('teams');
+        return redirect()->route('teams')->with('toast', [
+            'message' => "Team is aangemaakt",
+            'type' => 'success',
+        ]);
     }
 
     public function destroy(int $userId): RedirectResponse
     {
         $user = $this->userRepository->findUserById($userId);
 
+        if ($user->role->name === 'teamleader') {
+            return redirect()->route('teams')->with('toast', [
+                'message' => "Je kan geen teamleader verwijderen",
+                'type' => 'error',
+            ]);
+        }
+
         $user->guestify();
 
-        return redirect()->route('teams');
+        return redirect()->route('teams')->with('toast', [
+            'message' => "{$user->username} verwijderd",
+            'type' => 'success',
+        ]);
     }
 }

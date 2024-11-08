@@ -14,46 +14,71 @@
         </div>
 
         <div class="mt-4 pt-4 border-t border-gray-200">
-            <h2 class="text-base font-medium text-gray-900">Team Leader</h2>
+            <h2 class="text-base font-medium text-gray-900">{{ __('teams/team.team_info.role_position') }}</h2>
             <x-team-leader :team="$team" />
         </div>
     </div>
 
     <div class="mt-8 bg-white rounded-lg shadow-sm px-4 py-2">
         <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-medium text-gray-900">Team Leden</h2>
+            <h2 class="text-lg font-medium text-gray-900">{{ __('teams/team.team_members_table.table_header') }}</h2>
             <div class="flex items-center space-x-2">
-                @can('edit team')
-                    <form method="GET" action="{{ request()->url() }}">
-                        @if (request()->has('edit'))
-                            <button type="submit" x-cloak
-                                class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-sky-blue">
-                                Klaar
-                            </button>
-                        @else
-                            <input type="hidden" name="edit" value="true">
+                <form action="{{ route('teams') }}" method="GET" class="mr-8">
+                    <select name="role_type" onchange="this.form.submit()" class="py-1 px-4 rounded-lg">
+                        <option value="">
+                            {{ __('teams/team.team_members_table.table_filter.all') }}
+                        </option>
+                        <option value="teamleader" {{ request('role_type') === 'teamleader' ? 'selected' : '' }}>
+                            {{ __('teams/team.team_members_table.table_filter.teamleaders') }}
+                        </option>
+                        <option value="member" {{ request('role_type') === 'member' ? 'selected' : '' }}>
+                            {{ __('teams/team.team_members_table.table_filter.members') }}
+                        </option>
+                    </select>
+                </form>
 
-                            <button type="submit" x-cloak
-                                class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-midnight-blue">
-                                Team Bewerken
+                <button id="dropdownTeamFeaturesButton" data-dropdown-toggle="dropdownTeamFeatures">
+                    <x-tabler-dots />
+                </button>
+
+                <div id="dropdownTeamFeatures"
+                    class="hidden z-10 mt-2 w-36 rounded-md bg-white shadow-lg divide-y divide-gray-100 ring-1 ring-black ring-opacity-5">
+                    <div class="py-1">
+                        @can('edit team')
+                            <form method="GET" action="{{ request()->url() }}" class="w-full">
+                                @if (request()->has('edit'))
+                                    <button type="submit"
+                                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                                        {{ __('teams/team.team_members_table.table_dropdown.edit_team_save') }}
+                                    </button>
+                                @else
+                                    <input type="hidden" name="edit" value="true">
+                                    <button type="submit"
+                                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                                        {{ __('teams/team.team_members_table.table_dropdown.edit_team_button') }}
+                                    </button>
+                                @endif
+                            </form>
+                        @endcan
+
+                        @can('add people')
+                            <button type="button" data-modal-toggle="uitnodigen-modal"
+                                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                                {{ __('teams/team.team_members_table.table_dropdown.invite_members') }}
                             </button>
-                        @endif
-                    </form>
-                @endcan
-                @can('add people')
-                    <button type="button" data-modal-toggle="uitnodigen-modal"
-                        class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-midnight-blue">
-                        Uitnodigen
-                    </button>
-                @endcan
+                        @endcan
+                    </div>
+                </div>
             </div>
         </div>
 
-        <x-modal modalId="uitnodigen-modal" modalHeader="Uitnodigen" modalButton="Uitnodigen"
+        <x-modal modalId="uitnodigen-modal" method="POST"
+            modalHeader="{{ __('teams/team.team_members_table.table_dropdown.invite_members') }}"
+            modalButton="{{ __('teams/team.team_members_table.table_dropdown.invite_fields.invite_button') }}"
             formAction="{{ route('teams.invite') }}">
             <div class="flex flex-col items-start space-y-2">
                 <label class="ml-1 text-sm font-semibold text-gray-600" for="invite_email">
-                    {{ __('Email') }}
+                    {{ __('teams/team.team_members_table.table_dropdown.invite_fields.email') }}
                 </label>
                 <input type="text" name="invite_email" id="invite_email" required
                     class="w-full p-2 rounded-lg text-sm placeholder:text-gray-200 placeholder:text-sm border-[1px] focus:ring-sky-blue" />
@@ -65,20 +90,20 @@
                 <thead>
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Naam
+                            {{ __('teams/team.team_members_table.table_column_headings.name') }}
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Email
+                            {{ __('teams/team.team_members_table.table_column_headings.email') }}
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Rol
+                            {{ __('teams/team.team_members_table.table_column_headings.role') }}
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status
+                            {{ __('teams/team.team_members_table.table_column_headings.status') }}
                         </th>
                         @if (request()->has('edit'))
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Verwijderen
+                                {{ __('teams/team.team_members_table.table_column_headings.remove') }}
                             </th>
                         @endif
                     </tr>
@@ -101,12 +126,12 @@
                                 @if ($user->is_active)
                                     <span
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        Actief
+                                        {{ __('teams/team.team_members_table.table_user_activity.active') }}
                                     </span>
                                 @else
                                     <span
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                        Inactief
+                                        {{ __('teams/team.team_members_table.table_user_activity.inactive') }}
                                     </span>
                                 @endif
                             </td>
@@ -114,18 +139,27 @@
                                 <div class="flex items-center justify-end space-x-3">
                                     @if (request()->has('edit'))
                                         @can('remove people')
-                                            <form method="POST" action="{{ route('team.members.destroy', $user->id) }}"
-                                                onsubmit="return confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')"
-                                                class="flex items-center">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900"
-                                                    {{ $user->id === auth()->id() ? 'disabled' : '' }}>
-                                                    Verwijder
+                                            @if ($user->role->name === 'teamleader')
+                                            @else
+                                                <button type="button" data-modal-toggle="remove-user-modal-{{ $user->id }}"
+                                                    class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700">
+                                                    {{ __('teams/team.team_members_table.table_dropdown.remove_user_button') }}
                                                 </button>
-                                            </form>
+                                            @endif
                                         @endcan
                                     @endif
+
+                                    <x-modal modalId="remove-user-modal-{{ $user->id }}" method="DELETE"
+                                        modalHeader="{{ __('teams/team.team_members_table.table_dropdown.remove_user') }}"
+                                        modalButton="{{ __('teams/team.team_members_table.table_dropdown.remove_user_button') }}"
+                                        formAction="{{ route('team.members.destroy', $user->id) }}">
+                                        <div class="flex flex-col items-start space-y-2">
+                                            <label class="ml-1 text-sm font-semibold text-gray-600"
+                                                for="remove_user_confirm">
+                                                {{ __('teams/team.team_members_table.table_dropdown.remove_user_confirm') }}
+                                            </label>
+                                        </div>
+                                    </x-modal>
                                 </div>
                             </td>
                         </tr>

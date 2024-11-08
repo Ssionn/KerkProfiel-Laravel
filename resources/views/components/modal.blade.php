@@ -1,4 +1,4 @@
-@props(['modalId', 'modalHeader', 'modalButton', 'formAction'])
+@props(['modalId', 'modalHeader', 'modalButton', 'formAction', 'method'])
 
 <div id="{{ $modalId }}" tabindex="-1" aria-hidden="true"
     class="fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full hidden">
@@ -21,11 +21,12 @@
 
             <form action="{{ $formAction }}" method="POST">
                 @csrf
+                @method($method)
                 <div class="p-2">
                     {{ $slot }}
                 </div>
                 <div class="flex items-center p-2 rounded-b dark:border-gray-600">
-                    <button data-modal-hide="{{ $modalId }}" type="button"
+                    <button data-modal-hide="{{ $modalId }}" type="submit"
                         class="w-full text-sm py-2 px-2 font-medium focus:outline-none bg-midnight-blue text-white rounded-lg border border-indigo-500 focus:z-10 focus:ring-4 focus:ring-gray-100">
                         {{ $modalButton }}
                     </button>
