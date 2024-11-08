@@ -35,15 +35,6 @@ class Team extends Model implements HasMedia
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public function getTeamAvatar(): string
-    {
-        if ($this->avatar) {
-            return asset('storage/avatars/' . $this->avatar);
-        }
-
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->username);
-    }
-
     public function invitations(): HasMany
     {
         return $this->hasMany(Invitation::class);
