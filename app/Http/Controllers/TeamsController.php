@@ -28,14 +28,11 @@ class TeamsController extends Controller
 
         $users = $team->users()
             ->when(request('role_type'), function ($query, $roleType) {
-                $query->whereHas('role', function ($query) use ($roleType) {
-                    $query->where('name', $roleType);
-                });
+                $query->whereHas('role', fn($query) => $query->where('name', $roleType));
             })
+            ->with('role')
             ->get()
-            ->sort(function ($user) {
-                return $user->role->name !== 'teamleader';
-            });
+            ->sortByDesc(fn($user) => $user->role->name === 'teamleader');
 
         return view('teams.index', [
             'team' => $team,
