@@ -17,13 +17,22 @@
 </head>
 
 <body class="flex bg-gray-100 font-poppins">
-    <x-navigation />
+    <div x-data="{ open: false }" class="w-full">
+        <x-navigation />
 
-    <main class="flex-1 p-6">
-        {{ $slot }}
-    </main>
+        <main class="flex-1 p-6" x-data :class="open ? 'ml-60' : 'ml-16'" class="transition-all duration-300">
+            {{ $slot }}
+        </main>
+    </div>
 
     <x-notification-toast />
+    @if (env('APP_ENV') === 'local')
+        <div class="fixed bottom-0 right-0 p-2 bg-red-400 text-red-800 rounded-tl-md">
+            <p class="text-sm font-bold">
+                {{ __('This is a local environment') }}
+            </p>
+        </div>
+    @endif
 </body>
 
 </html>

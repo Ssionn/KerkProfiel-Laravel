@@ -12,6 +12,7 @@ return [
             'all' => 'Alle',
             'teamleaders' => 'Teamleaders',
             'members' => 'Members',
+            'no_users' => 'Geen gebruikers met de rol',
         ],
 
         'table_dropdown' => [

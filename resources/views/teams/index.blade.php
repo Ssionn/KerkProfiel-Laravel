@@ -37,14 +37,14 @@
                     </select>
                 </form>
 
-                <button id="dropdownTeamFeaturesButton" data-dropdown-toggle="dropdownTeamFeatures">
-                    <x-tabler-dots />
-                </button>
+                @can('edit team')
+                    <button id="dropdownTeamFeaturesButton" data-dropdown-toggle="dropdownTeamFeatures">
+                        <x-tabler-dots />
+                    </button>
 
-                <div id="dropdownTeamFeatures"
-                    class="hidden z-10 mt-2 w-36 rounded-md bg-white shadow-lg divide-y divide-gray-100 ring-1 ring-black ring-opacity-5">
-                    <div class="py-1">
-                        @can('edit team')
+                    <div id="dropdownTeamFeatures"
+                        class="hidden z-10 mt-2 w-36 rounded-md bg-white shadow-lg divide-y divide-gray-100 ring-1 ring-black ring-opacity-5">
+                        <div class="py-1">
                             <form method="GET" action="{{ request()->url() }}" class="w-full">
                                 @if (request()->has('edit'))
                                     <button type="submit"
@@ -59,16 +59,16 @@
                                     </button>
                                 @endif
                             </form>
-                        @endcan
 
-                        @can('add people')
-                            <button type="button" data-modal-toggle="uitnodigen-modal"
-                                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                                {{ __('teams/team.team_members_table.table_dropdown.invite_members') }}
-                            </button>
-                        @endcan
+                            @can('add people')
+                                <button type="button" data-modal-toggle="uitnodigen-modal"
+                                    class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                                    {{ __('teams/team.team_members_table.table_dropdown.invite_members') }}
+                                </button>
+                            @endcan
+                        </div>
                     </div>
-                </div>
+                @endcan
             </div>
         </div>
 
@@ -85,87 +85,103 @@
             </div>
         </x-modal>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('teams/team.team_members_table.table_column_headings.name') }}
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('teams/team.team_members_table.table_column_headings.email') }}
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('teams/team.team_members_table.table_column_headings.role') }}
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('teams/team.team_members_table.table_column_headings.status') }}
-                        </th>
-                        @if (request()->has('edit'))
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {{ __('teams/team.team_members_table.table_column_headings.remove') }}
-                            </th>
-                        @endif
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach ($users as $user)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="text-sm font-medium text-gray-900">{{ $user->username }}</div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $user->email }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ ucfirst($user->role->name) }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @if ($user->is_active)
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        {{ __('teams/team.team_members_table.table_user_activity.active') }}
-                                    </span>
-                                @else
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                        {{ __('teams/team.team_members_table.table_user_activity.inactive') }}
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex items-center justify-end space-x-3">
-                                    @if (request()->has('edit'))
-                                        @can('remove people')
-                                            @if ($user->role->name === 'teamleader')
-                                            @else
-                                                <button type="button" data-modal-toggle="remove-user-modal-{{ $user->id }}"
-                                                    class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700">
-                                                    {{ __('teams/team.team_members_table.table_dropdown.remove_user_button') }}
-                                                </button>
-                                            @endif
-                                        @endcan
-                                    @endif
+        @if (request()->has('role_type'))
+            @if ($users->count() === 0)
+                <div class="flex items-center justify-center w-full h-full">
+                    <div class="flex flex-row space-x-1">
+                        <p class="text-md font-semibold">
+                            {{ __('teams/team.team_members_table.table_filter.no_users') }}</p>
+                        <p class="text-md font-semibold underline">{{ ucfirst(request('role_type')) }}</p>
+                    </div>
+                </div>
+            @endif
+        @endif
 
-                                    <x-modal modalId="remove-user-modal-{{ $user->id }}" method="DELETE"
-                                        modalHeader="{{ __('teams/team.team_members_table.table_dropdown.remove_user') }}"
-                                        modalButton="{{ __('teams/team.team_members_table.table_dropdown.remove_user_button') }}"
-                                        formAction="{{ route('team.members.destroy', $user->id) }}">
-                                        <div class="flex flex-col items-start space-y-2">
-                                            <label class="ml-1 text-sm font-semibold text-gray-600"
-                                                for="remove_user_confirm">
-                                                {{ __('teams/team.team_members_table.table_dropdown.remove_user_confirm') }}
-                                            </label>
-                                        </div>
-                                    </x-modal>
-                                </div>
-                            </td>
+        @if ($users->count() > 0)
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {{ __('teams/team.team_members_table.table_column_headings.name') }}
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {{ __('teams/team.team_members_table.table_column_headings.email') }}
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {{ __('teams/team.team_members_table.table_column_headings.role') }}
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {{ __('teams/team.team_members_table.table_column_headings.status') }}
+                            </th>
+                            @if (request()->has('edit'))
+                                <th
+                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    {{ __('teams/team.team_members_table.table_column_headings.remove') }}
+                                </th>
+                            @endif
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach ($users as $user)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="text-sm font-medium text-gray-900">{{ $user->username }}</div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $user->email }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ ucfirst($user->role->name) }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if ($user->is_active)
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            {{ __('teams/team.team_members_table.table_user_activity.active') }}
+                                        </span>
+                                    @else
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                            {{ __('teams/team.team_members_table.table_user_activity.inactive') }}
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex items-center justify-end space-x-3">
+                                        @if (request()->has('edit'))
+                                            @can('remove people')
+                                                @if ($user->role->name === 'teamleader')
+                                                @else
+                                                    <button type="button"
+                                                        data-modal-toggle="remove-user-modal-{{ $user->id }}"
+                                                        class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700">
+                                                        {{ __('teams/team.team_members_table.table_dropdown.remove_user_button') }}
+                                                    </button>
+                                                @endif
+                                            @endcan
+                                        @endif
+
+                                        <x-modal modalId="remove-user-modal-{{ $user->id }}" method="DELETE"
+                                            modalHeader="{{ __('teams/team.team_members_table.table_dropdown.remove_user') }}"
+                                            modalButton="{{ __('teams/team.team_members_table.table_dropdown.remove_user_button') }}"
+                                            formAction="{{ route('team.members.destroy', $user->id) }}">
+                                            <div class="flex flex-col items-start space-y-2">
+                                                <label class="ml-1 text-sm font-semibold text-gray-600"
+                                                    for="remove_user_confirm">
+                                                    {{ __('teams/team.team_members_table.table_dropdown.remove_user_confirm') }}
+                                                </label>
+                                            </div>
+                                        </x-modal>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </div>
 </x-app-layout>
