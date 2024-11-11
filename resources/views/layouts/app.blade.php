@@ -26,6 +26,7 @@
     </div>
 
     <x-notification-toast />
+
     @if (env('APP_ENV') === 'local')
         <div class="fixed bottom-0 right-0 p-2 bg-red-400 text-red-800 rounded-tl-md">
             <p class="text-sm font-bold">
