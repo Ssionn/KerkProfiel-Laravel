@@ -3,7 +3,7 @@
         <div class="flex flex-col w-full p-2 bg-white rounded-lg shadow-lg md:p-0 sm:w-3/4 md:w-2/4 xl:w-1/3">
             <div>
                 <h1 class="text-md font-medium text-center mt-5">
-                    {{ __("Je bent uitgenodigd om lid te worden!") }}
+                    {{ __('Je bent uitgenodigd om lid te worden!') }}
                 </h1>
             </div>
             <div class="px-2">
