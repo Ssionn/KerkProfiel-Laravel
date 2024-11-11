@@ -1,5 +1,5 @@
-<aside x-data="{ open: false }" x-cloak :class="open ? 'w-60' : 'w-16'"
-    class="z-50 h-screen p-2 text-black bg-white rounded-tr-lg rounded-br-lg shadow-md transition-all duration-300">
+<aside :class="open ? 'w-60' : 'w-16'"
+    class="fixed h-screen p-2 text-black bg-white rounded-tr-lg rounded-br-lg shadow-md transition-all duration-300">
 
     <div class="flex items-center justify-between relative p-2">
         <div class="flex items-center">
