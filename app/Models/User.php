@@ -20,6 +20,7 @@ class User extends Authenticatable
         'provider',
         'provider_id',
         'provider_token',
+        'avatar',
         'team_id',
         'role_id',
     ];
@@ -76,5 +77,14 @@ class User extends Authenticatable
     public function hasPermission($permission)
     {
         return $this->role->permissions->contains('permission_name', $permission);
+    }
+
+    public function defaultUserAvatar(): string
+    {
+        if (! $this->avatar) {
+            return 'https://ui-avatars.com/api/?name='.urlencode($this->username).'&background=random&color=random?size=128';
+        }
+
+        return $this->getFirstMediaUrl('avatars');
     }
 }

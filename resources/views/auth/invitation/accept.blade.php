@@ -7,7 +7,8 @@
                 </h1>
             </div>
             <div class="px-2">
-                <form action="{{ route('teams.acceptPost', $invitation->token) }}" method="POST" class="p-2 space-y-2">
+                <form action="{{ route('teams.acceptPost', $invitation->token) }}" method="POST" class="p-2 space-y-2"
+                    name="invitation-form">
                     @csrf
                     <div class="flex flex-col items-start space-y-2">
                         <label class="ml-1 text-xs font-semibold text-gray-600" for="username">

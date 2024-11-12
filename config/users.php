@@ -14,5 +14,9 @@ return [
             'email' => 'andy@houseofhope.com',
             'role' => 'member',
         ],
+        'Damian Van Zeelt' => [
+            'email' => 'damian@houseofhope.com',
+            'role' => 'member',
+        ],
     ],
 ];

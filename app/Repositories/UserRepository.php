@@ -28,6 +28,11 @@ class UserRepository
         return User::find($id);
     }
 
+    public function findUserByEmail(string $email): User
+    {
+        return User::where('email', $email)->first();
+    }
+
     public function makeUserActive(int $id): User
     {
         $user = $this->findUserById($id);

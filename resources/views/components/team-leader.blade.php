@@ -1,13 +1,10 @@
 @props(['team'])
 
 @if ($team->owner)
-    <div class="mt-2 flex items-center space-x-3">
-        <div class="flex-shrink-0">
-            <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                <span class="text-xs font-medium text-gray-600">
-                    {{ Str::upper(Str::substr($team->owner->username, 0, 2)) }}
-                </span>
-            </div>
+    <div class="mt-2 flex items-center space-x-1">
+        <div class="flex flex-row items-center">
+            <img src="{{ $team->owner->defaultUserAvatar() }}" alt="{{ $team->owner->username }}"
+                class="h-8 w-8 rounded-lg object-cover" />
         </div>
         <div>
             <p class="text-sm font-medium text-gray-900">{{ $team->owner->username }}</p>

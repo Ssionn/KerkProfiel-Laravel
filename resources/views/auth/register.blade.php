@@ -17,7 +17,8 @@
                         </button>
                     </a>
                 </div>
-                <form action="{{ route('register.register') }}" method="POST" class="p-2 mt-2 space-y-2">
+                <form action="{{ route('register.register') }}" method="POST" class="p-2 mt-2 space-y-2"
+                    name="register-form">
                     @csrf
 
                     <div class="flex flex-col items-start space-y-2">

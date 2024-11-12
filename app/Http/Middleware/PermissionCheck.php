@@ -15,12 +15,16 @@ class PermissionCheck
      */
     public function handle(Request $request, Closure $next, ?string $ability = null): Response
     {
+        if ($request->session()->has('user_id', $request->user()->id)) {
+            $request->session()->put('is_active', true);
+        }
+
         if (! $ability) {
-            return redirect()->route('teams')->with('error', 'Permission not specified.');
+            return redirect()->route('teams')->with('toast', 'Permission not specified.');
         }
 
         if (! auth()->user()->hasPermission($ability)) {
-            return redirect()->route('teams')->with('error', 'You do not have the permission to do this.');
+            return redirect()->route('teams')->with('toast', 'You do not have the permission to do this.');
         }
 
         return $next($request);

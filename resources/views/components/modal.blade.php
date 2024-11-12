@@ -1,7 +1,7 @@
 @props(['modalId', 'modalHeader', 'modalButton', 'formAction', 'method'])
 
-<div id="{{ $modalId }}" tabindex="-1" aria-hidden="true"
-    class="fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full hidden">
+<div data-modal-target="{{ $modalId }}" id="{{ $modalId }}" tabindex="-1"
+    class="fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-screen max-h-full hidden">
     <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-300 ease-out opacity-0"
         data-modal-backdrop="{{ $modalId }}"></div>
     <div class="relative py-2 px-4 w-full max-w-md max-h-full">
@@ -19,7 +19,7 @@
                 </button>
             </div>
 
-            <form action="{{ $formAction }}" method="POST">
+            <form action="{{ $formAction }}" method="POST" name="remove-user-form">
                 @csrf
                 @method($method)
                 <div class="p-2">

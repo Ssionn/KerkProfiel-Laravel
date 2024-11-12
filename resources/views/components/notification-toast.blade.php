@@ -4,8 +4,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             window.Toast.show(
-                "{{ session()->get('toast.message') }}",
-                "{{ session()->get('toast.type', 'success') }}"
+                @json(session()->get('toast.message')),
+                @json(session()->get('toast.type', 'success'))
             );
         });
     </script>

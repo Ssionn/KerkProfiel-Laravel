@@ -2,7 +2,7 @@
 
 return [
     'team_info' => [
-        'role_position' => 'Teamleader'
+        'role_position' => 'Teamleader',
     ],
 
     'team_members_table' => [
@@ -18,7 +18,7 @@ return [
         'table_dropdown' => [
             'edit_team_save' => 'Team opslaan',
             'edit_team_button' => 'Team bewerken',
-            'invite_members' => 'Uitnodigen',
+            'invite_members' => 'Mensen uitnodigen',
             'invite_fields' => [
                 'email' => 'Email',
                 'invite_button' => 'Versturen',
@@ -26,6 +26,9 @@ return [
             'remove_user' => 'Verwijder gebruiker',
             'remove_user_button' => 'Verwijderen',
             'remove_user_confirm' => 'Weet je zeker dat je deze gebruiker wilt verwijderen?',
+            'leave_team' => 'Verlaat team',
+            'leave_team_button' => 'Verlaat team',
+            'leave_team_confirm' => 'Weet je zeker dat je dit team wilt verlaten?',
         ],
 
         'table_column_headings' => [
