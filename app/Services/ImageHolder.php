@@ -13,8 +13,8 @@ class ImageHolder
             try {
                 $tempFile = $request->file('team_avatar');
                 $fileName = $tempFile->getClientOriginalName();
-                $folder = uniqid() . '-' . now()->timestamp;
-                $path = 'avatars/tmp/' . $folder;
+                $folder = uniqid().'-'.now()->timestamp;
+                $path = 'avatars/tmp/'.$folder;
 
                 if ($tempFile->storeAs($path, $fileName, 'public')) {
                     TemporaryImage::create([
@@ -25,9 +25,10 @@ class ImageHolder
                     return $folder;
                 }
             } catch (\Exception $e) {
-                throw new \Exception('Error storing temporary image: ' . $e->getMessage());
+                throw new \Exception('Error storing temporary image: '.$e->getMessage());
             }
         }
+
         return '';
     }
 }

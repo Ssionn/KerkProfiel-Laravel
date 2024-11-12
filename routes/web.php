@@ -36,6 +36,11 @@ Route::middleware('auth')->group(function () {
                 ->name('teams.store');
         });
 
+        Route::middleware('permissionCheck:leave team')->group(function () {
+            Route::post('/leave/{user}', [TeamsController::class, 'leaveTeam'])
+                ->name('teams.leave');
+        });
+
         Route::delete('/{user}/remove', [TeamsController::class, 'destroy'])
             ->name('team.members.destroy');
 

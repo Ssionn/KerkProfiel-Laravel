@@ -28,11 +28,10 @@ class TeamsController extends Controller
 
         $users = $team->users()
             ->when(request('role_type'), function ($query, $roleType) {
-                $query->whereHas('role', fn($query) => $query->where('name', $roleType));
+                $query->whereHas('role', fn ($query) => $query->where('name', $roleType));
             })
             ->with('role')
-            ->get()
-            ->sortByDesc(fn($user) => $user->role->name === 'teamleader');
+            ->paginate(9);
 
         return view('teams.index', [
             'team' => $team,
@@ -61,25 +60,25 @@ class TeamsController extends Controller
 
         if ($tempFile) {
             try {
-                $filePath = storage_path('app/public/avatars/tmp/' . $request->team_avatar . '/' . $tempFile->filename);
+                $filePath = storage_path('app/public/avatars/tmp/'.$request->team_avatar.'/'.$tempFile->filename);
 
                 if (! file_exists($filePath)) {
-                    throw new \Exception('Team avatar file not found: ' . $filePath);
+                    throw new \Exception('Team avatar file not found: '.$filePath);
                 }
 
                 $team->addMedia($filePath)
                     ->toMediaCollection('avatars', 'local');
 
-                Storage::disk('public')->deleteDirectory('avatars/tmp/' . $request->team_avatar);
+                Storage::disk('public')->deleteDirectory('avatars/tmp/'.$request->team_avatar);
 
                 $tempFile->delete();
             } catch (\Exception $e) {
-                throw new \Exception('Error uploading team avatar: ' . $e->getMessage());
+                throw new \Exception('Error uploading team avatar: '.$e->getMessage());
             }
         }
 
         return redirect()->route('teams')->with('toast', [
-            'message' => "Team is aangemaakt",
+            'message' => 'Team is aangemaakt',
             'type' => 'success',
         ]);
     }
@@ -90,7 +89,7 @@ class TeamsController extends Controller
 
         if ($user->role->name === 'teamleader') {
             return redirect()->route('teams')->with('toast', [
-                'message' => "Je kan geen teamleader verwijderen",
+                'message' => 'Je kan geen teamleader verwijderen',
                 'type' => 'error',
             ]);
         }
@@ -99,6 +98,20 @@ class TeamsController extends Controller
 
         return redirect()->route('teams')->with('toast', [
             'message' => "{$user->username} verwijderd",
+            'type' => 'success',
+        ]);
+    }
+
+    public function leaveTeam(int $userId): RedirectResponse
+    {
+        $user = $this->userRepository->findUserById($userId);
+
+        $team = $user->team;
+
+        $user->guestify();
+
+        return redirect()->route('dashboard')->with('toast', [
+            'message' => "{$team->name} verlaten",
             'type' => 'success',
         ]);
     }

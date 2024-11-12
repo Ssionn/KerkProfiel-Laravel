@@ -35,6 +35,14 @@ class UsersSeeder extends Seeder
                 'role_id' => 2,
                 'team_id' => 1,
             ],
+            [
+                'username' => 'Damian Van Zeelt',
+                'email' => 'damian@houseofhope.com',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+                'role_id' => 3,
+                'team_id' => 1,
+            ],
         ];
 
         foreach ($users as $user) {

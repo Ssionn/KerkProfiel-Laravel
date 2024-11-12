@@ -14,8 +14,7 @@ class LoginController extends Controller
 {
     public function __construct(
         protected UserRepository $userRepository
-    ) {
-    }
+    ) {}
 
     public function index(): View|RedirectResponse
     {

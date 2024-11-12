@@ -70,7 +70,7 @@ class InvitationController extends Controller
 
             if ($user->role->name === 'teamleader') {
                 return redirect()->route('teams')->with('toast', [
-                    'message' => "Je kunt geen uitnodiging accepteren als je teamleader bent",
+                    'message' => 'Je kunt geen uitnodiging accepteren als je teamleader bent',
                     'type' => 'error',
                 ]);
             }
@@ -85,7 +85,7 @@ class InvitationController extends Controller
             return redirect()->route('teams')
                 ->with('toast', [
                     'message' => "Je bent toegevoegd aan {$authUserTeam->name}",
-                    'type' => 'success'
+                    'type' => 'success',
                 ]);
         }
 
@@ -123,7 +123,7 @@ class InvitationController extends Controller
         return redirect()->route('dashboard')
             ->with('toast', [
                 'message' => "Je bent toegevoegd aan {$user->team->name}",
-                'type' => 'success'
+                'type' => 'success',
             ]);
     }
 }

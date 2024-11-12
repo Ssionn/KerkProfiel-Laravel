@@ -26,7 +26,8 @@
                     @enderror
                 </div>
 
-                <form action="{{ route('login.authenticate') }}" method="POST" class="px-2 mt-2 space-y-2">
+                <form action="{{ route('login.authenticate') }}" method="POST" class="px-2 mt-2 space-y-2"
+                    name="login-form">
                     @csrf
 
                     <div class="flex flex-col items-start space-y-2">
