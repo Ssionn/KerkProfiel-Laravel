@@ -20,7 +20,7 @@ Route::get('/invite/{token}', [InvitationController::class, 'acceptInvite'])
 Route::post('/invite/{token}', [InvitationController::class, 'acceptInvitePost'])
     ->name('teams.acceptPost');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'UserActivityCheck')->group(function () {
     Route::get('/', function () {
         return view('welcome');
     })->name('dashboard');
@@ -29,14 +29,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [TeamsController::class, 'index'])->name('teams');
         Route::post('/invite', [InvitationController::class, 'sendInvite'])->name('teams.invite');
 
-        Route::middleware('permissionCheck:create team')->group(function () {
+        Route::middleware('PermissionCheck:create team')->group(function () {
             Route::get('/create', [TeamsController::class, 'create'])
                 ->name('teams.create');
             Route::post('/create', [TeamsController::class, 'store'])
                 ->name('teams.store');
         });
 
-        Route::middleware('permissionCheck:leave team')->group(function () {
+        Route::middleware('PermissionCheck:leave team')->group(function () {
             Route::post('/leave/{user}', [TeamsController::class, 'leaveTeam'])
                 ->name('teams.leave');
         });
