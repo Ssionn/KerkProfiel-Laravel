@@ -16,7 +16,8 @@ class TeamsController extends Controller
     public function __construct(
         protected TeamsRepository $teamsRepository,
         protected UserRepository $userRepository
-    ) {}
+    ) {
+    }
 
     public function index(): View|RedirectResponse
     {
@@ -106,12 +107,10 @@ class TeamsController extends Controller
     {
         $user = $this->userRepository->findUserById($userId);
 
-        $team = $user->team;
-
         $user->guestify();
 
         return redirect()->route('dashboard')->with('toast', [
-            'message' => "{$team->name} verlaten",
+            'message' => "{$user->team->name} verlaten",
             'type' => 'success',
         ]);
     }

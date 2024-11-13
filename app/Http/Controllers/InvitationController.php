@@ -18,7 +18,8 @@ class InvitationController extends Controller
         protected UserRepository $userRepository,
         protected InvitationRepository $invitationRepository,
         protected RolesRepository $rolesRepository
-    ) {}
+    ) {
+    }
 
     public function sendInvite(InviteRequest $request): RedirectResponse
     {
@@ -113,8 +114,6 @@ class InvitationController extends Controller
 
         $user->associateTeamToUserByTeamId($invitation->team_id);
         $user->associateRoleToUser($memberRole->name);
-
-        $this->userRepository->makeUserActive($user->id);
 
         $invitation->update(['accepted_at' => now()]);
 
