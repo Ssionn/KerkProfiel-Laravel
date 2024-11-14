@@ -29,8 +29,6 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $loginRequest->session()->regenerate();
 
-            $this->userRepository->findUserById(Auth::user()->id);
-
             return redirect()->route('dashboard');
         }
 

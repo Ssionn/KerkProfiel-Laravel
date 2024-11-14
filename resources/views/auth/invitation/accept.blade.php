@@ -49,6 +49,12 @@
                             {{ __('Aanmelden') }}
                         </button>
                     </div>
+
+                    <div class="flex justify-end items-center mt-2 mb-2">
+                        <a href="{{ route('teams.acceptLogin', $invitation->token) }}" class="text-[10px] font-light underline">
+                            {{ __('Al een account?') }}
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>

@@ -14,11 +14,16 @@ Route::post('/login', [LoginController::class, 'authenticate'])->name('login.aut
 Route::get('/sign-up', [RegisterController::class, 'index'])->name('register');
 Route::post('/sign-up', [RegisterController::class, 'register'])->name('register.register');
 
-Route::get('/invite/{token}', [InvitationController::class, 'acceptInvite'])
+Route::get('/invite/register/{token}', [InvitationController::class, 'acceptInvite'])
     ->name('teams.accept');
-
-Route::post('/invite/{token}', [InvitationController::class, 'acceptInvitePost'])
+Route::post('/invite/register/{token}', [InvitationController::class, 'acceptInvitePost'])
     ->name('teams.acceptPost');
+
+Route::get('/invite/login/{token}', [InvitationController::class, 'acceptInviteLogin'])
+    ->name('teams.acceptLogin');
+Route::post('/invite/login/{token}', [InvitationController::class, 'acceptInviteLoginPost'])
+    ->name('teams.acceptPostLogin');
+
 
 Route::middleware('auth', 'UserActivityCheck')->group(function () {
     Route::get('/', function () {
