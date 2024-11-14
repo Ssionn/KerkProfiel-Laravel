@@ -1,4 +1,5 @@
 import './bootstrap';
+import './filepond';
 import Alpine from 'alpinejs';
 import 'filepond/dist/filepond.min.css';
 import 'flowbite';

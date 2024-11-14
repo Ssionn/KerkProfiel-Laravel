@@ -143,7 +143,7 @@
                     <x-modal modalId="leave-team-modal" method="POST"
                         modalHeader="{{ __('teams/team.team_members_table.table_dropdown.leave_team') }}"
                         modalButton="{{ __('teams/team.team_members_table.table_dropdown.leave_team_button') }}"
-                        formAction="{{ route('teams.leave', $user->id) }}">
+                        formAction="{{ route('teams.leave', auth()->user()->id) }}">
                         <div class="flex flex-col items-start space-y-2">
                             <label class="ml-1 text-sm font-semibold text-gray-600" for="remove_user_confirm">
                                 {{ __('teams/team.team_members_table.table_dropdown.leave_team_confirm') }}

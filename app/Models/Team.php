@@ -41,7 +41,7 @@ class Team extends Model implements HasMedia
 
     public function defaultTeamAvatar(): string
     {
-        if (! $this->avatar) {
+        if (! $this->getFirstMediaUrl('avatars')) {
             return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&background=random&color=random?size=128';
         }
 
