@@ -42,9 +42,8 @@ class InvitationController extends Controller
 
         Mail::to($request->invite_email)->queue(
             new InviteUser(
+                $team,
                 $invitation->invite_email,
-                $invitation->token,
-                $team->name,
                 route('teams.accept', $invitation->token)
             )
         );
