@@ -13,6 +13,8 @@ use Illuminate\View\View;
 
 class TeamsController extends Controller
 {
+    public const TEAMLEADER = 'teamleader';
+
     public function __construct(
         protected TeamsRepository $teamsRepository,
         protected UserRepository $userRepository
@@ -55,26 +57,26 @@ class TeamsController extends Controller
         $user = $this->userRepository->findUserById(Auth::user()->id);
 
         $user->associateTeamToUserByModel($team);
-        $user->associateRoleToUser('teamleader');
+        $user->associateRoleToUser(self::TEAMLEADER);
 
         $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();
 
         if ($tempFile) {
             try {
-                $filePath = storage_path('app/public/avatars/tmp/'.$request->team_avatar.'/'.$tempFile->filename);
+                $filePath = storage_path('app/public/avatars/tmp/' . $request->team_avatar . '/' . $tempFile->filename);
 
                 if (! file_exists($filePath)) {
-                    throw new \Exception('Team avatar file not found: '.$filePath);
+                    throw new \Exception('Team avatar file not found: ' . $filePath);
                 }
 
                 $team->addMedia($filePath)
-                    ->toMediaCollection('avatars', 'local');
+                     ->toMediaCollection('avatars', 'local');
 
-                Storage::disk('public')->deleteDirectory('avatars/tmp/'.$request->team_avatar);
+                Storage::disk('public')->deleteDirectory('avatars/tmp/' . $request->team_avatar);
 
                 $tempFile->delete();
             } catch (\Exception $e) {
-                throw new \Exception('Error uploading team avatar: '.$e->getMessage());
+                throw new \Exception('Error uploading team avatar: ' . $e->getMessage());
             }
         }
 
@@ -107,10 +109,12 @@ class TeamsController extends Controller
     {
         $user = $this->userRepository->findUserById($userId);
 
+        $team = $user->team;
+
         $user->guestify();
 
         return redirect()->route('dashboard')->with('toast', [
-            'message' => "{$user->team->name} verlaten",
+            'message' => "{$team->name} verlaten",
             'type' => 'success',
         ]);
     }
