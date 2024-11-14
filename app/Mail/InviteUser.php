@@ -2,29 +2,25 @@
 
 namespace App\Mail;
 
+use App\Models\Team;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class InviteUser extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
-    public $email;
-
-    public $inviteToken;
-
-    public $teamName;
-
-    public $inviteUrl;
-
-    public function __construct($email, $inviteToken, $teamName, $inviteUrl)
-    {
+    public function __construct(
+        public Team $team,
+        public $email,
+        public $inviteUrl
+    ) {
         $this->email = $email;
-        $this->inviteToken = $inviteToken;
-        $this->teamName = $teamName;
         $this->inviteUrl = $inviteUrl;
     }
 
@@ -51,8 +47,6 @@ class InviteUser extends Mailable
             markdown: 'emails.invite',
             with: [
                 'email' => $this->email,
-                'inviteToken' => $this->inviteToken,
-                'teamName' => $this->teamName,
                 'url' => $this->inviteUrl,
             ],
         );
@@ -65,6 +59,8 @@ class InviteUser extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return [
+            Attachment::fromUrl($this->team->defaultTeamAvatar())
+        ];
     }
 }
