@@ -27,7 +27,7 @@ class InvitationRepository
         return Invitation::where('email', $email)->first() ?? [];
     }
 
-    public function findInvitationByNullableToken(string $token): Invitation
+    public function findInvitationByNullToken(string $token): Invitation
     {
         return Invitation::where('token', $token)
             ->whereNull('accepted_at')
