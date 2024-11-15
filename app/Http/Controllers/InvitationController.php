@@ -94,7 +94,7 @@ class InvitationController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
 
-            if ($user->role->name === 'teamleader') {
+            if ($user->role->name === Roles::TEAMLEADER->value) {
                 $invitation->delete();
 
                 return redirect()->route('teams')->with('toast', [
