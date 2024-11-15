@@ -6,6 +6,7 @@ use App\Http\Requests\TeamCreationRequest;
 use App\Models\TemporaryImage;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
+use App\Enums\Roles;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -13,8 +14,6 @@ use Illuminate\View\View;
 
 class TeamsController extends Controller
 {
-    public const TEAMLEADER = 'teamleader';
-
     public function __construct(
         protected TeamsRepository $teamsRepository,
         protected UserRepository $userRepository
@@ -57,7 +56,7 @@ class TeamsController extends Controller
         $user = $this->userRepository->findUserById(Auth::user()->id);
 
         $user->associateTeamToUserByModel($team);
-        $user->associateRoleToUser(self::TEAMLEADER);
+        $user->associateRoleToUser(Roles::TEAMLEADER->value);
 
         $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();
 
@@ -90,7 +89,7 @@ class TeamsController extends Controller
     {
         $user = $this->userRepository->findUserById($userId);
 
-        if ($user->role->name === 'teamleader') {
+        if ($user->role->name === Roles::TEAMLEADER->value) {
             return redirect()->route('teams')->with('toast', [
                 'message' => 'Je kan geen teamleader verwijderen',
                 'type' => 'error',

@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Roles;
 use App\Http\Requests\AcceptInviteRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\InviteRequest;
 use App\Mail\InviteUser;
+use App\Models\Invitation;
 use App\Repositories\InvitationRepository;
 use App\Repositories\RolesRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 
 class InvitationController extends Controller
 {
@@ -46,17 +49,16 @@ class InvitationController extends Controller
         ]);
     }
 
-    public function acceptInviteLogin(string $token)
+    public function acceptInviteLogin(string $token): View
     {
         $invitation = $this->checkInvitationExists($token);
 
         return view('auth.invitation.login', ['invitation' => $invitation]);
     }
 
-    public function acceptInviteLoginPost(string $token, LoginRequest $loginRequest)
+    public function acceptInviteLoginPost(string $token, LoginRequest $loginRequest): RedirectResponse
     {
         $invitation = $this->checkInvitationExists($token);
-        $memberRole = $this->rolesRepository->findMemberRole();
 
         $credentials = $loginRequest->validated();
 
@@ -69,7 +71,7 @@ class InvitationController extends Controller
             }
 
             $user->associateTeamToUserByTeamId($invitation->team_id);
-            $user->associateRoleToUser($memberRole->name);
+            $user->associateRoleToUser(Roles::MEMBER->value);
 
             $invitation->update(['accepted_at' => now()]);
 
@@ -85,14 +87,14 @@ class InvitationController extends Controller
         ]);
     }
 
-    public function acceptInvite(string $token)
+    public function acceptInvite(string $token): RedirectResponse
     {
         $invitation = $this->checkInvitationExists($token);
 
         if (Auth::check()) {
             $user = Auth::user();
 
-            if ($user->role->name === 'teamleader') {
+            if ($user->role->name === Roles::TEAMLEADER->value) {
                 $invitation->delete();
 
                 return redirect()->route('teams')->with('toast', [
@@ -102,7 +104,7 @@ class InvitationController extends Controller
             }
 
             $user->associateTeamToUserByTeamId($invitation->team_id);
-            $user->associateRoleToUser('member');
+            $user->associateRoleToUser(Roles::MEMBER->value);
 
             $invitation->update(['accepted_at' => now()]);
 
@@ -118,20 +120,9 @@ class InvitationController extends Controller
         return view('auth.invitation.accept', ['invitation' => $invitation]);
     }
 
-    public function acceptInvitePost(string $token, AcceptInviteRequest $request)
+    public function acceptInvitePost(string $token, AcceptInviteRequest $request): RedirectResponse
     {
-        $invitation = $this->invitationRepository->findInvitationByNullableToken($token);
-        $memberRole = $this->rolesRepository->findMemberRole();
-
-        if ($invitation->accepted_at !== null) {
-            $invitation->delete();
-
-            return redirect()->route('teams.accept', ['token' => $token])
-                ->with('toast', [
-                    'message' => 'Deze uitnodiging is niet meer geldig',
-                    'type' => 'error',
-                ]);
-        }
+        $invitation = $this->checkInvitationExists($token);
 
         $user = $this->userRepository->createUser(
             $request->username,
@@ -140,7 +131,7 @@ class InvitationController extends Controller
         );
 
         $user->associateTeamToUserByTeamId($invitation->team_id);
-        $user->associateRoleToUser($memberRole->name);
+        $user->associateRoleToUser(Roles::MEMBER->value);
 
         $invitation->update(['accepted_at' => now()]);
 
@@ -153,7 +144,7 @@ class InvitationController extends Controller
             ]);
     }
 
-    protected function checkInvitationExists(string $token)
+    protected function checkInvitationExists(string $token): RedirectResponse|Invitation
     {
         $invitation = $this->invitationRepository->findInvitationByNullToken($token);
 
