@@ -8,11 +8,13 @@ use App\Http\Controllers\TeamsController;
 use App\Services\ImageHolder;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/login', [LoginController::class, 'index'])->name('login');
-Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'index'])->name('login');
+    Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate');
 
-Route::get('/sign-up', [RegisterController::class, 'index'])->name('register');
-Route::post('/sign-up', [RegisterController::class, 'register'])->name('register.register');
+    Route::get('/sign-up', [RegisterController::class, 'index'])->name('register');
+    Route::post('/sign-up', [RegisterController::class, 'register'])->name('register.register');
+});
 
 Route::get('/invite/register/{token}', [InvitationController::class, 'acceptInvite'])
     ->name('teams.accept');
