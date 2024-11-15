@@ -6,6 +6,7 @@ use App\Http\Requests\TeamCreationRequest;
 use App\Models\TemporaryImage;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
+use App\Enums\Roles;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +17,8 @@ class TeamsController extends Controller
     public function __construct(
         protected TeamsRepository $teamsRepository,
         protected UserRepository $userRepository
-    ) {}
+    ) {
+    }
 
     public function index(): View|RedirectResponse
     {
@@ -28,14 +30,10 @@ class TeamsController extends Controller
 
         $users = $team->users()
             ->when(request('role_type'), function ($query, $roleType) {
-                $query->whereHas('role', function ($query) use ($roleType) {
-                    $query->where('name', $roleType);
-                });
+                $query->whereHas('role', fn ($query) => $query->where('name', $roleType));
             })
-            ->get()
-            ->sort(function ($user) {
-                return $user->role->name !== 'teamleader';
-            });
+            ->with('role')
+            ->paginate(9);
 
         return view('teams.index', [
             'team' => $team,
@@ -58,7 +56,7 @@ class TeamsController extends Controller
         $user = $this->userRepository->findUserById(Auth::user()->id);
 
         $user->associateTeamToUserByModel($team);
-        $user->associateRoleToUser('teamleader');
+        $user->associateRoleToUser(Roles::TEAMLEADER->value);
 
         $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();
 
@@ -71,7 +69,7 @@ class TeamsController extends Controller
                 }
 
                 $team->addMedia($filePath)
-                    ->toMediaCollection('avatars', 'local');
+                     ->toMediaCollection('avatars', 'local');
 
                 Storage::disk('public')->deleteDirectory('avatars/tmp/' . $request->team_avatar);
 
@@ -82,7 +80,7 @@ class TeamsController extends Controller
         }
 
         return redirect()->route('teams')->with('toast', [
-            'message' => "Team is aangemaakt",
+            'message' => 'Team is aangemaakt',
             'type' => 'success',
         ]);
     }
@@ -91,9 +89,9 @@ class TeamsController extends Controller
     {
         $user = $this->userRepository->findUserById($userId);
 
-        if ($user->role->name === 'teamleader') {
+        if ($user->role->name === Roles::TEAMLEADER->value) {
             return redirect()->route('teams')->with('toast', [
-                'message' => "Je kan geen teamleader verwijderen",
+                'message' => 'Je kan geen teamleader verwijderen',
                 'type' => 'error',
             ]);
         }
@@ -102,6 +100,20 @@ class TeamsController extends Controller
 
         return redirect()->route('teams')->with('toast', [
             'message' => "{$user->username} verwijderd",
+            'type' => 'success',
+        ]);
+    }
+
+    public function leaveTeam(int $userId): RedirectResponse
+    {
+        $user = $this->userRepository->findUserById($userId);
+
+        $team = $user->team;
+
+        $user->guestify();
+
+        return redirect()->route('dashboard')->with('toast', [
+            'message' => "{$team->name} verlaten",
             'type' => 'success',
         ]);
     }

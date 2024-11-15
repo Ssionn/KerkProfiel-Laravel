@@ -29,10 +29,6 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $loginRequest->session()->regenerate();
 
-            $user = $this->userRepository->findUserById(Auth::user()->id);
-
-            $this->userRepository->makeUserActive($user->id);
-
             return redirect()->route('dashboard');
         }
 
@@ -43,9 +39,8 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        $user = $this->userRepository->findUserById(Auth::user()->id);
-
-        $this->userRepository->makeUserInactive($user->id);
+        $this->userRepository->findUserById(Auth::user()->id);
+        $this->userRepository->makeUserInactive(Auth::user()->id);
 
         Auth::logout();
 

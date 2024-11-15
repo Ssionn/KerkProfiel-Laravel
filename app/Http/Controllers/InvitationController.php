@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Roles;
 use App\Http\Requests\AcceptInviteRequest;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\InviteRequest;
 use App\Mail\InviteUser;
+use App\Models\Invitation;
 use App\Repositories\InvitationRepository;
 use App\Repositories\RolesRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 
 class InvitationController extends Controller
 {
@@ -18,19 +22,11 @@ class InvitationController extends Controller
         protected UserRepository $userRepository,
         protected InvitationRepository $invitationRepository,
         protected RolesRepository $rolesRepository
-    ) {}
+    ) {
+    }
 
     public function sendInvite(InviteRequest $request): RedirectResponse
     {
-        $existingInvitation = $this->invitationRepository->findInvitationByEmail($request->invite_email);
-
-        if ($existingInvitation) {
-            return redirect()->back()->with('toast', [
-                'message' => 'Deze gebruiker heeft al een uitnodiging voor dit team',
-                'type' => 'error',
-            ]);
-        }
-
         $team = Auth::user()->team;
 
         $invitation = $this->invitationRepository->createInvitation(
@@ -41,9 +37,8 @@ class InvitationController extends Controller
 
         Mail::to($request->invite_email)->queue(
             new InviteUser(
+                $team,
                 $invitation->invite_email,
-                $invitation->token,
-                $team->name,
                 route('teams.accept', $invitation->token)
             )
         );
@@ -54,29 +49,62 @@ class InvitationController extends Controller
         ]);
     }
 
-    public function acceptInvite(string $token)
+    public function acceptInviteLogin(string $token): View
     {
-        $invitation = $this->invitationRepository->findInvitationByNullableToken($token);
+        $invitation = $this->checkInvitationExists($token);
 
-        if (! $invitation) {
-            return redirect()->route('teams')->with('toast', [
-                'message' => 'Deze uitnodiging bestaat niet',
-                'type' => 'error',
+        return view('auth.invitation.login', ['invitation' => $invitation]);
+    }
+
+    public function acceptInviteLoginPost(string $token, LoginRequest $loginRequest): RedirectResponse
+    {
+        $invitation = $this->checkInvitationExists($token);
+
+        $credentials = $loginRequest->validated();
+
+        if (Auth::attempt($credentials)) {
+            $loginRequest->session()->regenerate();
+            $user = Auth::user();
+
+            if ($user->team_id !== null) {
+                $user->guestify();
+            }
+
+            $user->associateTeamToUserByTeamId($invitation->team_id);
+            $user->associateRoleToUser(Roles::MEMBER->value);
+
+            $invitation->update(['accepted_at' => now()]);
+
+            return redirect()->route('dashboard')->with('toast', [
+                'message' => 'Je bent uitgenodigd om lid te worden van ' . $invitation->team->name,
+                'type' => 'success',
             ]);
         }
+
+        return redirect()->route('login')->with('toast', [
+            'message' => 'Deze uitnodiging is niet meer geldig',
+            'type' => 'error',
+        ]);
+    }
+
+    public function acceptInvite(string $token): RedirectResponse
+    {
+        $invitation = $this->checkInvitationExists($token);
 
         if (Auth::check()) {
             $user = Auth::user();
 
-            if ($user->role->name === 'teamleader') {
+            if ($user->role->name === Roles::TEAMLEADER->value) {
+                $invitation->delete();
+
                 return redirect()->route('teams')->with('toast', [
-                    'message' => "Je kunt geen uitnodiging accepteren als je teamleader bent",
+                    'message' => 'Je kunt geen uitnodiging accepteren als je teamleader bent',
                     'type' => 'error',
                 ]);
             }
 
             $user->associateTeamToUserByTeamId($invitation->team_id);
-            $user->associateRoleToUser('member');
+            $user->associateRoleToUser(Roles::MEMBER->value);
 
             $invitation->update(['accepted_at' => now()]);
 
@@ -85,25 +113,16 @@ class InvitationController extends Controller
             return redirect()->route('teams')
                 ->with('toast', [
                     'message' => "Je bent toegevoegd aan {$authUserTeam->name}",
-                    'type' => 'success'
+                    'type' => 'success',
                 ]);
         }
 
         return view('auth.invitation.accept', ['invitation' => $invitation]);
     }
 
-    public function acceptInvitePost(string $token, AcceptInviteRequest $request)
+    public function acceptInvitePost(string $token, AcceptInviteRequest $request): RedirectResponse
     {
-        $invitation = $this->invitationRepository->findInvitationByNullableToken($token);
-        $memberRole = $this->rolesRepository->findMemberRole();
-
-        if ($invitation->accepted_at !== null) {
-            return redirect()->route('teams.accept', ['token' => $token])
-                ->with('toast', [
-                    'message' => 'Deze uitnodiging is niet meer geldig',
-                    'type' => 'error',
-                ]);
-        }
+        $invitation = $this->checkInvitationExists($token);
 
         $user = $this->userRepository->createUser(
             $request->username,
@@ -112,9 +131,7 @@ class InvitationController extends Controller
         );
 
         $user->associateTeamToUserByTeamId($invitation->team_id);
-        $user->associateRoleToUser($memberRole->name);
-
-        $this->userRepository->makeUserActive($user->id);
+        $user->associateRoleToUser(Roles::MEMBER->value);
 
         $invitation->update(['accepted_at' => now()]);
 
@@ -123,7 +140,23 @@ class InvitationController extends Controller
         return redirect()->route('dashboard')
             ->with('toast', [
                 'message' => "Je bent toegevoegd aan {$user->team->name}",
-                'type' => 'success'
+                'type' => 'success',
             ]);
+    }
+
+    protected function checkInvitationExists(string $token): RedirectResponse|Invitation
+    {
+        $invitation = $this->invitationRepository->findInvitationByNullToken($token);
+
+        if (!$invitation) {
+            $invitation->delete();
+
+            return redirect()->route('login')->with('toast', [
+                'message' => 'Deze uitnodiging bestaat niet',
+                'type' => 'error',
+            ]);
+        }
+
+        return $invitation;
     }
 }

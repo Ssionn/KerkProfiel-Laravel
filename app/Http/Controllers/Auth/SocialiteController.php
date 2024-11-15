@@ -10,7 +10,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller
 {
-    const GOOGLE = 'google';
+    public const GOOGLE = 'google';
 
     public function __construct(
         protected UserRepository $userRepository
@@ -51,8 +51,6 @@ class SocialiteController extends Controller
                     'team_id' => null,
                 ]);
 
-                $this->userRepository->makeUserActive($dbUser->id);
-
                 Auth::login($dbUser);
 
                 return redirect()->route('dashboard');
@@ -64,8 +62,6 @@ class SocialiteController extends Controller
                 'provider_token' => $socialiteUser->token,
             ]);
 
-            $this->userRepository->makeUserActive($dbUser->id);
-
             Auth::login($dbUser);
 
             return redirect()->route('dashboard');
@@ -76,8 +72,6 @@ class SocialiteController extends Controller
             'provider_id' => $socialiteUser->id,
             'provider_token' => $socialiteUser->token,
         ]);
-
-        $this->userRepository->makeUserActive($user->id);
 
         Auth::login($user);
 

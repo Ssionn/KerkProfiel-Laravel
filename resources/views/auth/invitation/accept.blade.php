@@ -3,11 +3,12 @@
         <div class="flex flex-col w-full p-2 bg-white rounded-lg shadow-lg md:p-0 sm:w-3/4 md:w-2/4 xl:w-1/3">
             <div>
                 <h1 class="text-md font-medium text-center mt-5">
-                    {{ __("Je bent uitgenodigd om lid te worden!") }}
+                    {{ __('Je bent uitgenodigd om lid te worden!') }}
                 </h1>
             </div>
             <div class="px-2">
-                <form action="{{ route('teams.acceptPost', $invitation->token) }}" method="POST" class="p-2 space-y-2">
+                <form action="{{ route('teams.acceptPost', $invitation->token) }}" method="POST" class="p-2 space-y-2"
+                    name="invitation-form">
                     @csrf
                     <div class="flex flex-col items-start space-y-2">
                         <label class="ml-1 text-xs font-semibold text-gray-600" for="username">
@@ -47,6 +48,12 @@
                             class="w-full py-1 text-sm font-semibold text-center text-white rounded-lg bg-midnight-blue">
                             {{ __('Aanmelden') }}
                         </button>
+                    </div>
+
+                    <div class="flex justify-end items-center mt-2 mb-2">
+                        <a href="{{ route('teams.acceptLogin', $invitation->token) }}" class="text-[10px] font-light underline">
+                            {{ __('Al een account?') }}
+                        </a>
                     </div>
                 </form>
             </div>

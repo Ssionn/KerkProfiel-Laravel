@@ -6,6 +6,7 @@ return [
             'create team',
             'edit team',
             'delete team',
+            'disband team',
             'add people',
             'remove people',
             'create survey',
@@ -16,6 +17,7 @@ return [
             'view teams',
             'edit team',
             'delete team',
+            'disband team',
             'add people',
             'remove people',
             'view surveys',
@@ -25,6 +27,7 @@ return [
         ],
         'member' => [
             'view teams',
+            'leave team',
             'view surveys',
             'take surveys',
         ],
