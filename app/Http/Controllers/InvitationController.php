@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Roles;
 use App\Http\Requests\AcceptInviteRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\InviteRequest;
@@ -58,7 +59,6 @@ class InvitationController extends Controller
     public function acceptInviteLoginPost(string $token, LoginRequest $loginRequest): RedirectResponse
     {
         $invitation = $this->checkInvitationExists($token);
-        $memberRole = $this->rolesRepository->findMemberRole();
 
         $credentials = $loginRequest->validated();
 
@@ -71,7 +71,7 @@ class InvitationController extends Controller
             }
 
             $user->associateTeamToUserByTeamId($invitation->team_id);
-            $user->associateRoleToUser($memberRole->name);
+            $user->associateRoleToUser(Roles::MEMBER->value);
 
             $invitation->update(['accepted_at' => now()]);
 
@@ -104,7 +104,7 @@ class InvitationController extends Controller
             }
 
             $user->associateTeamToUserByTeamId($invitation->team_id);
-            $user->associateRoleToUser('member');
+            $user->associateRoleToUser(Roles::MEMBER->value);
 
             $invitation->update(['accepted_at' => now()]);
 
@@ -123,7 +123,6 @@ class InvitationController extends Controller
     public function acceptInvitePost(string $token, AcceptInviteRequest $request): RedirectResponse
     {
         $invitation = $this->checkInvitationExists($token);
-        $memberRole = $this->rolesRepository->findMemberRole();
 
         $user = $this->userRepository->createUser(
             $request->username,
@@ -132,7 +131,7 @@ class InvitationController extends Controller
         );
 
         $user->associateTeamToUserByTeamId($invitation->team_id);
-        $user->associateRoleToUser($memberRole->name);
+        $user->associateRoleToUser(Roles::MEMBER->value);
 
         $invitation->update(['accepted_at' => now()]);
 
