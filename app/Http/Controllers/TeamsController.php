@@ -89,7 +89,7 @@ class TeamsController extends Controller
     {
         $user = $this->userRepository->findUserById($userId);
 
-        if ($user->role->name === 'teamleader') {
+        if ($user->role->name === Roles::TEAMLEADER->value) {
             return redirect()->route('teams')->with('toast', [
                 'message' => 'Je kan geen teamleader verwijderen',
                 'type' => 'error',
