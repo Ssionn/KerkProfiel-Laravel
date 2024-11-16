@@ -54,13 +54,12 @@ test('team owner can remove a user from team', function () {
     $userId = $userToRemove->id;
 
     $response = $this->actingAs($team->owner)
-        ->delete("/teams/{$userId}/remove", [
-            '_token' => csrf_token(),
-        ]);
+        ->from('/teams')
+        ->delete("/teams/{$userToRemove->id}/remove");
 
-    expect($response->getStatusCode())->toBe(200);
+    expect($response->getStatusCode())->toBe(302);
 
-    $response->assertStatus(200);
+    $response->assertRedirect('/teams');
 
     assertDatabaseMissing('teams', [
         'id' => $teamId,
@@ -80,9 +79,8 @@ test('non-owner cannot remove user from team', function () {
         ->first();
 
     $response = $this->actingAs($regularUser)
-        ->delete("/teams/{$userToRemove->id}/remove", [
-            '_token' => csrf_token(),
-        ]);
+        ->from('/teams')
+        ->delete("/teams/{$userToRemove->id}/remove");
 
     expect($response->getStatusCode())->toBe(403);
 
