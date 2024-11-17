@@ -22,8 +22,7 @@ class InvitationController extends Controller
         protected UserRepository $userRepository,
         protected InvitationRepository $invitationRepository,
         protected RolesRepository $rolesRepository
-    ) {
-    }
+    ) {}
 
     public function sendInvite(InviteRequest $request): RedirectResponse
     {
