@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Roles;
 use App\Http\Requests\TeamCreationRequest;
 use App\Models\TemporaryImage;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
-use App\Enums\Roles;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -17,12 +17,11 @@ class TeamsController extends Controller
     public function __construct(
         protected TeamsRepository $teamsRepository,
         protected UserRepository $userRepository
-    ) {
-    }
+    ) {}
 
     public function index(): View|RedirectResponse
     {
-        $team = Auth::user()->load(['role.permissions', 'team'])->team;
+        $team = Auth::user()->team;
 
         if (! $team) {
             return redirect()->route('teams.create');
@@ -30,7 +29,7 @@ class TeamsController extends Controller
 
         $users = $team->users()
             ->when(request('role_type'), function ($query, $roleType) {
-                $query->whereHas('role', fn ($query) => $query->where('name', $roleType));
+                $query->whereHas('role', fn($query) => $query->where('name', $roleType));
             })
             ->with('role')
             ->paginate(9);
@@ -69,7 +68,7 @@ class TeamsController extends Controller
                 }
 
                 $team->addMedia($filePath)
-                     ->toMediaCollection('avatars', 'local');
+                    ->toMediaCollection('avatars', 'local');
 
                 Storage::disk('public')->deleteDirectory('avatars/tmp/' . $request->team_avatar);
 
