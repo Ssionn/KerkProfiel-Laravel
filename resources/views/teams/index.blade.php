@@ -83,18 +83,14 @@
                             <!-- Status -->
                             <div class="flex items-center justify-center" style="padding-bottom: 0.6rem;">
                                 <span
-                                    class="inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium
-                                    {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}"
-                                    style="margin-top: -2px; margin-left: -20px; padding-left: 0.25rem; padding-right: 0.25rem;">
+                                    class="inline-flex items-center px-[0.25rem] py-0.5 rounded-full text-xs font-medium mt-[2px] ml-[-20px] 
+                                    {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                     {{ $user->is_active
                                         ? __('teams/team.team_members_table.table_user_activity.active')
                                         : __('teams/team.team_members_table.table_user_activity.inactive') }}
                                 </span>
                             </div>
                         </div>
-
-
-
                     </div>
                 @endforeach
             </div>
