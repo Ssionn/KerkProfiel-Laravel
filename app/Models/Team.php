@@ -29,6 +29,11 @@ class Team extends Model implements HasMedia
         return $this->hasMany(Role::class);
     }
 
+    public function surveys(): HasMany
+    {
+        return $this->hasMany(Survey::class);
+    }
+
     public function owner(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
@@ -42,7 +47,7 @@ class Team extends Model implements HasMedia
     public function defaultTeamAvatar(): string
     {
         if (! $this->getFirstMediaUrl('avatars')) {
-            return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&background=random&color=random?size=128';
+            return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=random&color=random?size=128';
         }
 
         return $this->getFirstMediaUrl('avatars');

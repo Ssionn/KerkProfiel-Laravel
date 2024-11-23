@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\SurveysController;
 use App\Http\Controllers\TeamsController;
 use App\Services\ImageHolder;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +53,11 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
             ->name('team.members.destroy');
 
         Route::post('uploads/process', [ImageHolder::class, 'store']);
+    });
+
+    Route::prefix('surveys')->group(function () {
+        Route::get('/', [SurveysController::class, 'index'])->name('surveys');
+        Route::post('/', [SurveysController::class, 'store'])->name('surveys.store');
     });
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

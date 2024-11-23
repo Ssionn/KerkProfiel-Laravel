@@ -29,6 +29,12 @@
                 <x-sidebar-tab href="{{ route('teams') }}" active="{{ request()->routeIs('teams') }}" title="Teams"
                     icon="heroicon-s-users" class="flex items-center w-full" aria-label="Teams" />
             @endcan
+
+            @can('create survey')
+                <x-sidebar-tab href="{{ route('surveys') }}" active="{{ request()->routeIs('surveys') }}"
+                    title="Vragenlijsten" icon="heroicon-s-question-mark-circle" class="flex items-center w-full"
+                    aria-label="Vragenlijsten" />
+            @endcan
         </ul>
     </div>
 

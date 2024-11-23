@@ -16,4 +16,9 @@
             </button>
         </form>
     @endif
+
+    <div class="flex sm:flex-row flex-col items-start sm:space-x-4 space-x-0 space-y-4 sm:space-y-0 mt-2">
+        <x-open-surveys />
+        <x-completed-surveys />
+    </div>
 </x-app-layout>

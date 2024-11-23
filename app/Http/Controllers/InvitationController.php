@@ -22,8 +22,7 @@ class InvitationController extends Controller
         protected UserRepository $userRepository,
         protected InvitationRepository $invitationRepository,
         protected RolesRepository $rolesRepository
-    ) {
-    }
+    ) {}
 
     public function sendInvite(InviteRequest $request): RedirectResponse
     {
@@ -87,7 +86,7 @@ class InvitationController extends Controller
         ]);
     }
 
-    public function acceptInvite(string $token): RedirectResponse
+    public function acceptInvite(string $token): View|RedirectResponse
     {
         $invitation = $this->checkInvitationExists($token);
 
