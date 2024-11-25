@@ -14,6 +14,9 @@ return new class extends Migration
     {
         Schema::create('faqs', function (Blueprint $table) {
             $table->id();
+            $table->string('question');
+            $table->text('answer');
+            $table->foreignIdFor(Role::class, 'role_id');
             $table->timestamps();
         });
     }

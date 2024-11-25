@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             UsersSeeder::class,
             TeamsSeeder::class,
             RolesSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }

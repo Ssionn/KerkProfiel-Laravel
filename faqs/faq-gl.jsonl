@@ -1,0 +1,42 @@
+[
+    {
+        "question": "Hoe krijg ik toegang tot het dashboard?",
+        "answer": "Leg uit hoe groepsleiders kunnen inloggen op het dashboard en welke stappen ze moeten volgen om toegang te krijgen tot de gegevens van hun groep."
+    },
+    {
+        "question": "Wat kan ik doen met het dashboard?",
+        "answer": "Beschrijf de belangrijkste functies van het dashboard, zoals het bekijken van resultaten, het gebruik van analysetools, en het genereren van rapporten."
+    },
+    {
+        "question": "Hoe kan ik de resultaten van mijn members bekijken?",
+        "answer": "Geef gedetailleerde uitleg over waar en hoe de groepsleider de testresultaten van de individuele gebruikers kan inzien."
+    },
+    {
+        "question": "Hoe werken de analysetools in het dashboard?",
+        "answer": "Geef een overzicht van de beschikbare analysetools en hoe de groepsleider deze kan gebruiken om de resultaten van zijn members te analyseren."
+    },
+    {
+        "question": "Kan ik de resultaten exporteren?",
+        "answer": "Beantwoord of het mogelijk is om resultaten of analyses te exporteren, bijvoorbeeld naar een Excel-bestand of PDF."
+    },
+    {
+        "question": "Kan ik notities of opmerkingen toevoegen aan de resultaten van mijn members?",
+        "answer": "Beschrijf of en hoe de groepsleider notities of feedback kan toevoegen bij de resultaten van individuele gebruikers."
+    },
+    {
+        "question": "Hoe kan ik mijn groep beheren?",
+        "answer": "Leg uit hoe de groepsleider members kan toevoegen of verwijderen, en hoe ze de groepsinstellingen kunnen aanpassen."
+    },
+    {
+        "question": "Hoe vaak worden de resultaten bijgewerkt in het dashboard?",
+        "answer": "Geef informatie over de frequentie waarmee de resultaten in het dashboard worden geüpdatet, bijvoorbeeld in real-time of dagelijks."
+    },
+    {
+        "question": "Kan ik meldingen ontvangen wanneer mijn members een test afronden?",
+        "answer": "Beantwoord of er een optie is om meldingen te ontvangen, en hoe de groepsleider deze meldingen kan instellen."
+    },
+    {
+        "question": "Wat moet ik doen als ik technische problemen ondervind met het dashboard?",
+        "answer": "Bied een stappenplan of contactopties aan voor het geval de groepsleider technische problemen ervaart met het dashboard of de analysetools."
+    }
+]

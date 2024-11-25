@@ -29,6 +29,11 @@
                 <x-sidebar-tab href="{{ route('teams') }}" active="{{ request()->routeIs('teams') }}" title="Teams"
                     icon="heroicon-s-users" class="flex items-center w-full" aria-label="Teams" />
             @endcan
+
+            <div class="my-4 border-t border-gray-200 dark:border-gray-700"></div>
+
+            <x-sidebar-tab href="{{ route('faq') }}" active="{{ request()->routeIs('faq') }}"
+                title="FAQ" icon="mdi-head-question" class="flex items-center w-full" aria-label="FAQ" />
         </ul>
     </div>
 
