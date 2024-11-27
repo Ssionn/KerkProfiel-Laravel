@@ -32,10 +32,9 @@
         </ul>
     </div>
 
-    <div class="absolute bottom-4 left-4" :class="open ? 'w-52' : 'justify-center hover:text-white'">
+    <div class="absolute bottom-2 left-2" :class="open ? 'w-56' : 'justify-center hover:text-white'">
         <ul :class="open ? 'w-full' : ''">
-            <x-sidebar-tab href="" title="Settings" icon="heroicon-s-cog-6-tooth"
-                class="flex items-center w-full" aria-label="Settings" />
+            <x-profile-dropdown active="{{ request()->routeIs('settings') }}" />
         </ul>
     </div>
 </aside>

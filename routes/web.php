@@ -56,7 +56,7 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
     });
 
     Route::prefix('settings')->group(function () {
-        Route::get('/', [SettingsController::class, 'index'])->name('settings.index');
+        Route::get('/', [SettingsController::class, 'index'])->name('settings');
         Route::post('/profile/update', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
         Route::post('/password/update', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
         Route::post('/account/delete', [SettingsController::class, 'deleteAccount'])->name('settings.account.delete');
