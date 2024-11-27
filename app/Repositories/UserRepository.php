@@ -18,6 +18,38 @@ class UserRepository
             'password' => Hash::make($password),
         ]);
 
+        $user->guestify();
+
+        return $user;
+    }
+
+    public function findUserById(int $id): User
+    {
+        return User::find($id);
+    }
+
+    public function findUserByEmail(string $email): User
+    {
+        return User::where('email', $email)->first();
+    }
+
+    public function makeUserActive(int $id): User
+    {
+        $user = $this->findUserById($id);
+
+        $user->is_active = true;
+
+        $user->save();
+
+        return $user;
+    }
+
+    public function makeUserInactive(int $id): User
+    {
+        $user = $this->findUserById($id);
+
+        $user->is_active = false;
+
         $user->save();
 
         return $user;

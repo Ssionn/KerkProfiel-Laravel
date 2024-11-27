@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'PermissionCheck' => \App\Http\Middleware\PermissionCheck::class,
+            'UserActivityCheck' => \App\Http\Middleware\UserActivityCheck::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

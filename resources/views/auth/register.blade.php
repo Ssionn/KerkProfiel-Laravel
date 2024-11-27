@@ -6,7 +6,7 @@
             </div>
             <div class="p-2">
                 <div class="inline-flex items-center justify-center w-full space-x-2">
-                    <a href="#" class="w-full">
+                    <a href="/auth/google/redirect" class="w-full">
                         <button
                             class="inline-flex justify-center items-center bg-white border-[1px] border-gray-200 px-1 w-full py-1 rounded-full shadow-sm">
                             <img src="{{ asset('storage/images/socialite-icons/google.svg') }}"
@@ -17,7 +17,8 @@
                         </button>
                     </a>
                 </div>
-                <form action="{{ route('register.register') }}" method="POST" class="p-2 mt-2 space-y-2">
+                <form action="{{ route('register.register') }}" method="POST" class="p-2 mt-2 space-y-2"
+                    name="register-form">
                     @csrf
 
                     <div class="flex flex-col items-start space-y-2">

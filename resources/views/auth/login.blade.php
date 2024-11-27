@@ -17,7 +17,17 @@
                         </button>
                     </a>
                 </div>
-                <form action="{{ route('login.authenticate') }}" method="POST" class="p-2 mt-2 space-y-2">
+
+                <div class="flex justify-center mt-2">
+                    @error('email')
+                        <p class="text-xs text-red-600">
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </div>
+
+                <form action="{{ route('login.authenticate') }}" method="POST" class="px-2 mt-2 space-y-2"
+                    name="login-form">
                     @csrf
 
                     <div class="flex flex-col items-start space-y-2">
@@ -35,12 +45,13 @@
                             class="w-full p-2 rounded-lg text-xs placeholder:text-gray-200 placeholder:text-sm border-[1px] focus:ring-lavender-purple" />
                     </div>
                     <div class="mt-2">
-                        <button type="submit" class="w-full py-1 text-sm font-semibold text-center text-white rounded-lg bg-midnight-blue">
+                        <button type="submit"
+                            class="w-full py-1 text-sm font-semibold text-center text-white rounded-lg bg-midnight-blue">
                             {{ __('Inloggen') }}
                         </button>
                     </div>
                 </form>
-                <div class="flex justify-end px-2">
+                <div class="flex justify-end px-2 mt-2">
                     <a href="{{ route('register') }}" class="text-[10px] font-light underline">
                         {{ __('Geen account?') }}
                     </a>

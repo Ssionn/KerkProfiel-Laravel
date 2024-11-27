@@ -4,13 +4,18 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller
 {
-    const GOOGLE = 'google';
+    public const GOOGLE = 'google';
+
+    public function __construct(
+        protected UserRepository $userRepository
+    ) {
+    }
 
     public function redirect()
     {
@@ -31,10 +36,10 @@ class SocialiteController extends Controller
             'provider_id' => $socialiteUser->id,
         ])->first();
 
-        if (!$user) {
+        if (! $user) {
             $dbUser = User::where('email', $socialiteUser->getEmail())->first();
 
-            if (!$dbUser) {
+            if (! $dbUser) {
                 $dbUser = User::create([
                     'username' => $socialiteUser->getName(),
                     'email' => $socialiteUser->getEmail(),
@@ -42,9 +47,12 @@ class SocialiteController extends Controller
                     'provider_id' => $socialiteUser->id,
                     'provider_token' => $socialiteUser->token,
                     'email_verified_at' => now(),
+                    'role_id' => 4,
+                    'team_id' => null,
                 ]);
 
                 Auth::login($dbUser);
+
                 return redirect()->route('dashboard');
             }
 
@@ -55,6 +63,7 @@ class SocialiteController extends Controller
             ]);
 
             Auth::login($dbUser);
+
             return redirect()->route('dashboard');
         }
 
@@ -65,6 +74,7 @@ class SocialiteController extends Controller
         ]);
 
         Auth::login($user);
+
         return redirect()->route('dashboard');
     }
 }

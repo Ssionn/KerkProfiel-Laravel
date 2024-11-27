@@ -3,12 +3,48 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Team extends Model
+class Team extends Model implements HasMedia
 {
-    public function users(): BelongsToMany
+    use InteractsWithMedia;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'avatar',
+        'user_id',
+    ];
+
+    public function users(): HasMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasMany(User::class, 'team_id');
+    }
+
+    public function roles(): HasMany
+    {
+        return $this->hasMany(Role::class);
+    }
+
+    public function owner(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class);
+    }
+
+    public function defaultTeamAvatar(): string
+    {
+        if (! $this->getFirstMediaUrl('avatars')) {
+            return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&background=random&color=random?size=128';
+        }
+
+        return $this->getFirstMediaUrl('avatars');
     }
 }
