@@ -36,7 +36,7 @@ class UsersSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            User::created([
+            User::create([
                 'username' => $user['username'],
                 'email' => $user['email'],
                 'password' => $user['password'],

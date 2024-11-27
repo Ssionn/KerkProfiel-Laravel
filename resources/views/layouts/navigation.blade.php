@@ -29,7 +29,7 @@
 
     <div class="absolute bottom-4 left-4" :class="open ? 'w-52' : 'justify-center hover:text-white'">
         <ul :class="open ? 'w-full' : ''">
-            <x-sidebar-tab href="" title="Settings" icon="heroicon-s-cog-6-tooth"
+            <x-sidebar-tab href="/settings" title="Settings" icon="heroicon-s-cog-6-tooth"
                 class="flex items-center w-full" />
         </ul>
     </div>
