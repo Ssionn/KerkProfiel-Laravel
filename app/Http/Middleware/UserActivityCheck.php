@@ -12,8 +12,7 @@ class UserActivityCheck
 {
     public function __construct(
         protected UserRepository $userRepository
-    ) {
-    }
+    ) {}
 
     /**
      * Handle an incoming request.
@@ -26,8 +25,7 @@ class UserActivityCheck
             return redirect()->route('login');
         }
 
-        $sessionId = $request->session()->getId();
-        $session = DB::table('sessions')->where('id', $sessionId)->first();
+        $session = DB::table('sessions')->where('user_id', auth()->user()->id)->first();
 
         $this->userRepository->makeUserActive($session->user_id);
 
