@@ -11,7 +11,7 @@
             <div class="flex-1">
                 <h1 class="text-xl font-bold text-gray-900">{{ $team->name }}</h1>
                 <p class="text-sm text-gray-500 break-words">
-                    {{ $team->description ?? __('Geen beschrijving beschikbaar.') }}
+                    {{ $team->description ?? '' }}
                 </p>
             </div>
 
