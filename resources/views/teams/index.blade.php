@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="bg-white rounded-lg shadow-sm p-4 max-w-full md:max-w-3xl lg:max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-sm p-4 max-w-full md:max-w-4xl lg:max-w-4xl mx-auto">
         <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-3">
             <div class="flex-shrink-0">
                 <x-team-avatar :team="$team" />
