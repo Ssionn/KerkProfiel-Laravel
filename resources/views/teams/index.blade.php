@@ -59,6 +59,43 @@
                                 </div>
                             </div>
 
+                            <x-modal modalId="uitnodigen-modal" method="POST"
+                                modalHeader="{{ __('teams/team.team_members_table.table_dropdown.invite_members') }}"
+                                modalButton="{{ __('teams/team.team_members_table.table_dropdown.invite_fields.invite_button') }}"
+                                formAction="{{ route('teams.invite') }}">
+                                <div class="flex flex-col items-start space-y-2">
+                                    <label class="ml-1 text-sm font-semibold text-gray-600" for="invite_email">
+                                        {{ __('teams/team.team_members_table.table_dropdown.invite_fields.email') }}
+                                    </label>
+                                    <input type="text" name="invite_email" id="invite_email" required
+                                        class="w-full p-2 rounded-lg text-sm placeholder:text-gray-200 placeholder:text-sm border-[1px] focus:ring-sky-blue" />
+                                </div>
+                            </x-modal>
+
+                            <x-modal modalId="remove-user-{{ $user->id }}" method="DELETE"
+                                        modalHeader="{{ __('teams/team.team_members_table.table_dropdown.remove_user') }}"
+                                        modalButton="{{ __('teams/team.team_members_table.table_dropdown.remove_user_button') }}"
+                                        formAction="{{ route('team.members.destroy', $user->id) }}">
+                                        <div class="flex flex-col items-start space-y-2">
+                                            <label class="ml-1 text-sm font-semibold text-gray-600"
+                                                for="remove_user_confirm">
+                                                {{ __('teams/team.team_members_table.table_dropdown.remove_user_confirm') }}
+                                            </label>
+                                        </div>
+                            </x-modal>
+
+
+                            <x-modal modalId="leave-team-modal" method="POST"
+                                modalHeader="{{ __('teams/team.team_members_table.table_dropdown.leave_team') }}"
+                                modalButton="{{ __('teams/team.team_members_table.table_dropdown.leave_team_button') }}"
+                                formAction="{{ route('teams.leave', auth()->user()->id) }}">
+                                <div class="flex flex-col items-start space-y-2">
+                                    <label class="ml-1 text-sm font-semibold text-gray-600" for="remove_user_confirm">
+                                        {{ __('teams/team.team_members_table.table_dropdown.leave_team_confirm') }}
+                                    </label>
+                                </div>
+                            </x-modal>
+                            
                             <div class="flex items-center justify-center" style="padding-bottom: 0.6rem;">
                                 <span
                                     class="inline-flex items-center px-[0.25rem] py-0.5 rounded-full text-xs font-medium mt-[2px] ml-[-20px] 
