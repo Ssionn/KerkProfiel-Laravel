@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="bg-white rounded-lg shadow-sm p-4 max-w-full md:max-w-4xl lg:max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-sm p-4 max-w-full md:max-w-4xl lg:max-w-5xl mx-auto">
         <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-3">
             <div class="flex-shrink-0">
                 <x-team-avatar :team="$team" />
@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <div class="mt-8 bg-white rounded-lg shadow-sm px-4 py-2 max-w-full md:max-w-3xl lg:max-w-4xl mx-auto">
+    <div class="mt-8 bg-white rounded-lg shadow-sm px-4 py-2 max-w-full md:max-w-4xl lg:max-w-5xl mx-auto">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
             <h2 class="text-lg font-medium text-gray-900">{{ __('teams/team.team_members_table.table_header') }}</h2>
             <form action="{{ route('teams') }}" method="GET" name="team-members-filter-form" class="w-full sm:w-auto">
@@ -56,7 +56,7 @@
                                         class="w-12 h-12 rounded-xl object-cover">
                                 </div>
                                 <div>
-                                    <h3 class="text-md md:text-lg font-medium text-gray-900">{{ $user->username }}</h3>
+                                    <h3 class="text-md font-medium text-gray-900">{{ $user->username }}</h3>
                                     <p class="text-xs md:text-sm text-gray-500">{{ $user->email }}</p>
                                 </div>
                             </div>
@@ -75,15 +75,14 @@
                             </x-modal>
 
                             <x-modal modalId="remove-user-{{ $user->id }}" method="DELETE"
-                                        modalHeader="{{ __('teams/team.team_members_table.table_dropdown.remove_user') }}"
-                                        modalButton="{{ __('teams/team.team_members_table.table_dropdown.remove_user_button') }}"
-                                        formAction="{{ route('team.members.destroy', $user->id) }}">
-                                        <div class="flex flex-col items-start space-y-2">
-                                            <label class="ml-1 text-sm font-semibold text-gray-600"
-                                                for="remove_user_confirm">
-                                                {{ __('teams/team.team_members_table.table_dropdown.remove_user_confirm') }}
-                                            </label>
-                                        </div>
+                                modalHeader="{{ __('teams/team.team_members_table.table_dropdown.remove_user') }}"
+                                modalButton="{{ __('teams/team.team_members_table.table_dropdown.remove_user_button') }}"
+                                formAction="{{ route('team.members.destroy', $user->id) }}">
+                                <div class="flex flex-col items-start space-y-2">
+                                    <label class="ml-1 text-sm font-semibold text-gray-600" for="remove_user_confirm">
+                                        {{ __('teams/team.team_members_table.table_dropdown.remove_user_confirm') }}
+                                    </label>
+                                </div>
                             </x-modal>
 
 
@@ -98,7 +97,7 @@
                                 </div>
                             </x-modal>
 
-                            <div class="flex items-center justify-center" style="padding-bottom: 0.6rem;">
+                            <div class="flex items-center justify-center pb-2">
                                 <span
                                     class="inline-flex items-center px-[0.25rem] py-0.5 rounded-full text-xs font-medium mt-[2px] ml-[-20px]
                                     {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
