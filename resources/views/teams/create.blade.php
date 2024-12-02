@@ -1,17 +1,14 @@
 <x-app-layout>
     <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <div class="flex flex-col w-full p-4 bg-white rounded-lg shadow-lg md:p-6 sm:w-11/12 md:w-3/4 lg:w-2/4 xl:w-1/3">
-            <!-- Titel -->
             <div class="p-2 md:p-4">
                 <h1 class="text-lg font-semibold md:text-xl">{{ __('Team aanmaken') }}</h1>
             </div>
 
-            <!-- Formulier -->
             <div class="px-2">
                 <form action="{{ route('teams.store') }}" method="POST" enctype="multipart/form-data" class="p-2 space-y-4">
                     @csrf
 
-                    <!-- Teamnaam -->
                     <div class="flex flex-col space-y-1">
                         <label for="team_name" class="ml-1 text-sm font-medium text-gray-700">
                             {{ __('Team naam') }}
@@ -26,7 +23,6 @@
                         />
                     </div>
 
-                    <!-- Team beschrijving -->
                     <div class="flex flex-col space-y-1">
                         <label for="team_description" class="ml-1 text-sm font-medium text-gray-700">
                             {{ __('Team beschrijving') }}
@@ -41,7 +37,6 @@
                         />
                     </div>
 
-                    <!-- Team Avatar -->
                     <div class="flex flex-col space-y-1">
                         <label for="team_avatar" class="ml-1 text-sm font-medium text-gray-700">
                             {{ __('Team avatar') }}
@@ -54,7 +49,6 @@
                         />
                     </div>
 
-                    <!-- Verzenden -->
                     <div class="pt-2">
                         <button 
                             type="submit" 
