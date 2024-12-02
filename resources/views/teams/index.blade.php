@@ -58,6 +58,7 @@
                                 <div>
                                     <h3 class="text-md font-medium text-gray-900">{{ $user->username }}</h3>
                                     <p class="text-xs md:text-sm text-gray-500">{{ $user->email }}</p>
+                                    <p class="text-xs md:text-sm text-gray-500">{{ ucfirst($user->role->name) }}</p>
                                 </div>
                             </div>
 
