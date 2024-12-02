@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="bg-white rounded-lg shadow-sm p-4 max-w-full md:max-w-3xl lg:max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-sm p-4 max-w-full md:max-w-4xl lg:max-w-4xl mx-auto">
         <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-3">
             <div class="flex-shrink-0">
                 <x-team-avatar :team="$team" />
@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <div class="mt-8 bg-white rounded-lg shadow-sm px-4 py-2 max-w-full md:max-w-3xl lg:max-w-4xl mx-auto">
+    <div class="mt-8 bg-white rounded-lg shadow-sm px-4 py-2 max-w-full md:max-w-4xl lg:max-w-4xl mx-auto">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
             <h2 class="text-lg font-medium text-gray-900">{{ __('teams/team.team_members_table.table_header') }}</h2>
             <form action="{{ route('teams') }}" method="GET" name="team-members-filter-form" class="w-full sm:w-auto">
@@ -95,7 +95,7 @@
                                     </label>
                                 </div>
                             </x-modal>
-                            
+
                             <div class="flex items-center justify-center" style="padding-bottom: 0.6rem;">
                                 <span
                                     class="inline-flex items-center px-[0.25rem] py-0.5 rounded-full text-xs font-medium mt-[2px] ml-[-20px] 
