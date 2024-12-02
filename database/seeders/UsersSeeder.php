@@ -12,6 +12,14 @@ class UsersSeeder extends Seeder
     {
         $users = [
             [
+                'username' => 'Admin',
+                'email' => 'admin@houseofhope.com',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+                'role_id' => 1,
+                'team_id' => null,
+            ],
+            [
                 'username' => 'Ivano Baptista',
                 'email' => 'ivano@houseofhope.com',
                 'password' => Hash::make('password'),
