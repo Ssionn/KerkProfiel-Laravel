@@ -11,14 +11,14 @@ class Survey extends Model
 {
     protected $fillable = [
         'name',
-        'is_available_for_team',
+        'status',
+        'amount_of_questions',
         'team_id',
         'creator_id',
     ];
 
     protected $casts = [
         'status' => SurveyStatus::class,
-        'is_available_for_team' => 'boolean',
     ];
 
     public function team(): BelongsTo

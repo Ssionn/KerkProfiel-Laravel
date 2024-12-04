@@ -123,17 +123,17 @@
                             <h1>{{ $survey->name }}</h1>
                         </div>
                         <div>
-                            @if ($survey->status->value === 'DRAFT')
+                            @if ($survey->status->name === 'DRAFT')
                                 <span class="px-4 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-full">
                                     {{ __('Concept') }}
                                 </span>
-                            @elseif ($survey->status->value === 'published')
+                            @elseif ($survey->status->name === 'PUBLISHED')
                                 <span class="px-4 py-1 text-xs font-semibold text-green-600 bg-green-100 rounded-full">
-                                    {{ __('Published') }}
+                                    {{ __('Gepubliceerd') }}
                                 </span>
                             @else
                                 <span class="px-4 py-1 text-xs font-semibold text-green-600 bg-green-100 rounded-full">
-                                    {{ __('Closed') }}
+                                    {{ __('Gesloten') }}
                                 </span>
                             @endif
                         </div>

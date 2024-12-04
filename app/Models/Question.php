@@ -9,9 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Question extends Model
 {
     protected $fillable = [
-        'question',
+        'left_statement',
+        'right_statement',
+        'left_personality',
+        'right_personality',
         'personality',
-        'answered',
+        'sequence',
         'survey_id',
     ];
 

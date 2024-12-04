@@ -8,15 +8,14 @@ use Illuminate\Support\Collection;
 
 class SurveysRepository
 {
-    public function createSurvey(string $name, string $status, bool $is_available_for_team): Survey
+    public function createSurvey(string $name, string $status): Survey
     {
         $survey = new Survey([
             'name' => $name,
-            'status' => SurveyStatus::from(strtoupper($status)),
-            'is_available_for_team' => $is_available_for_team,
+            'status' => SurveyStatus::valueOf($status),
             'amount_of_questions' => 0,
-            'team_id' => auth()->user()->team_id,
-            'creator_id' => auth()->user()->id,
+            'team_id' => null,
+            'creator_id' => null,
         ]);
 
         $survey->save();
@@ -24,8 +23,8 @@ class SurveysRepository
         return $survey;
     }
 
-    public function getAllSurveys(int $teamId): Collection
+    public function getAllSurveys(): Collection
     {
-        return Survey::where('team_id', $teamId)->get();
+        return Survey::all();
     }
 }

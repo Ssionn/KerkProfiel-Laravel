@@ -17,7 +17,7 @@ class SurveysController extends Controller
 
     public function index()
     {
-        $surveys = $this->surveysRepository->getAllSurveys(auth()->user()->team_id);
+        $surveys = $this->surveysRepository->getAllSurveys();
 
         return view('surveys.create', [
             'surveys' => $surveys,
