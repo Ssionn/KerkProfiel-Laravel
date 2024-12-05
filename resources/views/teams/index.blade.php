@@ -47,18 +47,28 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                 @foreach ($users as $user)
                     <div
-                        class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow">
+                        class="bg-white rounded-lg shadow-sm border border-gray-100 px-4 py-2 hover:shadow-md transition-shadow">
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
+                            <div class="flex items-center space-x-2 w-full">
                                 <div
                                     class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
                                     <img src="{{ $user->defaultUserAvatar() }}" alt="{{ $user->username }}"
                                         class="w-12 h-12 rounded-xl object-cover">
                                 </div>
-                                <div>
+                                <div class="flex flex-col items-start">
                                     <h3 class="text-md font-medium text-gray-900">{{ $user->username }}</h3>
                                     <p class="text-xs md:text-sm text-gray-500">{{ $user->email }}</p>
-                                    <p class="text-xs md:text-sm text-gray-500">{{ ucfirst($user->role->name) }}</p>
+                                    <p class="text-xs md:text-sm text-gray-500">
+                                        {{ $user->role->capitalizedNameAttribute() }}</p>
+                                </div>
+                                <div class="flex items-center justify-end">
+                                    <span
+                                        class="inline-flex items-start px-2 py-[2px] rounded-full text-xs font-medium
+                                    {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                        {{ $user->is_active
+                                            ? __('teams/team.team_members_table.table_user_activity.active')
+                                            : __('teams/team.team_members_table.table_user_activity.inactive') }}
+                                    </span>
                                 </div>
                             </div>
 
@@ -97,16 +107,6 @@
                                     </label>
                                 </div>
                             </x-modal>
-
-                            <div class="flex items-center justify-center pb-2">
-                                <span
-                                    class="inline-flex items-center px-[0.25rem] py-0.5 rounded-full text-xs font-medium mt-[2px] ml-[-20px]
-                                    {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $user->is_active
-                                        ? __('teams/team.team_members_table.table_user_activity.active')
-                                        : __('teams/team.team_members_table.table_user_activity.inactive') }}
-                                </span>
-                            </div>
                         </div>
                     </div>
                 @endforeach
