@@ -22,10 +22,10 @@ class QuestionsImport implements ToCollection
             }
 
             Question::create([
-                'left_statement' => (string) trim($row[0]),
-                'right_statement' => (string) trim($row[4]),
-                'left_personality' => $row[1],
-                'right_personality' => $row[3],
+                'left_statement' => $this->trimmedString($row[0]),
+                'right_statement' => $this->trimmedString($row[4]),
+                'left_personality' => $this->trimmedString($row[1]),
+                'right_personality' => $this->trimmedString($row[3]),
                 'personality' => null,
                 'sequence' => (int) $row[2],
                 'survey_id' => $this->surveyId,
@@ -36,5 +36,10 @@ class QuestionsImport implements ToCollection
     public function startRow(): int
     {
         return 0;
+    }
+
+    protected function trimmedString(string $string): string
+    {
+        return (string) trim($string);
     }
 }
