@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->enum('status', ['DRAFT', 'PUBLISHED', 'CLOSED'])->default('draft');
+            $table->boolean('is_available_for_team')->default(false);
             $table->unsignedBigInteger('amount_of_questions')->default(0);
             $table->foreignIdFor(Team::class, 'team_id')->nullable();
             $table->foreignIdFor(User::class, 'creator_id')->nullable();

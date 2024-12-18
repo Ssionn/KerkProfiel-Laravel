@@ -16,17 +16,14 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('scripts')
+    @livewireStyles
 </head>
 
 <body class="flex bg-gray-100 font-poppins">
     <div x-data="{ open: false }" class="w-full">
         <x-navigation />
 
-        <main
-            class="p-6 transition-all duration-300"
-            x-data
-            :class="open ? 'ml-60' : 'ml-16'"
-        >
+        <main class="p-6 transition-all duration-300" x-data :class="open ? 'ml-60' : 'ml-16'">
             {{ $slot }}
         </main>
 
@@ -38,6 +35,7 @@
         <script src="{{ asset('js/modal.js') }}" defer></script>
         <script src="{{ asset('js/toast.js') }}" defer></script>
     @endpush
+    @livewireScripts
 </body>
 
 </html>

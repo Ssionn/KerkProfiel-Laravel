@@ -6,12 +6,16 @@ use App\Http\Requests\CreateSurveyRequest;
 use App\Imports\QuestionsImport;
 use App\Models\TemporaryImage;
 use App\Repositories\SurveysRepository;
+use App\Services\SurveyCreationService;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SurveysController extends Controller
 {
+    protected string $search = '';
+
     public function __construct(
+        protected SurveyCreationService $surveyCreationService,
         protected SurveysRepository $surveysRepository
     ) {}
 
@@ -26,6 +30,8 @@ class SurveysController extends Controller
 
     public function store(CreateSurveyRequest $request)
     {
+        $this->surveyCreationService->checkIfUserIsAdminForSurveyCreation();
+
         $file = $request->file('excel_file');
 
         $survey = $this->surveysRepository->createSurvey(

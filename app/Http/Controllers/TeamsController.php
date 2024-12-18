@@ -7,6 +7,7 @@ use App\Http\Requests\TeamCreationRequest;
 use App\Models\TemporaryImage;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
+use App\Services\SurveyCreationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +17,8 @@ class TeamsController extends Controller
 {
     public function __construct(
         protected TeamsRepository $teamsRepository,
-        protected UserRepository $userRepository
+        protected UserRepository $userRepository,
+        protected SurveyCreationService $surveyCreationService
     ) {}
 
     public function index(): View|RedirectResponse
@@ -115,5 +117,10 @@ class TeamsController extends Controller
             'message' => "{$team->name} verlaten",
             'type' => 'success',
         ]);
+    }
+
+    public function createExistingSurvey(int $teamId): RedirectResponse
+    {
+        $this->surveyCreationService->checkIfUserIsTeamleaderForSurveyCreation($teamId);
     }
 }

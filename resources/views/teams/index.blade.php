@@ -12,11 +12,18 @@
                 </p>
             </div>
 
-            <div class="flex space-x-2">
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0 w-full sm:w-auto">
                 @can('add people')
                     <button type="button" data-modal-toggle="uitnodigen-modal"
                         class="bg-midnight-blue text-white rounded-full px-4 py-1 font-medium">
                         {{ __('teams/team.team_members_table.table_dropdown.invite_members') }}
+                    </button>
+                @endcan
+
+                @can('create existing survey')
+                    <button type="button" data-modal-toggle="create-survey-modal"
+                        class="bg-emerald-700 text-white rounded-full px-4 py-1 font-medium">
+                        {{ __('teams/team.team_members_table.table_dropdown.create_survey') }}
                     </button>
                 @endcan
 
@@ -47,9 +54,9 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                 @foreach ($users as $user)
                     <div
-                        class="bg-white rounded-lg shadow-sm border border-gray-100 px-4 py-2 hover:shadow-md transition-shadow">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-2 w-full">
+                        class="bg-white rounded-lg shadow-sm border border-gray-100 px-4 py-2 hover:shadow-md transition-shadow w-full">
+                        <div class="flex items-center justify-between w-full">
+                            <div class="flex flex-row items-center space-x-2 w-full">
                                 <div
                                     class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
                                     <img src="{{ $user->defaultUserAvatar() }}" alt="{{ $user->username }}"
@@ -61,7 +68,7 @@
                                     <p class="text-xs md:text-sm text-gray-500">
                                         {{ $user->role->capitalizedNameAttribute() }}</p>
                                 </div>
-                                <div class="flex items-center justify-end">
+                                <div class="flex">
                                     <span
                                         class="inline-flex items-start px-2 py-[2px] rounded-full text-xs font-medium
                                     {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
@@ -96,14 +103,24 @@
                                 </div>
                             </x-modal>
 
-
                             <x-modal modalId="leave-team-modal" method="POST"
                                 modalHeader="{{ __('teams/team.team_members_table.table_dropdown.leave_team') }}"
                                 modalButton="{{ __('teams/team.team_members_table.table_dropdown.leave_team_button') }}"
                                 formAction="{{ route('teams.leave', auth()->user()->id) }}">
                                 <div class="flex flex-col items-start space-y-2">
-                                    <label class="ml-1 text-sm font-semibold text-gray-600" for="remove_user_confirm">
+                                    <label class="ml-1 text-sm font-semibold text-gray-600" for="leave_team_confirm">
                                         {{ __('teams/team.team_members_table.table_dropdown.leave_team_confirm') }}
+                                    </label>
+                                </div>
+                            </x-modal>
+
+                            <x-modal modalId="create-survey-modal" method="POST"
+                                modalHeader="{{ __('teams/team.team_members_table.table_dropdown.create_survey_header') }}"
+                                modalButton="{{ __('teams/team.team_members_table.table_dropdown.create_survey_button') }}"
+                                formAction="">
+                                <div class="flex flex-col items-start space-y-2">
+                                    <label class="ml-1 text-sm font-semibold text-gray-600" for="">
+                                        {{ __('teams/team.team_members_table.table_dropdown.create_survey_description') }}
                                     </label>
                                 </div>
                             </x-modal>

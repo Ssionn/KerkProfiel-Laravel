@@ -22,6 +22,7 @@ return [
             'add people',
             'remove people',
             'view surveys',
+            'create existing survey',
             'edit survey',
             'remove survey',
         ],

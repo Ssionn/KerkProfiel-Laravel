@@ -12,6 +12,7 @@
         "laravel/framework": "^11.9",
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
+        "livewire/livewire": "^3.5",
         "maatwebsite/excel": "^3.1",
         "nejcc/php-datatypes": "^1.0",
         "owenvoke/blade-entypo": "^2.2",
