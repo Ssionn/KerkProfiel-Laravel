@@ -32,10 +32,6 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-row items-center space-x-2">
-                        <livewire:survey-team-search />
-                    </div>
-
                     <div x-data="{
                         fileName: null,
                         handleFile(event) {

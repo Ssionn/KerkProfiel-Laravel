@@ -16,7 +16,6 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('scripts')
-    @livewireStyles
 </head>
 
 <body class="flex bg-gray-100 font-poppins">
@@ -35,7 +34,6 @@
         <script src="{{ asset('js/modal.js') }}" defer></script>
         <script src="{{ asset('js/toast.js') }}" defer></script>
     @endpush
-    @livewireScripts
 </body>
 
 </html>

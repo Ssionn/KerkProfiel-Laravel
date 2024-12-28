@@ -1,8 +1,9 @@
 <x-app-layout>
     <div class="bg-white rounded-lg shadow-sm p-4 max-w-full md:max-w-4xl lg:max-w-5xl mx-auto">
         <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-3">
-            <div class="flex-shrink-0">
-                <x-team-avatar :team="$team" />
+            <div class="">
+                <img src="{{ $team->defaultTeamAvatar() }}" alt="{{ $team->name }}"
+                    class="h-12 w-12 rounded-lg object-cover border border-gray-200" />
             </div>
 
             <div class="flex-1">
@@ -22,7 +23,7 @@
 
                 @can('create existing survey')
                     <button type="button" data-modal-toggle="create-survey-modal"
-                        class="bg-emerald-700 text-white rounded-full px-4 py-1 font-medium">
+                        class="bg-emerald-600 text-white rounded-full px-4 py-1 font-medium">
                         {{ __('teams/team.team_members_table.table_dropdown.create_survey') }}
                     </button>
                 @endcan
