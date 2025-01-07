@@ -50,6 +50,7 @@
         <x-modal modalId="uitnodigen-modal" method="POST"
             modalHeader="{{ __('teams/team.team_members_table.table_dropdown.invite_members') }}"
             modalButton="{{ __('teams/team.team_members_table.table_dropdown.invite_fields.invite_button') }}"
+            modalButtonColor="bg-midnight-blue"
             formAction="{{ route('teams.invite') }}">
             <div class="flex flex-col items-start space-y-2">
                 <label class="ml-1 text-sm font-semibold text-gray-600" for="invite_email">
@@ -127,6 +128,7 @@
                                     <x-modal modalId="remove-user-{{ $user->id }}" method="DELETE"
                                         modalHeader="{{ __('teams/team.team_members_table.table_dropdown.remove_user') }}"
                                         modalButton="{{ __('teams/team.team_members_table.table_dropdown.remove_user_button') }}"
+                                        modalButtonColor="bg-red-500"
                                         formAction="{{ route('team.members.destroy', $user->id) }}">
                                         <div class="flex flex-col items-start space-y-2">
                                             <label class="ml-1 text-sm font-semibold text-gray-600"
@@ -143,6 +145,7 @@
                     <x-modal modalId="leave-team-modal" method="POST"
                         modalHeader="{{ __('teams/team.team_members_table.table_dropdown.leave_team') }}"
                         modalButton="{{ __('teams/team.team_members_table.table_dropdown.leave_team_button') }}"
+                        modalButtonColor="bg-red-500"
                         formAction="{{ route('teams.leave', auth()->user()->id) }}">
                         <div class="flex flex-col items-start space-y-2">
                             <label class="ml-1 text-sm font-semibold text-gray-600" for="remove_user_confirm">

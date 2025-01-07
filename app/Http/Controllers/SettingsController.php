@@ -1,68 +1,73 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class SettingsController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         return view('settings.index');
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(Request $request): RedirectResponse
     {
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         $request->validate([
             "username" => ["required", "string"],
             "email" => ["required", "string", "email"]
         ]);
 
-        $changes = array_filter([
-            'username' => $request->username !== $user->username ? $request->username : null,
-            'email' => $request->email !== $user->email ? $request->email : null,
+        $user->update([
+            'username' => $request->username,
+            'email' => $request->email,
         ]);
 
-        if (!empty($changes)) {
-            $user->update($changes);
-            $message = count($changes) > 1
-                ? 'Gebruikersnaam en e-mail zijn succesvol bijgewerkt.'
-                : (isset($changes['username'])
-                    ? 'Gebruikersnaam is succesvol bijgewerkt.'
-                    : 'E-mail is succesvol bijgewerkt.');
-
-            return redirect()->route("settings.index")->with('status', $message);
-        }
-
-        return redirect()->route("settings.index");
+        return redirect()->route('settings')->with('toast', [
+            'message' => "Gebruikersinformatie is succesvol bijgewerkt",
+            'type' => 'success'
+        ]);
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(Request $request): RedirectResponse
     {
         $user = Auth::user();
 
         $request->validate([
-            'password' => 'required|min:6|confirmed',
-            'password_confirmation' => 'required|min:6'
+            'current_password' => 'required|min:8',
+            'password' => 'required|min:8|confirmed',
         ]);
+
+        if (! Hash::check($request->current_password, $user->password)) {
+            return redirect()->route('settings')->with('toast', [
+                'message' => 'Wachtwoord komt niet over een met het huidige wachtwoord',
+                'type' => 'error'
+            ]);
+        }
 
         $user->update([
-            "password" => Hash::make($request->get('password')),
+            'password' => Hash::make($request->password)
         ]);
 
-        return redirect()->route("settings.index")
-            ->with('status', 'Wachtwoord is succesvol bijgewerkt.');
+        return redirect()->route('settings')->with('toast', [
+            'message' => 'Wachtwoord is successvol bijgewerkt',
+            'type' => 'success'
+        ]);
     }
 
-    public function deleteAccount()
+    public function deleteAccount(Request $request): RedirectResponse
     {
-        $user = Auth::user();
-        $user->delete();
+        Auth::user()->delete();
 
-        return redirect('/');
+        $request->session()->invalidate();
+        $request->session()->regenerate();
+
+        return redirect()->route('login');
     }
 }
