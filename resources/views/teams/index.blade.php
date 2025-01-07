@@ -17,35 +17,35 @@
                 @can('add people')
                     <button type="button" data-modal-toggle="uitnodigen-modal"
                         class="bg-midnight-blue text-white rounded-full px-4 py-1 font-medium">
-                        {{ __('teams/team.team_members_table.table_dropdown.invite_members') }}
+                        {{ __('teams/index.team_members_table.table_dropdown.invite_members') }}
                     </button>
                 @endcan
 
                 @can('create existing survey')
                     <button type="button" data-modal-toggle="create-survey-modal"
                         class="bg-emerald-600 text-white rounded-full px-4 py-1 font-medium">
-                        {{ __('teams/team.team_members_table.table_dropdown.create_survey') }}
+                        {{ __('teams/index.team_members_table.table_dropdown.create_survey') }}
                     </button>
                 @endcan
 
                 @can('leave team')
                     <button type="button" data-modal-toggle="leave-team-modal"
                         class="bg-red-600 text-white rounded-full px-4 py-1 font-medium">
-                        {{ __('teams/team.team_members_table.table_dropdown.leave_team') }}
+                        {{ __('teams/index.team_members_table.table_dropdown.leave_team') }}
                     </button>
                 @endcan
             </div>
         </div>
 
         <div class="mt-4 pt-4 border-t border-gray-200">
-            <h2 class="text-base font-medium text-gray-900">{{ __('teams/team.team_info.role_position') }}</h2>
+            <h2 class="text-base font-medium text-gray-900">{{ __('teams/index.team_info.role_position') }}</h2>
             <x-team-leader :team="$team" />
         </div>
     </div>
 
     <div class="mt-8 bg-white rounded-lg shadow-sm px-4 py-2 max-w-full md:max-w-4xl lg:max-w-5xl mx-auto">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
-            <h2 class="text-lg font-medium text-gray-900">{{ __('teams/team.team_members_table.table_header') }}</h2>
+            <h2 class="text-lg font-medium text-gray-900">{{ __('teams/index.team_members_table.table_header') }}</h2>
             <form action="{{ route('teams') }}" method="GET" name="team-members-filter-form" class="w-full sm:w-auto">
                 <x-select-filter name="role_type" :options="['Alle', 'Teamleader', 'Member']" label="Role Selection" />
             </form>
@@ -74,19 +74,19 @@
                                         class="inline-flex items-start px-2 py-[2px] rounded-full text-xs font-medium
                                     {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                         {{ $user->is_active
-                                            ? __('teams/team.team_members_table.table_user_activity.active')
-                                            : __('teams/team.team_members_table.table_user_activity.inactive') }}
+                                            ? __('teams/index.team_members_table.table_user_activity.active')
+                                            : __('teams/index.team_members_table.table_user_activity.inactive') }}
                                     </span>
                                 </div>
                             </div>
 
                             <x-modal modalId="uitnodigen-modal" method="POST"
-                                modalHeader="{{ __('teams/team.team_members_table.table_dropdown.invite_members') }}"
-                                modalButton="{{ __('teams/team.team_members_table.table_dropdown.invite_fields.invite_button') }}"
+                                modalHeader="{{ __('teams/index.team_members_table.table_dropdown.invite_members') }}"
+                                modalButton="{{ __('teams/index.team_members_table.table_dropdown.invite_fields.invite_button') }}"
                                 formAction="{{ route('teams.invite') }}">
                                 <div class="flex flex-col items-start space-y-2">
                                     <label class="ml-1 text-sm font-semibold text-gray-600" for="invite_email">
-                                        {{ __('teams/team.team_members_table.table_dropdown.invite_fields.email') }}
+                                        {{ __('teams/index.team_members_table.table_dropdown.invite_fields.email') }}
                                     </label>
                                     <input type="text" name="invite_email" id="invite_email" required
                                         class="w-full p-2 rounded-lg text-sm placeholder:text-gray-200 placeholder:text-sm border-[1px] focus:ring-sky-blue" />
@@ -94,34 +94,34 @@
                             </x-modal>
 
                             <x-modal modalId="remove-user-{{ $user->id }}" method="DELETE"
-                                modalHeader="{{ __('teams/team.team_members_table.table_dropdown.remove_user') }}"
-                                modalButton="{{ __('teams/team.team_members_table.table_dropdown.remove_user_button') }}"
+                                modalHeader="{{ __('teams/index.team_members_table.table_dropdown.remove_user') }}"
+                                modalButton="{{ __('teams/index.team_members_table.table_dropdown.remove_user_button') }}"
                                 formAction="{{ route('team.members.destroy', $user->id) }}">
                                 <div class="flex flex-col items-start space-y-2">
                                     <label class="ml-1 text-sm font-semibold text-gray-600" for="remove_user_confirm">
-                                        {{ __('teams/team.team_members_table.table_dropdown.remove_user_confirm') }}
+                                        {{ __('teams/index.team_members_table.table_dropdown.remove_user_confirm') }}
                                     </label>
                                 </div>
                             </x-modal>
 
                             <x-modal modalId="leave-team-modal" method="POST"
-                                modalHeader="{{ __('teams/team.team_members_table.table_dropdown.leave_team') }}"
-                                modalButton="{{ __('teams/team.team_members_table.table_dropdown.leave_team_button') }}"
+                                modalHeader="{{ __('teams/index.team_members_table.table_dropdown.leave_team') }}"
+                                modalButton="{{ __('teams/index.team_members_table.table_dropdown.leave_team_button') }}"
                                 formAction="{{ route('teams.leave', auth()->user()->id) }}">
                                 <div class="flex flex-col items-start space-y-2">
                                     <label class="ml-1 text-sm font-semibold text-gray-600" for="leave_team_confirm">
-                                        {{ __('teams/team.team_members_table.table_dropdown.leave_team_confirm') }}
+                                        {{ __('teams/index.team_members_table.table_dropdown.leave_team_confirm') }}
                                     </label>
                                 </div>
                             </x-modal>
 
                             <x-modal modalId="create-survey-modal" method="POST"
-                                modalHeader="{{ __('teams/team.team_members_table.table_dropdown.create_survey_header') }}"
-                                modalButton="{{ __('teams/team.team_members_table.table_dropdown.create_survey_button') }}"
+                                modalHeader="{{ __('teams/index.team_members_table.table_dropdown.create_survey_header') }}"
+                                modalButton="{{ __('teams/index.team_members_table.table_dropdown.create_survey_button') }}"
                                 formAction="">
                                 <div class="flex flex-col items-start space-y-2">
                                     <label class="ml-1 text-sm font-semibold text-gray-600" for="">
-                                        {{ __('teams/team.team_members_table.table_dropdown.create_survey_description') }}
+                                        {{ __('teams/index.team_members_table.table_dropdown.create_survey_description') }}
                                     </label>
                                 </div>
                             </x-modal>

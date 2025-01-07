@@ -51,7 +51,7 @@ class TeamsController extends Controller
     {
         $team = $this->teamsRepository->createTeam(
             $request->team_name,
-            $request->team_description
+            $request->team_description,
         );
 
         $user = $this->userRepository->findUserById(Auth::user()->id);
@@ -59,6 +59,7 @@ class TeamsController extends Controller
         $user->associateTeamToUserByModel($team);
         $user->associateRoleToUser(Roles::TEAMLEADER->value);
 
+        // team avatar returns null here because it doesn't actually contain a string with the folder name? just gibberish
         $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();
 
         if ($tempFile) {
@@ -117,10 +118,5 @@ class TeamsController extends Controller
             'message' => "{$team->name} verlaten",
             'type' => 'success',
         ]);
-    }
-
-    public function createExistingSurvey(int $teamId): RedirectResponse
-    {
-        $this->surveyCreationService->checkIfUserIsTeamleaderForSurveyCreation($teamId);
     }
 }

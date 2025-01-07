@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Team;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class TeamsRepository
@@ -17,15 +16,6 @@ class TeamsRepository
         ]);
 
         $team->save();
-
-        return $team;
-    }
-
-    public function searchTeams(string $search): Collection
-    {
-        $team = Team::where('name', 'like', '%' . $search . '%')
-            ->orWhere('description', 'like', '%' . $search . '%')
-            ->get();
 
         return $team;
     }

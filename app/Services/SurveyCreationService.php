@@ -33,7 +33,7 @@ class SurveyCreationService
 
         if (! in_array($user->role->name, ['Teamleader'])) {
             return redirect()->route('teams')->with('toast', [
-                'message' => 'U bent niet lid van een team',
+                'message' => 'U bent geen teamleider',
                 'type' => 'error',
             ]);
         }

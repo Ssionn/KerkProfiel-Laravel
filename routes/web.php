@@ -6,7 +6,7 @@ use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\SurveysController;
 use App\Http\Controllers\TeamsController;
-use App\Services\ImageHolder;
+use App\Services\ImageHolderService;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -52,7 +52,7 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
         Route::delete('/{user}/remove', [TeamsController::class, 'destroy'])
             ->name('team.members.destroy');
 
-        Route::post('uploads/process', [ImageHolder::class, 'store']);
+        Route::post('uploads/process', [ImageHolderService::class, 'store']);
     });
 
     Route::prefix('surveys')->group(function () {
