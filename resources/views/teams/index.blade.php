@@ -6,10 +6,15 @@
             </div>
 
             <div class="flex-1">
-                <h1 class="text-xl font-bold text-gray-900">{{ $team->name }}</h1>
-                @if ($team->description)
-                    <p class="text-sm text-gray-500">{{ $team->description }}</p>
+                @if (auth()->user()->getTeamEditPermission())
+                    <a href="{{ route('teams.edit', $team->id) }}" class="inline-flex items-center text-xl font-bold text-gray-900 hover:underline hover:scale-110 transition ease-in-out duration-300">
+                        {{ $team->name }}
+                        <x-feathericon-edit class="w-4 h-4 ml-1"/>
+                    </a>
+                @else
+                    <h1 class="text-xl font-bold text-gray-900">{{ $team->name }}</h1>
                 @endif
+                <p class="text-sm text-gray-500">{{ $team->description ?? '' }}</p>
             </div>
 
             @can('add people')

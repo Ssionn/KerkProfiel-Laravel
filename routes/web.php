@@ -7,6 +7,7 @@ use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\TeamsController;
+use App\Http\Controllers\TeamSettingsController;
 use App\Services\ImageHolder;
 
 Route::middleware('guest')->group(function () {
@@ -36,6 +37,10 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
     Route::prefix('teams')->group(function () {
         Route::get('/', [TeamsController::class, 'index'])->name('teams');
         Route::post('/invite', [InvitationController::class, 'sendInvite'])->name('teams.invite');
+
+        Route::middleware('PermissionCheck:edit team')->group(function () {
+            Route::get('/edit/{teamId}', [TeamSettingsController::class, 'index'])->name('teams.edit');
+        });
 
         Route::middleware('PermissionCheck:create team')->group(function () {
             Route::get('/create', [TeamsController::class, 'create'])
