@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\Roles;
 use App\Http\Requests\TeamCreationRequest;
+use App\Models\Survey;
 use App\Models\TemporaryImage;
+use App\Repositories\SurveysRepository;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
-use App\Services\SurveyCreationService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -18,7 +20,7 @@ class TeamsController extends Controller
     public function __construct(
         protected TeamsRepository $teamsRepository,
         protected UserRepository $userRepository,
-        protected SurveyCreationService $surveyCreationService
+        protected SurveysRepository $surveysRepository,
     ) {}
 
     public function index(): View|RedirectResponse
@@ -36,9 +38,12 @@ class TeamsController extends Controller
             ->with('role')
             ->paginate(9);
 
+        $surveys = $this->surveysRepository->getAdminSurveys();
+
         return view('teams.index', [
             'team' => $team,
             'users' => $users,
+            'surveys' => $surveys,
         ]);
     }
 
@@ -116,6 +121,26 @@ class TeamsController extends Controller
 
         return redirect()->route('dashboard')->with('toast', [
             'message' => "{$team->name} verlaten",
+            'type' => 'success',
+        ]);
+    }
+
+    public function createSurvey(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'survey_id' => 'required|exists:surveys,id'
+        ]);
+
+        $survey = Survey::findOrFail($request->survey_id);
+
+        $this->surveysRepository->copySurveyForTeam(
+            $survey,
+            Auth::user()->team->id,
+            Auth::user()->team->owner->id,
+        );
+
+        return redirect()->route('teams')->with('toast', [
+            'message' => 'Survey aangemaakt',
             'type' => 'success',
         ]);
     }

@@ -4,20 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateSurveyRequest;
 use App\Imports\QuestionsImport;
+use App\Models\Survey;
 use App\Repositories\SurveysRepository;
-use App\Services\SurveyCreationService;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SurveysController extends Controller
 {
     public function __construct(
-        protected SurveyCreationService $surveyCreationService,
         protected SurveysRepository $surveysRepository
     ) {}
 
     public function index()
     {
-        $surveys = $this->surveysRepository->getAllSurveys();
+        $surveys = $this->surveysRepository->getAdminSurveys();
 
         return view('surveys.create', [
             'surveys' => $surveys,
@@ -26,14 +25,11 @@ class SurveysController extends Controller
 
     public function store(CreateSurveyRequest $request)
     {
-        $this->surveyCreationService->checkIfUserIsAdminForSurveyCreation();
-
         $file = $request->file('excel_file');
 
         $survey = $this->surveysRepository->createSurvey(
             $request->survey_name,
             $request->survey_status,
-            $request->is_available_for_team
         );
 
         Excel::import(new QuestionsImport($survey->id), $file);
@@ -45,6 +41,15 @@ class SurveysController extends Controller
         return redirect()->route('surveys')->with('toast', [
             'message' => 'Survey aangemaakt',
             'type' => 'success',
+        ]);
+    }
+
+    public function showSurvey(Survey $survey)
+    {
+        $survey->load('questions.answers');
+
+        return view('surveys.show', [
+            'survey' => $survey,
         ]);
     }
 }

@@ -25,9 +25,9 @@
 
                             <select name="survey_status" id="survey_status"
                                 class="w-full p-2 rounded text-xs placeholder:text-gray-200 placeholder:text-sm border-[1px] focus:ring-sky-blue">
-                                <option value="draft">Concept</option>
-                                <option value="published">Gepubliceerd</option>
-                                <option value="closed">Gesloten</option>
+                                <option value="Concept">Concept</option>
+                                <option value="Gepubliceerd">Gepubliceerd</option>
+                                <option value="Gesloten">Gesloten</option>
                             </select>
                         </div>
                     </div>

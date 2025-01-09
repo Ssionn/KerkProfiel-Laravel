@@ -118,11 +118,24 @@
                             <x-modal modalId="create-survey-modal" method="POST"
                                 modalHeader="{{ __('teams/index.team_members_table.table_dropdown.create_survey_header') }}"
                                 modalButton="{{ __('teams/index.team_members_table.table_dropdown.create_survey_button') }}"
-                                formAction="">
+                                formAction="{{ route('teams.create.survey') }}">
                                 <div class="flex flex-col items-start space-y-2">
                                     <label class="ml-1 text-sm font-semibold text-gray-600" for="">
                                         {{ __('teams/index.team_members_table.table_dropdown.create_survey_description') }}
                                     </label>
+
+                                    @if ($surveys->count() > 0)
+                                        <select name="survey_id" id="survey_id"
+                                            class="w-full rounded-md border-gray-300">
+                                            @foreach ($surveys as $survey)
+                                                <option value="{{ $survey->id }}">{{ $survey->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    @else
+                                        <p class="text-sm text-gray-500">
+                                            {{ __('teams/index.team_members_table.table_dropdown.create_survey_no_surveys') }}
+                                        </p>
+                                    @endif
                                 </div>
                             </x-modal>
                         </div>

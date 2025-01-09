@@ -26,7 +26,6 @@ class QuestionsImport implements ToCollection
                 'right_statement' => $this->trimmedString($row[4]),
                 'left_personality' => $this->trimmedString($row[1]),
                 'right_personality' => $this->trimmedString($row[3]),
-                'personality' => null,
                 'sequence' => (int) $row[2],
                 'survey_id' => $this->surveyId,
             ]);

@@ -13,6 +13,7 @@ class Survey extends Model
         'name',
         'status',
         'amount_of_questions',
+        'made_by_admin',
         'team_id',
         'creator_id',
     ];

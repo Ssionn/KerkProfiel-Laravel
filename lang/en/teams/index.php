@@ -26,6 +26,7 @@ return [
             'create_survey' => 'Maak enquête aan',
             'create_survey_header' => 'Maak enquête aan',
             'create_survey_description' => 'Maak een enquête aan voor dit team. Deze enquête bevatten vragen over persoonlijke leerzamen; Evangelist, Pastoor, etc...',
+            'create_survey_no_surveys' => 'Er zijn nog geen enquêtes aangemaakt voor dit team.',
             'create_survey_button' => 'Maak een enquête aan',
             'remove_user' => 'Verwijder gebruiker',
             'remove_user_button' => 'Verwijderen',

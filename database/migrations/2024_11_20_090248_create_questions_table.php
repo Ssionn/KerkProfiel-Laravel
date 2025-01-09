@@ -20,17 +20,16 @@ return new class extends Migration
             $table->string('right_statement');
             $table->string('left_personality');
             $table->string('right_personality');
-            $table->enum('personality', ['teacher', 'evangelist', 'priest', 'parent', 'student'])->nullable();
             $table->unsignedInteger('sequence')->default(0);
             $table->foreignIdFor(Survey::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
 
             $table->index(['survey_id', 'sequence']);
-            $table->index('personality');
         });
 
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Survey::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Question::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained();
             $table->text('answer');

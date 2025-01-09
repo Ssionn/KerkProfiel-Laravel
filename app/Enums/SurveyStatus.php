@@ -2,18 +2,18 @@
 
 namespace App\Enums;
 
-enum SurveyStatus
+enum SurveyStatus: string
 {
-    case DRAFT;
-    case PUBLISHED;
-    case CLOSED;
+    case DRAFT = 'Concept';
+    case PUBLISHED = 'Gepubliceerd';
+    case CLOSED = 'Gesloten';
 
-    public static function valueOf(string $value): self
+    public static function valueOf(string $value): string
     {
         return match ($value) {
-            'draft' => self::DRAFT,
-            'published' => self::PUBLISHED,
-            'closed' => self::CLOSED,
+            'Concept' => self::DRAFT->value,
+            'Gepubliceerd' => self::PUBLISHED->value,
+            'Gesloten' => self::CLOSED->value,
         };
     }
 }

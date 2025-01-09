@@ -24,7 +24,6 @@ class CreateSurveyRequest extends FormRequest
         return [
             'survey_name' => 'required|string|max:255',
             'survey_status' => 'required|string|max:255',
-            'is_available_for_team' => 'required|boolean',
         ];
     }
 }
