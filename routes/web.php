@@ -3,9 +3,11 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\SurveysController;
 use App\Http\Controllers\TeamsController;
-use App\Services\ImageHolder;
+use App\Services\ImageHolderService;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -28,22 +30,19 @@ Route::post('/invite/login/{token}', [InvitationController::class, 'acceptInvite
 
 
 Route::middleware('auth', 'UserActivityCheck')->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('teams')->group(function () {
         Route::get('/', [TeamsController::class, 'index'])->name('teams');
         Route::post('/invite', [InvitationController::class, 'sendInvite'])->name('teams.invite');
+        Route::post('/create/survey', [TeamsController::class, 'createSurvey'])->name('teams.create.survey');
 
-        Route::middleware('PermissionCheck:create team')->group(function () {
+        Route::middleware(['PermissionCheck:create team', 'PermissionCheck:leave team'])->group(function () {
             Route::get('/create', [TeamsController::class, 'create'])
                 ->name('teams.create');
             Route::post('/create', [TeamsController::class, 'store'])
                 ->name('teams.store');
-        });
 
-        Route::middleware('PermissionCheck:leave team')->group(function () {
             Route::post('/leave/{user}', [TeamsController::class, 'leaveTeam'])
                 ->name('teams.leave');
         });
@@ -51,7 +50,15 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
         Route::delete('/{user}/remove', [TeamsController::class, 'destroy'])
             ->name('team.members.destroy');
 
-        Route::post('uploads/process', [ImageHolder::class, 'store']);
+        Route::post('uploads/process', [ImageHolderService::class, 'store']);
+    });
+
+    Route::prefix('surveys')->group(function () {
+        Route::get('/', [SurveysController::class, 'index'])->name('surveys');
+        Route::post('/', [SurveysController::class, 'store'])->name('surveys.store');
+
+        Route::get('/{survey}', [SurveysController::class, 'showSurvey'])->name('surveys.show');
+        Route::post('/{survey}/answers', [SurveysController::class, 'storeAnswer'])->name('survey.answer');
     });
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

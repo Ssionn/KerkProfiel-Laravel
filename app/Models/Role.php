@@ -27,4 +27,9 @@ class Role extends Model
     {
         return $this->belongsTo(Team::class);
     }
+
+    public function capitalizedNameAttribute(): string
+    {
+        return ucfirst($this->name);
+    }
 }

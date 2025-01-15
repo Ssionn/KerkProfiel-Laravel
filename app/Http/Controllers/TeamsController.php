@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\Roles;
 use App\Http\Requests\TeamCreationRequest;
+use App\Models\Survey;
 use App\Models\TemporaryImage;
+use App\Repositories\SurveysRepository;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -16,8 +19,10 @@ class TeamsController extends Controller
 {
     public function __construct(
         protected TeamsRepository $teamsRepository,
-        protected UserRepository $userRepository
-    ) {}
+        protected UserRepository $userRepository,
+        protected SurveysRepository $surveysRepository,
+    ) {
+    }
 
     public function index(): View|RedirectResponse
     {
@@ -29,14 +34,17 @@ class TeamsController extends Controller
 
         $users = $team->users()
             ->when(request('role_type'), function ($query, $roleType) {
-                $query->whereHas('role', fn($query) => $query->where('name', $roleType));
+                $query->whereHas('role', fn ($query) => $query->where('name', $roleType));
             })
             ->with('role')
             ->paginate(9);
 
+        $surveys = $this->surveysRepository->getAdminSurveys();
+
         return view('teams.index', [
             'team' => $team,
             'users' => $users,
+            'surveys' => $surveys,
         ]);
     }
 
@@ -49,7 +57,7 @@ class TeamsController extends Controller
     {
         $team = $this->teamsRepository->createTeam(
             $request->team_name,
-            $request->team_description
+            $request->team_description,
         );
 
         $user = $this->userRepository->findUserById(Auth::user()->id);
@@ -57,6 +65,7 @@ class TeamsController extends Controller
         $user->associateTeamToUserByModel($team);
         $user->associateRoleToUser(Roles::TEAMLEADER->value);
 
+        // team avatar returns null here because it doesn't actually contain a string with the folder name? just gibberish
         $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();
 
         if ($tempFile) {
@@ -113,6 +122,26 @@ class TeamsController extends Controller
 
         return redirect()->route('dashboard')->with('toast', [
             'message' => "{$team->name} verlaten",
+            'type' => 'success',
+        ]);
+    }
+
+    public function createSurvey(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'survey_id' => 'required|exists:surveys,id'
+        ]);
+
+        $survey = Survey::findOrFail($request->survey_id);
+
+        $this->surveysRepository->copySurveyForTeam(
+            $survey,
+            Auth::user()->team->id,
+            Auth::user()->team->owner->id,
+        );
+
+        return redirect()->route('teams')->with('toast', [
+            'message' => 'Survey aangemaakt',
             'type' => 'success',
         ]);
     }

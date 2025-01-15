@@ -22,7 +22,7 @@
     <div x-data="{ open: false }" class="w-full">
         <x-navigation />
 
-        <main class="flex-1 p-6" x-data :class="open ? 'ml-60' : 'ml-16'" class="transition-all duration-300">
+        <main class="p-6 transition-all duration-300" x-data :class="open ? 'ml-60' : 'ml-16'">
             {{ $slot }}
         </main>
 
