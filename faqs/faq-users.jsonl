@@ -1,0 +1,46 @@
+[
+    {
+        "question": "Hoe werkt de online test?",
+        "answer": "In deze vraag leg je uit hoe de test werkt, wat de gebruiker kan verwachten, en welke stappen ze moeten volgen om de test succesvol af te ronden."
+    },
+    {
+        "question": "Is de test gratis?",
+        "answer": "Dit is een veel gestelde vraag. Beantwoord of de test volledig gratis is of dat er kosten aan verbonden zijn. Als er betaalde opties zijn, kun je deze hier toelichten."
+    },
+    {
+        "question": "Hoe lang duurt het om de test in te vullen?",
+        "answer": "Geef een schatting van de tijd die de gebruiker nodig heeft om de test af te ronden, zodat ze weten hoeveel tijd ze moeten reserveren."
+    },
+    {
+        "question": "Wat gebeurt er met mijn antwoorden?",
+        "answer": "Beschrijf hoe de gegevens van de gebruiker worden verwerkt en opgeslagen, en verzeker hen van de privacy en veiligheid van hun gegevens."
+    },
+    {
+        "question": "Kan ik de test meerdere keren doen?",
+        "answer": "Beantwoord of gebruikers de mogelijkheid hebben om de test opnieuw te maken, en zo ja, of er een limiet is aan het aantal keren dat dit kan."
+    },
+    {
+        "question": "Hoe krijg ik de resultaten van de test?",
+        "answer": "Leg uit hoe en wanneer de gebruiker de testresultaten ontvangt, bijvoorbeeld direct op de website, via e-mail, of in een downloadbaar rapport."
+    },
+    {
+        "question": "Heb ik een account nodig om de test in te vullen?",
+        "answer": "Beantwoord of het verplicht is om een account aan te maken, en leg uit waarom een account nuttig kan zijn (bijvoorbeeld om resultaten op te slaan)."
+    },
+    {
+        "question": "Kan ik mijn resultaten later terugzien?",
+        "answer": "Geef aan of de resultaten opgeslagen blijven en of de gebruiker ze op een later moment kan inzien, bijvoorbeeld via een persoonlijk dashboard."
+    },
+    {
+        "question": "Wat als ik technische problemen ondervind tijdens de test?",
+        "answer": "Bied stappen voor wat te doen als de gebruiker technische problemen heeft, zoals een vastgelopen pagina of problemen met het laden van de test."
+    },
+    {
+        "question": "Is de test beschikbaar op mobiele apparaten?",
+        "answer": "Informeer de gebruiker of de test compatibel is met mobiele telefoons en tablets."
+    },
+    {
+        "question": "Hoelang worden de resultaten bewaard?",
+        "answer": "Geef uitleg over de bewaarperiode van de testresultaten en hoe deze gegevens worden beheerd."
+    }
+]

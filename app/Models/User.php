@@ -82,7 +82,7 @@ class User extends Authenticatable
     public function defaultUserAvatar(): string
     {
         if (! $this->avatar) {
-            return 'https://ui-avatars.com/api/?name='.urlencode($this->username).'&background=random&color=random?size=128';
+            return 'https://ui-avatars.com/api/?name=' . urlencode($this->username) . '&background=random&color=random?size=128';
         }
 
         return $this->getFirstMediaUrl('avatars');

@@ -1,10 +1,10 @@
 <x-app-layout>
     <h1 class="text-xl font-semibold">
-        {{ __('Logged in as: ' . auth()->user()->username) }}
+        {{ __('welcome.auth.logged_in_as', ['username' => auth()->user()->username]) }}
     </h1>
 
     @if (auth()->user()->password === null)
-        {{ __('You don\'t have a password, please change it!') }}
+        {{ __('welcome.auth.no_password_warning') }}
     @endif
 
     @if (auth()->user())
@@ -12,7 +12,7 @@
             @csrf
 
             <button type="submit" class="px-6 py-1 font-semibold text-white rounded bg-midnight-blue">
-                {{ __('Uitloggen') }}
+                {{ __('welcome.auth.logout') }}
             </button>
         </form>
     @endif

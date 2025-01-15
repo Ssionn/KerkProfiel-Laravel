@@ -7,6 +7,7 @@ use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\TeamsController;
 use App\Services\ImageHolder;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FaqController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login');
@@ -31,6 +32,8 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
     Route::get('/', function () {
         return view('welcome');
     })->name('dashboard');
+
+    Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
     Route::prefix('teams')->group(function () {
         Route::get('/', [TeamsController::class, 'index'])->name('teams');

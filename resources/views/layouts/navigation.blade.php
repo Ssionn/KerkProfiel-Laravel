@@ -22,13 +22,19 @@
 
     <div class="flex items-center" :class="open ? '' : 'justify-center'">
         <ul class="space-y-2" :class="open ? 'w-full' : ''">
-            <x-sidebar-tab href="{{ route('dashboard') }}" active="{{ request()->routeIs('dashboard') }}"
-                title="Dashboard" icon="heroicon-s-home" class="flex items-center w-full" aria-label="Dashboard" />
+            <x-sidebar-tab href="{{ route('dashboard') }}"
+                title="{{ __('navigation.menu.dashboard') }}"
+                aria-label="{{ __('navigation.aria.dashboard') }}" />
 
             @can('view teams')
                 <x-sidebar-tab href="{{ route('teams') }}" active="{{ request()->routeIs('teams') }}" title="Teams"
                     icon="heroicon-s-users" class="flex items-center w-full" aria-label="Teams" />
             @endcan
+
+            <div class="my-4 border-t border-gray-200 dark:border-gray-700"></div>
+
+            <x-sidebar-tab href="{{ route('faq') }}" active="{{ request()->routeIs('faq') }}"
+                title="FAQ" icon="mdi-head-question" class="flex items-center w-full" aria-label="FAQ" />
         </ul>
     </div>
 

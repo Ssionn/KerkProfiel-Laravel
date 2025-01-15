@@ -86,7 +86,7 @@ class InvitationController extends Controller
         ]);
     }
 
-    public function acceptInvite(string $token): RedirectResponse
+    public function acceptInvite(string $token): RedirectResponse|View
     {
         $invitation = $this->checkInvitationExists($token);
 
