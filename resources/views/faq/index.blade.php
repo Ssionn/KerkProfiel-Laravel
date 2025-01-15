@@ -1,7 +1,7 @@
 <x-app-layout>
     <body class="bg-gray-50 flex items-center justify-center min-h-screen">
         <div class="max-w-3xl mx-auto p-6">
-            <h1 class="text-4xl font-bold text-center mb-8">FAQs</h1>
+            <h1 class="text-4xl font-bold text-center mb-8">{{ __('faq/faq.page.title') }}</h1>
 
             <div id="accordion-collapse" data-accordion="collapse">
                 @foreach ($faqs as $index => $faq)
@@ -10,8 +10,8 @@
                             type="button"
                             class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-black border border-b-0 border-gray-200 {{ $loop->first ? 'rounded-t-xl' : '' }} focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
                             data-accordion-target="#accordion-collapse-body-{{ $index }}"
-                            aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
-                            aria-controls="accordion-collapse-body-{{ $index }}"
+                            aria-expanded="{{ __('faq/faq.accordion.expand_button.aria_expanded') }}"
+                            aria-controls="{{ __('faq/faq.accordion.expand_button.aria_controls') }}-{{ $index }}"
                         >
                             <span class="text-black dark:text-gray-400">{{ $faq->question }}</span>
                             <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -33,7 +33,11 @@
 
             <div class="mt-8 text-center">
                 <p class="mt-4 text-sm">
-                    Contact us at <a href="mailto:houseofhope@hope.com" class="text-blue-600 underline">HouseOfHope@hope.com</a> via email!
+                    {{ __('faq/faq.contact.text') }}
+                    <a href="mailto:{{ __('faq/faq.contact.email') }}" class="text-blue-600 underline">
+                        {{ __('faq/faq.contact.email') }}
+                    </a>
+                    {{ __('faq/faq.contact.via') }}
                 </p>
             </div>
         </div>

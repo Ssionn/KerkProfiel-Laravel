@@ -22,8 +22,9 @@
 
     <div class="flex items-center" :class="open ? '' : 'justify-center'">
         <ul class="space-y-2" :class="open ? 'w-full' : ''">
-            <x-sidebar-tab href="{{ route('dashboard') }}" active="{{ request()->routeIs('dashboard') }}"
-                title="Dashboard" icon="heroicon-s-home" class="flex items-center w-full" aria-label="Dashboard" />
+            <x-sidebar-tab href="{{ route('dashboard') }}"
+                title="{{ __('navigation.menu.dashboard') }}"
+                aria-label="{{ __('navigation.aria.dashboard') }}" />
 
             @can('view teams')
                 <x-sidebar-tab href="{{ route('teams') }}" active="{{ request()->routeIs('teams') }}" title="Teams"
