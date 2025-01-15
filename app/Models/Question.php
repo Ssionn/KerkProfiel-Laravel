@@ -33,34 +33,19 @@ class Question extends Model
         return $this->hasMany(Answer::class);
     }
 
-    public function getLeftStatementAttribute()
-    {
-        return $this->question['left_statement'] ?? null;
-    }
-
-    public function getRightStatementAttribute()
-    {
-        return $this->question['right_statement'] ?? null;
-    }
-
-    public function getSequenceNumberAttribute()
-    {
-        return $this->question['sequence_number'] ?? null;
-    }
-
-    public function getPersonalityLabelAttribute()
+    // This returns an array with the values for the radio buttons (Eventually for calculation)
+    public function radioButtonValues(): array
     {
         return [
-            'evangelist' => 'Evangelist',
-            'priest' => 'Priester',
-            'teacher' => 'Leraar',
-            'parent' => 'Ouder',
-            'student' => 'Student'
-        ][$this->personality] ?? 'Student';
-    }
-
-    public function scopeOrdered($query)
-    {
-        return $query->orderByRaw("CAST(JSON_EXTRACT(question, '$.sequence_number') AS UNSIGNED)");
+            'left' => $this->left_personality,
+            5,
+            3,
+            1,
+            0,
+            1,
+            3,
+            5,
+            'right' => $this->right_personality,
+        ];
     }
 }

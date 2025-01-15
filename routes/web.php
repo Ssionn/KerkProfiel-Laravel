@@ -58,6 +58,7 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
         Route::post('/', [SurveysController::class, 'store'])->name('surveys.store');
 
         Route::get('/{survey}', [SurveysController::class, 'showSurvey'])->name('surveys.show');
+        Route::post('/{survey}/answers', [SurveysController::class, 'storeAnswer'])->name('survey.answer');
     });
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

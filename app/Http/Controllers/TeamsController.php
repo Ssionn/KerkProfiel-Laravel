@@ -21,7 +21,8 @@ class TeamsController extends Controller
         protected TeamsRepository $teamsRepository,
         protected UserRepository $userRepository,
         protected SurveysRepository $surveysRepository,
-    ) {}
+    ) {
+    }
 
     public function index(): View|RedirectResponse
     {
@@ -33,7 +34,7 @@ class TeamsController extends Controller
 
         $users = $team->users()
             ->when(request('role_type'), function ($query, $roleType) {
-                $query->whereHas('role', fn($query) => $query->where('name', $roleType));
+                $query->whereHas('role', fn ($query) => $query->where('name', $roleType));
             })
             ->with('role')
             ->paginate(9);
