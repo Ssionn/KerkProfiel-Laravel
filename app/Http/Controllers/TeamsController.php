@@ -61,36 +61,51 @@ class TeamsController extends Controller
         );
 
         $user = $this->userRepository->findUserById(Auth::user()->id);
-
         $user->associateTeamToUserByModel($team);
         $user->associateRoleToUser(Roles::TEAMLEADER->value);
 
-        // team avatar returns null here because it doesn't actually contain a string with the folder name? just gibberish
-        $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();
+        $tempFile = TemporaryImage::where('owner_id', Auth::user()->id)->first();
 
-        if ($tempFile) {
-            try {
-                $filePath = storage_path('app/public/avatars/tmp/' . $request->team_avatar . '/' . $tempFile->filename);
-
-                if (! file_exists($filePath)) {
-                    throw new \Exception('Team avatar file not found: ' . $filePath);
-                }
-
-                $team->addMedia($filePath)
-                    ->toMediaCollection('avatars', 'local');
-
-                Storage::disk('public')->deleteDirectory('avatars/tmp/' . $request->team_avatar);
-
-                $tempFile->delete();
-            } catch (\Exception $e) {
-                throw new \Exception('Error uploading team avatar: ' . $e->getMessage());
-            }
+        if (! $tempFile) {
+            return redirect()->route('teams')->with('toast', [
+                'message' => 'Team is aangemaakt',
+                'type' => 'success',
+            ]);
         }
 
-        return redirect()->route('teams')->with('toast', [
-            'message' => 'Team is aangemaakt',
-            'type' => 'success',
-        ]);
+        $filePath = 'avatars/tmp/' . $tempFile->folder . '/' . $tempFile->filename;
+
+        if (! Storage::disk('spaces')->exists($filePath)) {
+            return redirect()->route('teams')->with('toast', [
+                'message' => 'Er is iets misgegaan met het uploaden van de avatar, maar het team is aangemaakt',
+                'type' => 'success',
+            ]);
+        }
+
+        $fullPath = Storage::disk('spaces')->path($filePath);
+        $temporaryUrl = Storage::disk('spaces')->temporaryUrl($filePath, now()->addMinutes(5));
+
+        try {
+            $team->addMedia(Storage::disk('spaces')->get($filePath))
+                ->usingName($tempFile->filename)
+                ->usingFileName($tempFile->filename)
+                ->toMediaCollection('avatars', 'spaces');
+
+            Storage::disk('spaces')->deleteDirectory('avatars/tmp/' . $tempFile->folder);
+            $tempFile->delete();
+
+            return redirect()->route('teams')->with('toast', [
+                'message' => 'Team is aangemaakt',
+                'type' => 'success',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error uploading team avatar: ' . $e->getMessage());
+
+            return redirect()->route('teams')->with('toast', [
+                'message' => 'Er is iets misgegaan met het uploaden van de avatar, maar het team is aangemaakt',
+                'type' => 'success',
+            ]);
+        }
     }
 
     public function destroy(int $userId): RedirectResponse

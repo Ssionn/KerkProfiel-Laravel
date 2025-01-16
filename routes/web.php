@@ -34,18 +34,15 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
 
     Route::prefix('teams')->group(function () {
         Route::get('/', [TeamsController::class, 'index'])->name('teams');
+        Route::get('/create', [TeamsController::class, 'create'])
+            ->name('teams.create');
+        Route::post('/create', [TeamsController::class, 'store'])
+            ->name('teams.store');
+        Route::post('/leave/{user}', [TeamsController::class, 'leaveTeam'])
+            ->name('teams.leave');
+
         Route::post('/invite', [InvitationController::class, 'sendInvite'])->name('teams.invite');
         Route::post('/create/survey', [TeamsController::class, 'createSurvey'])->name('teams.create.survey');
-
-        Route::middleware(['PermissionCheck:create team', 'PermissionCheck:leave team'])->group(function () {
-            Route::get('/create', [TeamsController::class, 'create'])
-                ->name('teams.create');
-            Route::post('/create', [TeamsController::class, 'store'])
-                ->name('teams.store');
-
-            Route::post('/leave/{user}', [TeamsController::class, 'leaveTeam'])
-                ->name('teams.leave');
-        });
 
         Route::delete('/{user}/remove', [TeamsController::class, 'destroy'])
             ->name('team.members.destroy');

@@ -50,6 +50,8 @@ class Team extends Model implements HasMedia
             return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=random&color=random?size=128';
         }
 
-        return $this->getFirstMediaUrl('avatars');
+        $teamAvatar = $this->getMedia('avatars');
+
+        return $teamAvatar[0]->getFullUrl();
     }
 }
