@@ -22,7 +22,8 @@ class InvitationController extends Controller
         protected UserRepository $userRepository,
         protected InvitationRepository $invitationRepository,
         protected RolesRepository $rolesRepository
-    ) {}
+    ) {
+    }
 
     public function sendInvite(InviteRequest $request): RedirectResponse
     {
@@ -30,14 +31,14 @@ class InvitationController extends Controller
 
         $invitation = $this->invitationRepository->createInvitation(
             $request->invite_email,
-            bin2hex(random_bytes(24)),
-            $team->id
+            $team->id,
+            $team->createInvitationToken(),
         );
 
         Mail::to($request->invite_email)->queue(
             new InviteUser(
                 $team,
-                $invitation->invite_email,
+                $invitation->email,
                 route('teams.accept', $invitation->token)
             )
         );
