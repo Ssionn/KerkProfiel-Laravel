@@ -65,8 +65,6 @@ return [
             'bucket' => env('DO_SPACES_BUCKET'),
             'url' => env('DO_SPACES_URL'),
             'visiblity' => 'public',
-            'use_path_style_endpoint' => false,
-            'throw' => false,
         ],
 
     ],

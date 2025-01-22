@@ -9,14 +9,19 @@ use App\Models\TemporaryImage;
 use App\Repositories\SurveysRepository;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
+use App\Services\ImageHolderService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class TeamsController extends Controller
 {
+    public const disk_name = 'spaces';
+    public const teamleader = Roles::TEAMLEADER->value;
+
     public function __construct(
         protected TeamsRepository $teamsRepository,
         protected UserRepository $userRepository,
@@ -60,59 +65,43 @@ class TeamsController extends Controller
             $request->team_description,
         );
 
-        $user = $this->userRepository->findUserById(Auth::user()->id);
-        $user->associateTeamToUserByModel($team);
-        $user->associateRoleToUser(Roles::TEAMLEADER->value);
+        Auth::user()->associateTeamToUserByModel($team);
+        Auth::user()->associateRoleToUser(self::teamleader);
 
-        $tempFile = TemporaryImage::where('owner_id', Auth::user()->id)->first();
+        $teamAvatar = $this->teamsRepository->getTeamAvatar(
+            ImageHolderService::getRecentFolder()
+        );
 
-        if (! $tempFile) {
+        if (! $teamAvatar) {
             return redirect()->route('teams')->with('toast', [
-                'message' => 'Team is aangemaakt',
+                'message' => "{$team->name} is gecreëerd, maar er is iets misgegaan met het uploaden van de avatar",
                 'type' => 'success',
             ]);
         }
 
-        $filePath = 'avatars/tmp/' . $tempFile->folder . '/' . $tempFile->filename;
+        $path = "avatars/tmp/{$teamAvatar->folder}/{$teamAvatar->filename}";
+        $team->addMedia(storage_path('app/public/' . $path))
+            ->usingFileName($teamAvatar->filename)
+            ->storingConversionsOnDisk(self::disk_name)
+            ->toMediaCollection(
+                'team_avatars',
+                self::disk_name
+            );
 
-        if (! Storage::disk('spaces')->exists($filePath)) {
-            return redirect()->route('teams')->with('toast', [
-                'message' => 'Er is iets misgegaan met het uploaden van de avatar, maar het team is aangemaakt',
-                'type' => 'success',
-            ]);
-        }
+        Storage::disk('public')->deleteDirectory("avatars/tmp/{$teamAvatar->folder}");
+        $this->teamsRepository->deleteTemporaryImage($teamAvatar->folder);
 
-        $fullPath = Storage::disk('spaces')->path($filePath);
-        $temporaryUrl = Storage::disk('spaces')->temporaryUrl($filePath, now()->addMinutes(5));
-
-        try {
-            $team->addMedia(Storage::disk('spaces')->get($filePath))
-                ->usingName($tempFile->filename)
-                ->usingFileName($tempFile->filename)
-                ->toMediaCollection('avatars', 'spaces');
-
-            Storage::disk('spaces')->deleteDirectory('avatars/tmp/' . $tempFile->folder);
-            $tempFile->delete();
-
-            return redirect()->route('teams')->with('toast', [
-                'message' => 'Team is aangemaakt',
-                'type' => 'success',
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('Error uploading team avatar: ' . $e->getMessage());
-
-            return redirect()->route('teams')->with('toast', [
-                'message' => 'Er is iets misgegaan met het uploaden van de avatar, maar het team is aangemaakt',
-                'type' => 'success',
-            ]);
-        }
+        return redirect()->route('teams')->with('toast', [
+            'message' => "{$team->name} is gecreëerd",
+            'type' => 'success',
+        ]);
     }
 
     public function destroy(int $userId): RedirectResponse
     {
         $user = $this->userRepository->findUserById($userId);
 
-        if ($user->role->name === Roles::TEAMLEADER->value) {
+        if ($user->role->name === self::teamleader) {
             return redirect()->route('teams')->with('toast', [
                 'message' => 'Je kan geen teamleader verwijderen',
                 'type' => 'error',

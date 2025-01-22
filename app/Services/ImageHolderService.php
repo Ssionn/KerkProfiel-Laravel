@@ -17,7 +17,7 @@ class ImageHolderService
                 $folder = uniqid() . '-' . now()->timestamp;
                 $path = 'avatars/tmp/' . $folder;
 
-                if ($tempFile->storeAs($path, $fileName, 'spaces')) {
+                if ($tempFile->storeAs($path, $fileName, ['disk' => 'public'])) {
                     TemporaryImage::create([
                         'folder' => $folder,
                         'filename' => $fileName,
@@ -32,5 +32,14 @@ class ImageHolderService
         }
 
         return '';
+    }
+
+    public static function getRecentFolder(): string
+    {
+        $tempImage = TemporaryImage::where('owner_id', Auth::user()->id)
+            ->latest()
+            ->first();
+
+        return $tempImage->folder ?? '';
     }
 }
