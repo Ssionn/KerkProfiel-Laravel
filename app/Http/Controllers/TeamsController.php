@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Enums\Roles;
 use App\Http\Requests\TeamCreationRequest;
 use App\Models\Survey;
-use App\Models\TemporaryImage;
 use App\Repositories\SurveysRepository;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
@@ -18,7 +17,7 @@ use Illuminate\View\View;
 
 class TeamsController extends Controller
 {
-    public const disk_name = 'spaces';
+    public const diskName = 'spaces';
     public const teamleader = Roles::TEAMLEADER->value;
 
     public function __construct(
@@ -81,10 +80,10 @@ class TeamsController extends Controller
         $path = "avatars/tmp/{$teamAvatar->folder}/{$teamAvatar->filename}";
         $team->addMedia(storage_path('app/public/' . $path))
             ->usingFileName($teamAvatar->filename)
-            ->storingConversionsOnDisk(self::disk_name)
+            ->storingConversionsOnDisk(self::diskName)
             ->toMediaCollection(
                 'team_avatars',
-                self::disk_name
+                self::diskName
             );
 
         Storage::disk('public')->deleteDirectory("avatars/tmp/{$teamAvatar->folder}");
