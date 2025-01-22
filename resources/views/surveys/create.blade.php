@@ -102,7 +102,9 @@
                 @foreach ($surveys as $survey)
                     <div class="flex justify-between items-center bg-white rounded-lg shadow-sm p-4 w-full">
                         <div class="">
-                            <h1>{{ $survey->name }}</h1>
+                            <a href="{{ route('surveys.show', ['survey' => $survey]) }}" class="text-blue-600 hover:text-blue-800">
+                                {{ $survey->name }}
+                            </a>
                         </div>
                         <div>
                             @if ($survey->status->name === 'DRAFT')

@@ -87,15 +87,14 @@ class SurveysController extends Controller
             'answer' => 'required',
         ]);
 
-        dd($validated);
-
         $survey->answers()->firstOrCreate([
             'question_id' => $validated['question_id'],
             'user_id' => Auth::user()->id,
             'answer' => $validated['answer'],
         ]);
 
-        $nextPage = $request->query('page', 1) + 1;
+        $currentPage = (int) $request->input('page', 1);
+        $nextPage = $currentPage + 1;
 
         if ($nextPage > $survey->questions->count()) {
             return redirect()->route('surveys')->with('toast', [
