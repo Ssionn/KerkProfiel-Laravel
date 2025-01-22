@@ -3,20 +3,29 @@
 namespace App\Repositories;
 
 use App\Models\Team;
+use App\Models\TemporaryImage;
 use Illuminate\Support\Facades\Auth;
 
 class TeamsRepository
 {
     public function createTeam(string $name, string $description): Team
     {
-        $team = new Team([
+        $team = Team::create([
             'name' => $name,
             'description' => $description,
-            'user_id' => Auth::user()->id,
+            'owner_id' => Auth::id(),
         ]);
 
-        $team->save();
-
         return $team;
+    }
+
+    public function getTeamAvatar(string $folder): TemporaryImage
+    {
+        return TemporaryImage::where('folder', $folder)->first();
+    }
+
+    public function deleteTemporaryImage(string $folder): void
+    {
+        TemporaryImage::where('folder', $folder)->delete();
     }
 }

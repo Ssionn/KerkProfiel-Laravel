@@ -23,20 +23,24 @@
                 {{ __('Surveys') }}
             </h2>
 
-            <ul class="mt-4">
-                @foreach ($surveys as $survey)
-                    <a href="{{ route('surveys.show', $survey) }}">
-                        <li class="flex flex-row justify-between items-center bg-white rounded-md p-3">
-                            <div class="flex flex-col items-start">
-                                <span class="font-semibold text-gray-900">{{ $survey->name }}</span>
-                            </div>
-                            <span class="px-4 py-1 text-xs font-semibold text-green-600 bg-green-100 rounded-full">
-                                {{ $survey->status->value }}
-                            </span>
-                        </li>
-                    </a>
-                @endforeach
-            </ul>
+            @if ($surveys->count() > 0)
+                <ul class="mt-4">
+                    @foreach ($surveys as $survey)
+                        <a href="{{ route('surveys.show', $survey) }}">
+                            <li class="flex flex-row justify-between items-center bg-white rounded-md p-3">
+                                <div class="flex flex-col items-start">
+                                    <span class="font-semibold text-gray-900">{{ $survey->name }}</span>
+                                </div>
+                                <span class="px-4 py-1 text-xs font-semibold text-green-600 bg-green-100 rounded-full">
+                                    {{ $survey->status->value }}
+                                </span>
+                            </li>
+                        </a>
+                    @endforeach
+                </ul>
+            @else
+                <p>{{ __('No surveys found.') }}</p>
+            @endif
         </div>
     </div>
 </x-app-layout>

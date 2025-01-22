@@ -24,7 +24,7 @@ class TeamsSeeder extends Seeder
             'name' => 'Development Team',
             'description' => 'The team which develops this product',
             'avatar' => null,
-            'user_id' => $teamLeader->id,
+            'owner_id' => $teamLeader->id,
         ]);
 
         User::query()

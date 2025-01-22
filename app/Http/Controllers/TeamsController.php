@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Enums\Roles;
 use App\Http\Requests\TeamCreationRequest;
 use App\Models\Survey;
-use App\Models\TemporaryImage;
 use App\Repositories\SurveysRepository;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
+use App\Services\ImageHolderService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +17,9 @@ use Illuminate\View\View;
 
 class TeamsController extends Controller
 {
+    public const diskName = 'spaces';
+    public const teamleader = Roles::TEAMLEADER->value;
+
     public function __construct(
         protected TeamsRepository $teamsRepository,
         protected UserRepository $userRepository,
@@ -60,35 +63,34 @@ class TeamsController extends Controller
             $request->team_description,
         );
 
-        $user = $this->userRepository->findUserById(Auth::user()->id);
+        Auth::user()->associateTeamToUserByModel($team);
+        Auth::user()->associateRoleToUser(self::teamleader);
 
-        $user->associateTeamToUserByModel($team);
-        $user->associateRoleToUser(Roles::TEAMLEADER->value);
+        $teamAvatar = $this->teamsRepository->getTeamAvatar(
+            ImageHolderService::getRecentFolder()
+        );
 
-        // team avatar returns null here because it doesn't actually contain a string with the folder name? just gibberish
-        $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();
-
-        if ($tempFile) {
-            try {
-                $filePath = storage_path('app/public/avatars/tmp/' . $request->team_avatar . '/' . $tempFile->filename);
-
-                if (! file_exists($filePath)) {
-                    throw new \Exception('Team avatar file not found: ' . $filePath);
-                }
-
-                $team->addMedia($filePath)
-                    ->toMediaCollection('avatars', 'local');
-
-                Storage::disk('public')->deleteDirectory('avatars/tmp/' . $request->team_avatar);
-
-                $tempFile->delete();
-            } catch (\Exception $e) {
-                throw new \Exception('Error uploading team avatar: ' . $e->getMessage());
-            }
+        if (! $teamAvatar) {
+            return redirect()->route('teams')->with('toast', [
+                'message' => "{$team->name} is gecreëerd, maar er is iets misgegaan met het uploaden van de avatar",
+                'type' => 'success',
+            ]);
         }
 
+        $path = "avatars/tmp/{$teamAvatar->folder}/{$teamAvatar->filename}";
+        $team->addMedia(storage_path('app/public/' . $path))
+            ->usingFileName($teamAvatar->filename)
+            ->storingConversionsOnDisk(self::diskName)
+            ->toMediaCollection(
+                'team_avatars',
+                self::diskName
+            );
+
+        Storage::disk('public')->deleteDirectory("avatars/tmp/{$teamAvatar->folder}");
+        $this->teamsRepository->deleteTemporaryImage($teamAvatar->folder);
+
         return redirect()->route('teams')->with('toast', [
-            'message' => 'Team is aangemaakt',
+            'message' => "{$team->name} is gecreëerd",
             'type' => 'success',
         ]);
     }
@@ -97,7 +99,7 @@ class TeamsController extends Controller
     {
         $user = $this->userRepository->findUserById($userId);
 
-        if ($user->role->name === Roles::TEAMLEADER->value) {
+        if ($user->role->name === self::teamleader) {
             return redirect()->route('teams')->with('toast', [
                 'message' => 'Je kan geen teamleader verwijderen',
                 'type' => 'error',
