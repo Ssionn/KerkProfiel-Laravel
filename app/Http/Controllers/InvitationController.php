@@ -148,7 +148,7 @@ class InvitationController extends Controller
     {
         $invitation = $this->invitationRepository->findInvitationByNullToken($token);
 
-        if (!$invitation) {
+        if (! $invitation) {
             $invitation->delete();
 
             return redirect()->route('login')->with('toast', [
