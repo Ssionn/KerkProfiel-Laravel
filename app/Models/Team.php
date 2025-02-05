@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Team extends Model implements HasMedia
 {
@@ -56,5 +57,18 @@ class Team extends Model implements HasMedia
         return $teamAvatar->getTemporaryUrl(
             Carbon::now()->addMinutes(5),
         );
+    }
+
+    public function createInvitationToken(): string
+    {
+        return bin2hex(random_bytes(24));
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+              ->width(128)
+              ->height(128)
+              ->sharpen(10);
     }
 }
