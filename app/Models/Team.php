@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Team extends Model implements HasMedia
 {
@@ -16,7 +18,7 @@ class Team extends Model implements HasMedia
         'name',
         'description',
         'avatar',
-        'user_id',
+        'owner_id',
     ];
 
     public function users(): HasMany
@@ -27,6 +29,11 @@ class Team extends Model implements HasMedia
     public function roles(): HasMany
     {
         return $this->hasMany(Role::class);
+    }
+
+    public function surveys(): HasMany
+    {
+        return $this->hasMany(Survey::class);
     }
 
     public function owner(): HasOne
@@ -41,10 +48,27 @@ class Team extends Model implements HasMedia
 
     public function defaultTeamAvatar(): string
     {
-        if (! $this->getFirstMediaUrl('avatars')) {
-            return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&background=random&color=random?size=128';
+        if (! $this->getFirstMediaUrl('team_avatars')) {
+            return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=random&color=random?size=128';
         }
 
-        return $this->getFirstMediaUrl('avatars');
+        $teamAvatar = $this->getMedia('team_avatars')->first();
+
+        return $teamAvatar->getTemporaryUrl(
+            Carbon::now()->addMinutes(5),
+        );
+    }
+
+    public function createInvitationToken(): string
+    {
+        return bin2hex(random_bytes(24));
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+              ->width(128)
+              ->height(128)
+              ->sharpen(10);
     }
 }

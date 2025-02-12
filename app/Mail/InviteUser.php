@@ -5,62 +5,42 @@ namespace App\Mail;
 use App\Models\Team;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Attachment;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class InviteUser extends Mailable
 {
     use Queueable;
-    use SerializesModels;
 
     public function __construct(
         public Team $team,
-        public $email,
-        public $inviteUrl
+        public string $inviteEmail,
+        public string $acceptUrl
     ) {
-        $this->email = $email;
-        $this->inviteUrl = $inviteUrl;
     }
 
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
+    public function build(): self
     {
-        return new Envelope(
-            subject: 'Uitnodiging om lid te worden',
-            from: config('mail.from.address'),
-            replyTo: [
-                config('mail.from.address'),
-            ],
-        );
-    }
+        $mail = $this->view('emails.invite')
+            ->with([
+                'subject' => 'Uitnodiging',
+                'team' => $this->team,
+                'acceptUrl' => $this->acceptUrl,
+            ]);
 
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            markdown: 'emails.invite',
-            with: [
-                'email' => $this->email,
-                'url' => $this->inviteUrl,
-            ],
-        );
-    }
+        /** @var ?Media $inviteTeamMedia */
+        $inviteTeamMedia = $this->team->getFirstMedia('team_avatars');
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [
-            Attachment::fromUrl($this->team->defaultTeamAvatar())
-        ];
+        if ($inviteTeamMedia) {
+            $thumbnailPath = $inviteTeamMedia->getPath('thumb');
+
+            if (file_exists($thumbnailPath)) {
+                $mail->attach($thumbnailPath, [
+                    'as' => 'team-avatar.' . $inviteTeamMedia->extension,
+                    'mime' => $inviteTeamMedia->mime_type,
+                ]);
+            }
+        }
+
+        return $mail;
     }
 }

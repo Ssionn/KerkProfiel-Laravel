@@ -3,12 +3,13 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SocialiteController;
-use App\Http\Controllers\SettingsController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\SurveysController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TeamSettingsController;
-use App\Services\ImageHolder;
+use App\Services\ImageHolderService;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login');
@@ -30,9 +31,7 @@ Route::post('/invite/login/{token}', [InvitationController::class, 'acceptInvite
 
 
 Route::middleware('auth', 'UserActivityCheck')->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('teams')->group(function () {
         Route::get('/', [TeamsController::class, 'index'])->name('teams')->middleware('PermissionCheck:view teams');
@@ -60,7 +59,15 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
         Route::delete('/{user}/remove', [TeamsController::class, 'destroy'])
             ->name('team.members.destroy');
 
-        Route::post('uploads/process', [ImageHolder::class, 'store']);
+        Route::post('uploads/process', [ImageHolderService::class, 'store']);
+    });
+
+    Route::prefix('surveys')->group(function () {
+        Route::get('/', [SurveysController::class, 'index'])->name('surveys');
+        Route::post('/', [SurveysController::class, 'store'])->name('surveys.store');
+
+        Route::get('/{survey}', [SurveysController::class, 'showSurvey'])->name('surveys.show');
+        Route::post('/{survey}/answers', [SurveysController::class, 'storeAnswer'])->name('survey.answer');
     });
 
     Route::prefix('settings')->group(function () {

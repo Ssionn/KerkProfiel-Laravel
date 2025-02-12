@@ -17,12 +17,14 @@ class TeamsSeeder extends Seeder
 
     public function run(): void
     {
+        $teamLeader = User::where('email', 'casper@houseofhope.com')->first();
+
         $team = Team::create([
             'id' => 1,
             'name' => 'Development Team',
             'description' => 'The team which develops this product',
             'avatar' => null,
-            'user_id' => User::where('email', 'casper@houseofhope.com')->value('id'),
+            'owner_id' => $teamLeader->id,
         ]);
 
         User::query()

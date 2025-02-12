@@ -1,40 +1,44 @@
 <x-app-layout>
-    <div class="flex flex-col items-center justify-center">
-        <div class="flex flex-col w-full p-2 bg-white rounded-lg shadow-lg md:p-0 sm:w-3/4 md:w-2/4 xl:w-2/4">
-            <div class="p-2 md:p-3">
-                <h1 class="text-xl font-medium">{{ __('Team aanmaken') }}</h1>
+    <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <div class="flex flex-col w-full bg-white rounded-lg shadow-lg p-2 md:p-4 sm:w-11/12 md:w-3/4 lg:w-2/4 xl:w-1/3">
+            <div class="p-2">
+                <h1 class="text-lg font-semibold md:text-xl">{{ __('teams/create.form.header') }}</h1>
             </div>
-            <div class="px-2">
-                <form action="{{ route('teams.store') }}" method="POST" class="p-2 space-y-2">
+
+            <div>
+                <form action="{{ route('teams.store') }}" method="POST" enctype="multipart/form-data"
+                    class="p-2 space-y-4">
                     @csrf
 
-                    <div class="flex flex-col items-start space-y-2">
-                        <label class="ml-1 text-xs font-semibold text-gray-600" for="team_name">
-                            {{ __('Team naam') }}
+                    <div class="flex flex-col space-y-1">
+                        <label for="team_name" class="ml-1 text-sm font-medium text-gray-700">
+                            {{ __('teams/create.form.fields.name') }}
                         </label>
                         <input type="text" name="team_name" id="team_name" required
-                            class="w-full p-2 rounded-lg text-xs placeholder:text-gray-200 placeholder:text-sm border-[1px] focus:ring-sky-blue" />
+                            placeholder="{{ __('teams/create.form.fields.placeholder_name') }}"
+                            class="w-full p-2 border rounded-lg shadow-sm text-sm placeholder-gray-400 focus:ring focus:ring-blue-300" />
                     </div>
 
-                    <div class="flex flex-col items-start space-y-2">
-                        <label class="ml-1 text-xs font-semibold text-gray-600" for="team_description">
-                            {{ __('Team beschrijving') }}
+                    <div class="flex flex-col space-y-1">
+                        <label for="team_description" class="ml-1 text-sm font-medium text-gray-700">
+                            {{ __('teams/create.form.fields.description') }}
                         </label>
                         <input type="text" name="team_description" id="team_description" required
-                            class="w-full p-2 rounded-lg text-xs placeholder:text-gray-200 placeholder:text-sm border-[1px] focus:ring-sky-blue" />
+                            placeholder="{{ __('teams/create.form.fields.placeholder_omschrijving') }}"
+                            class="w-full p-2 border rounded-lg shadow-sm text-sm placeholder-gray-400 focus:ring focus:ring-blue-300" />
                     </div>
 
-                    <div class="flex flex-col items-start space-y-2 py-4">
-                        <label class="ml-1 text-xs font-semibold text-gray-600" for="team_avatar">
-                            {{ __('Team avatar') }}
+                    <div class="flex flex-col space-y-1">
+                        <label for="team_avatar" class="ml-1 text-sm font-medium text-gray-700">
+                            {{ __('teams/create.form.fields.avatar') }}
                         </label>
-                        <input type="file" name="team_avatar" id="team_avatar" class="w-full filepond" />
+                        <input type="file" name="team_avatar" id="team_avatar" class="filepond" />
                     </div>
 
-                    <div class="mt-2 mb-2">
+                    <div class="pt-2">
                         <button type="submit"
-                            class="w-full py-1 text-sm font-semibold text-center text-white rounded-lg bg-midnight-blue">
-                            {{ __('Aanmaken') }}
+                            class="w-full py-2 text-sm font-semibold text-white bg-midnight-blue rounded-lg shadow">
+                            {{ __('teams/create.form.fields.create_button') }}
                         </button>
                     </div>
                 </form>

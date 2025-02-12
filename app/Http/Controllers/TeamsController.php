@@ -4,20 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Enums\Roles;
 use App\Http\Requests\TeamCreationRequest;
-use App\Models\TemporaryImage;
+use App\Models\Survey;
+use App\Repositories\SurveysRepository;
 use App\Repositories\TeamsRepository;
 use App\Repositories\UserRepository;
+use App\Services\ImageHolderService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class TeamsController extends Controller
 {
+    public const diskName = 'spaces';
+    public const teamleader = Roles::TEAMLEADER->value;
+
     public function __construct(
         protected TeamsRepository $teamsRepository,
-        protected UserRepository $userRepository
-    ) {}
+        protected UserRepository $userRepository,
+        protected SurveysRepository $surveysRepository,
+    ) {
+    }
 
     public function index(): View|RedirectResponse
     {
@@ -29,14 +37,17 @@ class TeamsController extends Controller
 
         $users = $team->users()
             ->when(request('role_type'), function ($query, $roleType) {
-                $query->whereHas('role', fn($query) => $query->where('name', $roleType));
+                $query->whereHas('role', fn ($query) => $query->where('name', $roleType));
             })
             ->with('role')
             ->paginate(9);
 
+        $surveys = $this->surveysRepository->getAdminSurveys();
+
         return view('teams.index', [
             'team' => $team,
             'users' => $users,
+            'surveys' => $surveys,
         ]);
     }
 
@@ -49,37 +60,37 @@ class TeamsController extends Controller
     {
         $team = $this->teamsRepository->createTeam(
             $request->team_name,
-            $request->team_description
+            $request->team_description,
         );
 
-        $user = $this->userRepository->findUserById(Auth::user()->id);
+        Auth::user()->associateTeamToUserByModel($team);
+        Auth::user()->associateRoleToUser(self::teamleader);
 
-        $user->associateTeamToUserByModel($team);
-        $user->associateRoleToUser(Roles::TEAMLEADER->value);
+        $teamAvatar = $this->teamsRepository->getTeamAvatar(
+            ImageHolderService::getRecentFolder()
+        );
 
-        $tempFile = TemporaryImage::where('folder', $request->team_avatar)->first();
-
-        if ($tempFile) {
-            try {
-                $filePath = storage_path('app/public/avatars/tmp/' . $request->team_avatar . '/' . $tempFile->filename);
-
-                if (! file_exists($filePath)) {
-                    throw new \Exception('Team avatar file not found: ' . $filePath);
-                }
-
-                $team->addMedia($filePath)
-                    ->toMediaCollection('avatars', 'local');
-
-                Storage::disk('public')->deleteDirectory('avatars/tmp/' . $request->team_avatar);
-
-                $tempFile->delete();
-            } catch (\Exception $e) {
-                throw new \Exception('Error uploading team avatar: ' . $e->getMessage());
-            }
+        if (! $teamAvatar) {
+            return redirect()->route('teams')->with('toast', [
+                'message' => "{$team->name} is gecreëerd, maar er is iets misgegaan met het uploaden van de avatar",
+                'type' => 'success',
+            ]);
         }
 
+        $path = "avatars/tmp/{$teamAvatar->folder}/{$teamAvatar->filename}";
+        $team->addMedia(storage_path('app/public/' . $path))
+            ->usingFileName($teamAvatar->filename)
+            ->storingConversionsOnDisk(self::diskName)
+            ->toMediaCollection(
+                'team_avatars',
+                self::diskName
+            );
+
+        Storage::disk('public')->deleteDirectory("avatars/tmp/{$teamAvatar->folder}");
+        $this->teamsRepository->deleteTemporaryImage($teamAvatar->folder);
+
         return redirect()->route('teams')->with('toast', [
-            'message' => 'Team is aangemaakt',
+            'message' => "{$team->name} is gecreëerd",
             'type' => 'success',
         ]);
     }
@@ -88,7 +99,7 @@ class TeamsController extends Controller
     {
         $user = $this->userRepository->findUserById($userId);
 
-        if ($user->role->name === Roles::TEAMLEADER->value) {
+        if ($user->role->name === self::teamleader) {
             return redirect()->route('teams')->with('toast', [
                 'message' => 'Je kan geen teamleader verwijderen',
                 'type' => 'error',
@@ -115,6 +126,26 @@ class TeamsController extends Controller
 
         return redirect()->route('dashboard')->with('toast', [
             'message' => "{$team->name} verlaten",
+            'type' => 'success',
+        ]);
+    }
+
+    public function createSurvey(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'survey_id' => 'required|exists:surveys,id'
+        ]);
+
+        $survey = Survey::findOrFail($request->survey_id);
+
+        $this->surveysRepository->copySurveyForTeam(
+            $survey,
+            Auth::user()->team->id,
+            Auth::user()->team->owner->id,
+        );
+
+        return redirect()->route('teams')->with('toast', [
+            'message' => 'Survey aangemaakt',
             'type' => 'success',
         ]);
     }
