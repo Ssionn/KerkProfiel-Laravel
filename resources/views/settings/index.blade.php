@@ -65,7 +65,7 @@
                     <div class="flex justify-end">
                         <button type="button" data-modal-toggle="delete-account"
                             class="bg-red-500 text-white rounded-full px-4 py-1 font-medium">
-                            {{ __('settings/user-setting.delete.delete_button') }}
+                            {{ __('settings/user.delete.delete_button') }}
                         </button>
                     </div>
                 </form>
@@ -74,12 +74,12 @@
     </div>
 
     <x-modal modalId="delete-account" method="POST"
-            modalHeader="{{ __('settings/user-setting.delete.delete_button') }}"
-            modalButton="{{ __('settings/user-setting.delete.delete_confirmation') }}"
+            modalHeader="{{ __('settings/user.delete.delete_button') }}"
+            modalButton="{{ __('settings/user.delete.delete_confirmation') }}"
             modalButtonColor="bg-red-500"
             formAction="{{ route('settings.account.delete') }}">
             <div class="flex flex-col items-start space-y-2">
-                <span class="font-semibold text-sm ">{{ __('settings/user-setting.delete.delete_description') }}</span>
+                <span class="font-semibold text-sm ">{{ __('settings/user.delete.delete_description') }}</span>
             </div>
     </x-modal>
 </x-app-layout>

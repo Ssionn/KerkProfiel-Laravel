@@ -35,11 +35,14 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
     })->name('dashboard');
 
     Route::prefix('teams')->group(function () {
-        Route::get('/', [TeamsController::class, 'index'])->name('teams');
+        Route::get('/', [TeamsController::class, 'index'])->name('teams')->middleware('PermissionCheck:view teams');
         Route::post('/invite', [InvitationController::class, 'sendInvite'])->name('teams.invite');
 
         Route::middleware('PermissionCheck:edit team')->group(function () {
-            Route::get('/edit/{teamId}', [TeamSettingsController::class, 'index'])->name('teams.edit');
+            Route::get('/edit/{team}', [TeamSettingsController::class, 'edit'])->name('teams.edit');
+
+            Route::post('/update/{team}', [TeamSettingsController::class, 'updateTeam'])->name('teams.team.update');
+            Route::post('/delete/{team}', [TeamSettingsController::class, 'deleteTeam'])->name('teams.team.delete');
         });
 
         Route::middleware('PermissionCheck:create team')->group(function () {

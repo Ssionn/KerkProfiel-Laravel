@@ -96,6 +96,7 @@ class TeamsController extends Controller
         }
 
         $user->guestify();
+        $user->refresh();
 
         return redirect()->route('teams')->with('toast', [
             'message' => "{$user->username} verwijderd",
@@ -110,6 +111,7 @@ class TeamsController extends Controller
         $team = $user->team;
 
         $user->guestify();
+        $user->refresh();
 
         return redirect()->route('dashboard')->with('toast', [
             'message' => "{$team->name} verlaten",

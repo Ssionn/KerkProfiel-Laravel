@@ -7,7 +7,7 @@
 
             <div class="flex-1">
                 @if (auth()->user()->getTeamEditPermission())
-                    <a href="{{ route('teams.edit', $team->id) }}" class="inline-flex items-center text-xl font-bold text-gray-900 hover:underline hover:scale-110 transition ease-in-out duration-300">
+                    <a href="{{ route('teams.edit', $team) }}" class="inline-flex items-center text-xl font-bold text-gray-900 hover:underline hover:scale-110 transition ease-in-out duration-300">
                         {{ $team->name }}
                         <x-feathericon-edit class="w-4 h-4 ml-1"/>
                     </a>
