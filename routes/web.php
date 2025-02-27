@@ -29,7 +29,7 @@ Route::post('/invite/login/{token}', [InvitationController::class, 'acceptInvite
     ->name('teams.acceptPostLogin');
 
 
-Route::middleware('auth', 'UserActivityCheck')->group(function () {
+Route::middleware('auth', 'activity', 'role')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('teams')->group(function () {
@@ -46,8 +46,6 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
 
         Route::delete('/{user}/remove', [TeamsController::class, 'destroy'])
             ->name('team.members.destroy');
-
-        Route::post('uploads/process', [ImageHolderService::class, 'store']);
     });
 
     Route::prefix('surveys')->group(function () {
@@ -58,6 +56,7 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
         Route::post('/{survey}/answers', [SurveysController::class, 'storeAnswer'])->name('survey.answer');
     });
 
+    Route::post('uploads/process', [ImageHolderService::class, 'store']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 

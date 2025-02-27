@@ -6,12 +6,11 @@ use App\Enums\Roles;
 use App\Http\Requests\TeamCreationRequest;
 use App\Models\Survey;
 use App\Repositories\SurveysRepository;
-use App\Repositories\TeamsRepository;
+use App\Repositories\TeamRepository;
+use App\Repositories\TemporaryImageRepository;
 use App\Repositories\UserRepository;
-use App\Services\ImageHolderService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -21,7 +20,8 @@ class TeamsController extends Controller
     public const teamleader = Roles::TEAMLEADER->value;
 
     public function __construct(
-        protected TeamsRepository $teamsRepository,
+        protected TeamRepository $teamRepository,
+        protected TemporaryImageRepository $temporaryImageRepository,
         protected UserRepository $userRepository,
         protected SurveysRepository $surveysRepository,
     ) {
@@ -29,7 +29,7 @@ class TeamsController extends Controller
 
     public function index(): View|RedirectResponse
     {
-        $team = Auth::user()->team;
+        $team = auth()->user()->team;
 
         if (! $team) {
             return redirect()->route('teams.create');
@@ -58,16 +58,21 @@ class TeamsController extends Controller
 
     public function store(TeamCreationRequest $request): RedirectResponse
     {
-        $team = $this->teamsRepository->createTeam(
+        $team = $this->teamRepository->createTeam(
             $request->team_name,
             $request->team_description,
         );
 
-        Auth::user()->associateTeamToUserByModel($team);
-        Auth::user()->associateRoleToUser(self::teamleader);
+        auth()->user()->associateTeamToUserByModel($team);
+        auth()->user()->associateRoleToUser(self::teamleader);
 
-        $teamAvatar = $this->teamsRepository->getTeamAvatar(
-            ImageHolderService::getRecentFolder()
+        $recentImage = $this->temporaryImageRepository->findRecentTemporaryImageByUser(
+            auth()->user()
+        );
+
+        $teamAvatar = $this->temporaryImageRepository->updateRecentTemporaryImageWithModel(
+            $recentImage,
+            $team,
         );
 
         if (! $teamAvatar) {
@@ -77,17 +82,20 @@ class TeamsController extends Controller
             ]);
         }
 
+        $getModelTypeAsString = str_replace("App\\Models\\", '', $teamAvatar->model_type);
+        $lowercaseModelType = strtolower($getModelTypeAsString);
+
         $path = "avatars/tmp/{$teamAvatar->folder}/{$teamAvatar->filename}";
         $team->addMedia(storage_path('app/public/' . $path))
             ->usingFileName($teamAvatar->filename)
             ->storingConversionsOnDisk(self::diskName)
             ->toMediaCollection(
-                'team_avatars',
+                $lowercaseModelType . '_avatars',
                 self::diskName
             );
 
         Storage::disk('public')->deleteDirectory("avatars/tmp/{$teamAvatar->folder}");
-        $this->teamsRepository->deleteTemporaryImage($teamAvatar->folder);
+        $this->temporaryImageRepository->deleteTemporaryImage($teamAvatar->folder);
 
         return redirect()->route('teams')->with('toast', [
             'message' => "{$team->name} is gecreëerd",
@@ -138,8 +146,8 @@ class TeamsController extends Controller
 
         $this->surveysRepository->copySurveyForTeam(
             $survey,
-            Auth::user()->team->id,
-            Auth::user()->team->owner->id,
+            auth()->user()->team->id,
+            auth()->user()->team->owner->id,
         );
 
         return redirect()->route('teams')->with('toast', [

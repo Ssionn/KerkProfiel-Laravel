@@ -13,6 +13,8 @@ return new class () extends Migration {
     {
         Schema::create('temporary_images', function (Blueprint $table) {
             $table->id();
+            $table->string('model_type')->nullable();
+            $table->unsignedBigInteger('model_id')->nullable();
             $table->string('folder');
             $table->string('filename');
             $table->foreignIdFor(User::class, 'owner_id')->nullable();

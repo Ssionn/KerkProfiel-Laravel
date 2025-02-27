@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -23,8 +25,8 @@ class User extends Authenticatable
         'provider_id',
         'provider_token',
         'avatar',
-        'team_id',
         'role_id',
+        'team_id',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -73,12 +75,31 @@ class User extends Authenticatable
         return $this->save();
     }
 
-    public function guestify(): bool
+    /*
+    * Defaults to name column.
+    */
+    public function guestify(string $column = 'name', $columnDef = 'guest', ?User $user = null): bool
     {
-        $this->role_id = Role::where('name', 'guest')->pluck('id')->first();
-        $this->team_id = null;
+        if (! Role::where($column, $columnDef)->exists()) {
+            throw new Exception('Unable to update user role.');
+        }
 
-        return $this->save();
+        $roleId = Role::where($column, $columnDef)->pluck('id')->first();
+
+        if (!$roleId) {
+            throw new Exception('Role ID could not be determined.');
+        }
+
+        if ($user === null) {
+            $this->role_id = $roleId;
+            return true;
+        }
+
+        $user->update([
+            'role_id' => $roleId
+        ]);
+
+        return true;
     }
 
     public function hasPermission($permission)

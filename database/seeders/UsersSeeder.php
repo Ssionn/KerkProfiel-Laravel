@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Team;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -54,14 +55,11 @@ class UsersSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            User::create([
-                'username' => $user['username'],
-                'email' => $user['email'],
-                'password' => $user['password'],
-                'email_verified_at' => now(),
-                'role_id' => $user['role_id'],
-                'team_id' => $user['team_id'],
-            ]);
+            User::create($user);
         }
+
+        $team = Team::find(1);
+        $teamLeader = User::where('email', 'casper@houseofhope.com')->first();
+        $team->update(['owner_id' => $teamLeader->id]);
     }
 }

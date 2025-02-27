@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('provider_token')->nullable();
             $table->string('avatar')->nullable();
             $table->boolean('is_active')->default(false);
-            $table->foreignIdFor(Role::class, 'role_id')->default(null);
+            $table->foreignIdFor(Role::class, 'role_id')->default(4);
             $table->rememberToken();
             $table->timestamps();
         });

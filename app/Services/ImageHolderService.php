@@ -3,43 +3,35 @@
 namespace App\Services;
 
 use App\Models\TemporaryImage;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\UploadedFile;
 
 class ImageHolderService
 {
-    public function store(Request $request): string
-    {
-        if ($request->hasFile($requestedFileName = $request->keys()[0])) {
-            try {
-                $tempFile = $request->file($requestedFileName);
-                $fileName = str_replace(' ', '_', $tempFile->getClientOriginalName());
-                $folder = uniqid() . '-' . now()->timestamp;
-                $path = 'avatars/tmp/' . $folder;
+    public function store(
+        Request $request
+    ): string {
+        $uploadedFile = $request->allFiles()[$request->keys()[0]];
 
-                if ($tempFile->storeAs($path, $fileName, ['disk' => 'public'])) {
-                    TemporaryImage::create([
-                        'folder' => $folder,
-                        'filename' => $fileName,
-                        'owner_id' => Auth::user()->id,
-                    ]);
+        if (!$uploadedFile instanceof UploadedFile) {
+            throw new Exception('Image is not an uploaded file');
+        }
 
-                    return $folder;
-                }
-            } catch (\Exception $e) {
-                throw new \Exception('Error storing temporary image: ' . $e->getMessage());
-            }
+        $newFileName = str_replace(' ', '_', $uploadedFile->getClientOriginalName());
+        $uniqueFolder = uniqid() . '-' . now()->timestamp;
+        $path =  'avatars/tmp/' . $uniqueFolder;
+
+        if ($uploadedFile->storeAs($path, $newFileName, ['disk' => 'public'])) {
+            TemporaryImage::create([
+                'folder' => $uniqueFolder,
+                'filename' => $newFileName,
+                'owner_id' => auth()->user()->id,
+            ]);
+
+            return $uniqueFolder;
         }
 
         return '';
-    }
-
-    public static function getRecentFolder(): string
-    {
-        $tempImage = TemporaryImage::where('owner_id', Auth::user()->id)
-            ->latest()
-            ->first();
-
-        return $tempImage->folder ?? '';
     }
 }

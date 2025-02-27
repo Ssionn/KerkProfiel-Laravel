@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TemporaryImage extends Model
 {
     protected $fillable = [
+        'model_type',
+        'model_id',
         'folder',
         'filename',
         'owner_id',

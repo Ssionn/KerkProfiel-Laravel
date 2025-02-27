@@ -12,13 +12,11 @@ class UserRepository
         string $email,
         string $password
     ): User {
-        $user = new User([
+        $user = User::create([
             'username' => $username,
             'email' => $email,
             'password' => Hash::make($password),
         ]);
-
-        $user->guestify();
 
         return $user;
     }

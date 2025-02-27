@@ -16,7 +16,8 @@ return new class () extends Migration {
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('avatar')->nullable();
-            $table->foreignIdFor(User::class, 'owner_id');
+            $table->foreignIdFor(User::class, 'owner_id')
+                ->nullable();
             $table->timestamps();
         });
     }

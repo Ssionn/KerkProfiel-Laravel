@@ -13,8 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'PermissionCheck' => \App\Http\Middleware\PermissionCheck::class,
-            'UserActivityCheck' => \App\Http\Middleware\UserActivityCheck::class,
+            'activity' => \App\Http\Middleware\UserActivityCheck::class,
+            'role' => \App\Http\Middleware\CheckUserRoleMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

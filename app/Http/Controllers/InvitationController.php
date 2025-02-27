@@ -9,7 +9,6 @@ use App\Http\Requests\InviteRequest;
 use App\Mail\InviteUser;
 use App\Models\Invitation;
 use App\Repositories\InvitationRepository;
-use App\Repositories\RolesRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +17,11 @@ use Illuminate\View\View;
 
 class InvitationController extends Controller
 {
+    public const member = Roles::MEMBER->value;
+
     public function __construct(
         protected UserRepository $userRepository,
         protected InvitationRepository $invitationRepository,
-        protected RolesRepository $rolesRepository
     ) {
     }
 
@@ -71,7 +71,7 @@ class InvitationController extends Controller
             }
 
             $user->associateTeamToUserByTeamId($invitation->team_id);
-            $user->associateRoleToUser(Roles::MEMBER->value);
+            $user->associateRoleToUser(self::member);
 
             $invitation->update(['accepted_at' => now()]);
 
@@ -131,7 +131,7 @@ class InvitationController extends Controller
         );
 
         $user->associateTeamToUserByTeamId($invitation->team_id);
-        $user->associateRoleToUser(Roles::MEMBER->value);
+        $user->associateRoleToUser(self::member);
 
         $invitation->update(['accepted_at' => now()]);
 
