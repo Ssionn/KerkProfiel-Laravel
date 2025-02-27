@@ -39,6 +39,7 @@
         <script src="{{ asset('js/filepond.js') }}" defer></script>
         <script src="{{ asset('js/modal.js') }}" defer></script>
         <script src="{{ asset('js/toast.js') }}" defer></script>
+        <script src="{{ asset('js/quantity-diagram.js') }}" defer></script>
     @endpush
 </body>
 

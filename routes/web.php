@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\Charts\QuantityDiagramController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\SurveysController;
@@ -31,6 +32,7 @@ Route::post('/invite/login/{token}', [InvitationController::class, 'acceptInvite
 
 Route::middleware('auth', 'UserActivityCheck')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/charts/quantity-diagram', QuantityDiagramController::class)->name('charts.quantity-diagram');
 
     Route::prefix('teams')->group(function () {
         Route::get('/', [TeamsController::class, 'index'])->name('teams');

@@ -42,5 +42,9 @@
                 <p>{{ __('No surveys found.') }}</p>
             @endif
         </div>
+
+        <div class="col-span-1">
+            <canvas id="quantityDiagramChart" width="400" height="200">
+        </div>
     </div>
 </x-app-layout>
