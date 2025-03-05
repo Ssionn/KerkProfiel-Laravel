@@ -30,10 +30,14 @@
                     icon="heroicon-s-users" class="flex items-center w-full" aria-label="Teams" />
             @endcan
 
+            <x-sidebar-tab href="{{ route('surveys') }}" active="{{ request()->routeIs('surveys') }}"
+                title="Vragenlijsten" icon="heroicon-s-clipboard-document-list" class="flex items-center w-full"
+                aria-label="Vragenlijsten" />
+
             @can('create survey')
-                <x-sidebar-tab href="{{ route('surveys') }}" active="{{ request()->routeIs('surveys') }}"
-                    title="Vragenlijsten" icon="heroicon-s-question-mark-circle" class="flex items-center w-full"
-                    aria-label="Vragenlijsten" />
+                <x-sidebar-tab href="{{ route('surveys.create') }}" active="{{ request()->routeIs('surveys.create') }}"
+                    title="Vragenlijst maken" icon="heroicon-s-plus-circle" class="flex items-center w-full"
+                    aria-label="Vragenlijst maken" />
             @endcan
         </ul>
     </div>

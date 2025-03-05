@@ -106,7 +106,7 @@
                                 {{ $survey->name }}
                             </a>
                         </div>
-                        <div>
+                        <div class="flex items-center gap-4">
                             @if ($survey->status->name === 'DRAFT')
                                 <span class="px-4 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-full">
                                     {{ __('Concept') }}
@@ -120,9 +120,20 @@
                                     {{ __('Gesloten') }}
                                 </span>
                             @endif
+
+                            <form action="{{ route('surveys.destroy', $survey) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    onclick="return confirm('Weet je zeker dat je deze vragenlijst wilt verwijderen?')"
+                                    class="text-red-600 hover:text-red-800">
+                                    <x-heroicon-s-trash class="w-5 h-5" />
+                                </button>
+                            </form>
                         </div>
                     </div>
                 @endforeach
             </div>
         </div>
+    </div>
 </x-app-layout>

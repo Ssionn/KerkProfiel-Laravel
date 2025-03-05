@@ -6,6 +6,7 @@ use App\Http\Requests\CreateSurveyRequest;
 use App\Imports\QuestionsImport;
 use App\Models\Survey;
 use App\Repositories\SurveysRepository;
+use App\Enums\SurveyStatus;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,11 +19,32 @@ class SurveysController extends Controller
     ) {
     }
 
-    public function index()
+    public function create()
     {
-        $surveys = $this->surveysRepository->getAdminSurveys();
+        $surveys = Survey::where(function($query) {
+            $query->where('made_by_admin', true)
+                  ->orWhere('team_id', Auth::user()->team_id);
+        })
+        ->latest()
+        ->get();
 
         return view('surveys.create', [
+            'surveys' => $surveys,
+        ]);
+    }
+
+    public function index()
+    {
+        // Get published surveys that are either admin surveys or belong to the user's team
+        $surveys = Survey::where(function($query) {
+            $query->where('made_by_admin', true)
+                  ->orWhere('team_id', Auth::user()->team_id);
+        })
+        ->where('status', SurveyStatus::PUBLISHED)
+        ->latest()
+        ->get();
+
+        return view('surveys.index', [
             'surveys' => $surveys,
         ]);
     }
@@ -54,10 +76,36 @@ class SurveysController extends Controller
             $query->orderBy('sequence', 'asc');
         }, 'questions.answers']);
 
-        $currentPage = $request->query('page', 1);
+        // Get the current page from the request, or find the last answered question
+        $currentPage = $request->query('page', null);
+
+        if (!$currentPage) {
+            // Find the last answered question for this user
+            $lastAnswer = $survey->answers()
+                ->where('user_id', Auth::id())
+                ->orderBy('question_id', 'desc')
+                ->first();
+
+            if ($lastAnswer) {
+                // Get the next question's sequence number
+                $nextQuestion = $survey->questions()
+                    ->where('sequence', '>', $survey->questions()->where('id', $lastAnswer->question_id)->first()->sequence)
+                    ->orderBy('sequence', 'asc')
+                    ->first();
+
+                // If there's a next question, go to it, otherwise stay on the last answered question
+                $currentPage = $nextQuestion
+                    ? $survey->questions()->where('sequence', '<=', $nextQuestion->sequence)->count()
+                    : $survey->questions()->where('sequence', '<=', $survey->questions()->where('id', $lastAnswer->question_id)->first()->sequence)->count();
+            } else {
+                // If no answers yet, start from the beginning
+                $currentPage = 1;
+            }
+        }
+
         $question = $survey->questions->get($currentPage - 1);
 
-        if (! $question) {
+        if (!$question) {
             if ($currentPage > 1) {
                 return redirect()->route('surveys.show', [
                     'survey' => $survey,
@@ -71,11 +119,18 @@ class SurveysController extends Controller
             ]);
         }
 
+        // Check if this question was already answered
+        $existingAnswer = $survey->answers()
+            ->where('user_id', Auth::id())
+            ->where('question_id', $question->id)
+            ->first();
+
         return view('surveys.show', [
             'survey' => $survey,
             'question' => $question,
             'currentPage' => $currentPage,
-            'totalPages' => $survey->questions->count()
+            'totalPages' => $survey->questions->count(),
+            'existingAnswer' => $existingAnswer
         ]);
     }
 
@@ -106,6 +161,19 @@ class SurveysController extends Controller
         return redirect()->route('surveys.show', [
             'survey' => $survey,
             'page' => $nextPage
+        ]);
+    }
+
+    public function destroy(Survey $survey): RedirectResponse
+    {
+        // Delete related questions and answers
+        $survey->questions()->delete();
+        $survey->answers()->delete();
+        $survey->delete();
+
+        return back()->with('toast', [
+            'message' => 'Vragenlijst verwijderd',
+            'type' => 'success',
         ]);
     }
 }

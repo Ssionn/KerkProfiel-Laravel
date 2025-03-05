@@ -55,7 +55,13 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
 
     Route::prefix('surveys')->group(function () {
         Route::get('/', [SurveysController::class, 'index'])->name('surveys');
+        Route::get('/create', [SurveysController::class, 'create'])
+            ->middleware('can:create survey')
+            ->name('surveys.create');
         Route::post('/', [SurveysController::class, 'store'])->name('surveys.store');
+        Route::delete('/{survey}', [SurveysController::class, 'destroy'])
+            ->middleware('can:create survey')
+            ->name('surveys.destroy');
 
         Route::get('/{survey}', [SurveysController::class, 'showSurvey'])->name('surveys.show');
         Route::post('/{survey}/answers', [SurveysController::class, 'storeAnswer'])->name('survey.answer');
