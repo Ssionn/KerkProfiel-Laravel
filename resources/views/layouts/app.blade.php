@@ -21,10 +21,10 @@
 
     <title>{{ config('meta-tags.title') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @stack('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="flex bg-gray-100 font-poppins">
+<body class="flex font-poppins">
     <div x-data="{ open: false }" class="w-full">
         <x-navigation />
 
@@ -39,7 +39,6 @@
         <script src="{{ asset('js/filepond.js') }}" defer></script>
         <script src="{{ asset('js/modal.js') }}" defer></script>
         <script src="{{ asset('js/toast.js') }}" defer></script>
-        <script src="{{ asset('js/quantity-diagram.js') }}" defer></script>
     @endpush
 </body>
 

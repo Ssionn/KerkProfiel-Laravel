@@ -17,7 +17,9 @@
         </form>
     @endif
 
-    <div class="grid grid-cols-3 mt-4">
+    <div class="grid grid-cols-3 gap-4 mt-4">
+        <x-totalscore-diagram />
+
         <div class="col-span-1">
             <h2 class="text-lg font-semibold">
                 {{ __('Surveys') }}
@@ -41,10 +43,6 @@
             @else
                 <p>{{ __('No surveys found.') }}</p>
             @endif
-        </div>
-
-        <div class="col-span-1">
-            <canvas id="quantityDiagramChart" width="400" height="200">
         </div>
     </div>
 </x-app-layout>

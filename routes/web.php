@@ -32,7 +32,6 @@ Route::post('/invite/login/{token}', [InvitationController::class, 'acceptInvite
 
 Route::middleware('auth', 'UserActivityCheck')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/charts/quantity-diagram', QuantityDiagramController::class)->name('charts.quantity-diagram');
 
     Route::prefix('teams')->group(function () {
         Route::get('/', [TeamsController::class, 'index'])->name('teams');

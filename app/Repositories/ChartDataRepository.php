@@ -4,9 +4,9 @@ namespace App\Repositories;
 
 class ChartDataRepository
 {
-    public function getData(): array
+    public function getQuantityData(): array
     {
-        return [
+        $data = [
             'roles' => ['Apostel', 'Profeet', 'Leraar', 'Evangelist', 'Herder'],
             'people' => ['Willem', 'Gerard', 'Mieke', 'Jannie', 'Silvia'],
             'values' => [
@@ -17,21 +17,23 @@ class ChartDataRepository
                 'Silvia' => [0, 5, 20, 5, 25],
             ],
             'totals' => [
-                'byPerson' => [
-                    'Willem' => 135,
-                    'Gerard' => 130,
-                    'Mieke' => 160,
-                    'Jannie' => 100,
-                    'Silvia' => 55,
-                ],
                 'byRole' => [
-                    'Apostel' => 140,
-                    'Profeet' => 135,
-                    'Leraar' => 95,
-                    'Evangelist' => 70,
-                    'Herder' => 140,
+                    'Apostel' => 0,
+                    'Profeet' => 0,
+                    'Leraar' => 0,
+                    'Evangelist' => 0,
+                    'Herder' => 0,
                 ]
             ]
         ];
+
+        foreach ($data['values'] as $person => $values) {
+            foreach($values as $index => $score) {
+                $role = $data['roles'][$index];
+                $data['totals']['byRole'][$role] += $score;
+            }
+        }
+
+        return $data;
     }
 }

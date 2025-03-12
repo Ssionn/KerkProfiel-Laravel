@@ -9,7 +9,7 @@ use Illuminate\View\View;
 class DashboardController extends Controller
 {
     public function __construct(
-        protected SurveysRepository $surveysRepository
+        protected SurveysRepository $surveysRepository,
     ) {
     }
 
@@ -27,4 +27,6 @@ class DashboardController extends Controller
             'surveys' => collect(),
         ]);
     }
+
+
 }
