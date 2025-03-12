@@ -64,7 +64,7 @@
                     <!-- Radio Button Group (Desktop) -->
                     <div class="hidden sm:flex justify-center items-center gap-4 mb-8 sm:mb-16">
                         <div class="grid grid-cols-7 gap-4 sm:gap-8 w-full max-w-4xl mx-auto px-2 sm:px-0">
-                            @foreach ($question->radioButtonValues() as $key => $value)
+                            @foreach ($question->radioButtonValues() as $item)
                                 @php
                                     $colors = [
                                         ['bg' => 'bg-emerald-600', 'border' => 'border-emerald-600'],
@@ -75,7 +75,12 @@
                                         ['bg' => 'bg-blue-400', 'border' => 'border-blue-400'],
                                         ['bg' => 'bg-emerald-600', 'border' => 'border-emerald-600']
                                     ];
+
+                                    $key = $item['key'];
+                                    $value = $item['value'];
                                     $index = is_string($key) ? ($key === 'left' ? 0 : 6) : $value+3;
+                                    // Ensure the index is within bounds (0-6)
+                                    $index = max(0, min(6, $index));
                                 @endphp
                                 <div class="flex flex-col items-center">
                                     <label class="relative">

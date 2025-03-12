@@ -37,13 +37,13 @@ class Question extends Model
     public function radioButtonValues(): array
     {
         return [
-            5,
-            3,
-            1,
-            0,
-            1,
-            3,
-            5,
+            ['key' => 'left', 'value' => 5],
+            ['key' => 0, 'value' => 3],
+            ['key' => 1, 'value' => 1],
+            ['key' => 2, 'value' => 0],
+            ['key' => 3, 'value' => 1],
+            ['key' => 4, 'value' => 3],
+            ['key' => 'right', 'value' => 5],
         ];
     }
 
