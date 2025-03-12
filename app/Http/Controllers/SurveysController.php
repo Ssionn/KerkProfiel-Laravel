@@ -10,6 +10,7 @@ use App\Enums\SurveyStatus;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SurveysController extends Controller
@@ -19,7 +20,7 @@ class SurveysController extends Controller
     ) {
     }
 
-    public function create()
+    public function create(): View
     {
         $surveys = Survey::where(function($query) {
             $query->where('made_by_admin', true)
@@ -33,7 +34,7 @@ class SurveysController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(): View
     {
         // Get published surveys that are either admin surveys or belong to the user's team
         $surveys = Survey::where(function($query) {
@@ -49,7 +50,7 @@ class SurveysController extends Controller
         ]);
     }
 
-    public function store(CreateSurveyRequest $request)
+    public function store(CreateSurveyRequest $request): RedirectResponse
     {
         $file = $request->file('excel_file');
 
@@ -70,7 +71,7 @@ class SurveysController extends Controller
         ]);
     }
 
-    public function showSurvey(Survey $survey, Request $request)
+    public function showSurvey(Survey $survey, Request $request): View|RedirectResponse
     {
         $survey->load(['questions' => function ($query) {
             $query->orderBy('sequence', 'asc');

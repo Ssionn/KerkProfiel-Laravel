@@ -37,13 +37,13 @@ class Question extends Model
     public function radioButtonValues(): array
     {
         return [
-            'left' => $this->left_personality,
-            2,
+            5,
+            3,
             1,
             0,
             1,
-            2,
-            'right' => $this->right_personality,
+            3,
+            5,
         ];
     }
 
