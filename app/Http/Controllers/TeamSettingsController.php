@@ -6,6 +6,7 @@ use App\Models\Team;
 use App\Http\Requests\UpdateTeamRequest;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -30,7 +31,7 @@ class TeamSettingsController extends Controller
             'type' => 'success'
         ]);
 
-        
+
     }
 
     public function deleteTeam(Team $team)

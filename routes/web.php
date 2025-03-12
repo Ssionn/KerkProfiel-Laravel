@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SurveysController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TeamSettingsController;
@@ -36,6 +37,7 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
     Route::prefix('teams')->group(function () {
         Route::get('/', [TeamsController::class, 'index'])->name('teams')->middleware('PermissionCheck:view teams');
         Route::post('/invite', [InvitationController::class, 'sendInvite'])->name('teams.invite');
+        Route::post('/create-survey', [TeamsController::class, 'createSurvey'])->name('teams.create.survey');
 
         Route::middleware('PermissionCheck:edit team')->group(function () {
             Route::get('/edit/{team}', [TeamSettingsController::class, 'edit'])->name('teams.edit');
