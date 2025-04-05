@@ -19,6 +19,7 @@ class UserRepository
         ]);
 
         $user->guestify();
+        $user->refresh();
 
         return $user;
     }

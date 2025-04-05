@@ -94,4 +94,20 @@ class User extends Authenticatable
 
         return $this->getFirstMediaUrl('avatars');
     }
+
+    public function getTeamEditPermission(): bool
+    {
+        $permissions = $this->role
+                ->permissions()
+                ->get()
+                ->toArray();
+
+        $filteredPermissions = array_filter($permissions, fn($permission) => $permission['permission_name'] === 'edit team');
+
+        if (! $filteredPermissions) {
+            return false;
+        }
+
+        return true;
+    }
 }

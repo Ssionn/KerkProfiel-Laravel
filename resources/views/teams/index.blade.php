@@ -7,10 +7,15 @@
             </div>
 
             <div class="flex-1">
-                <h1 class="text-xl font-bold text-gray-900">{{ $team->name }}</h1>
-                <p class="text-sm text-gray-500 break-words">
-                    {{ $team->description ?? '' }}
-                </p>
+                @if (auth()->user()->getTeamEditPermission())
+                    <a href="{{ route('teams.edit', $team) }}" class="inline-flex items-center text-xl font-bold text-gray-900 hover:underline hover:scale-110 transition ease-in-out duration-300">
+                        {{ $team->name }}
+                        <x-feathericon-edit class="w-4 h-4 ml-1"/>
+                    </a>
+                @else
+                    <h1 class="text-xl font-bold text-gray-900">{{ $team->name }}</h1>
+                @endif
+                <p class="text-sm text-gray-500">{{ $team->description ?? '' }}</p>
             </div>
 
             <div class="flex flex-col sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0 w-full sm:w-auto">
@@ -51,6 +56,32 @@
             </form>
         </div>
 
+        <x-modal modalId="uitnodigen-modal" method="POST"
+            modalHeader="{{ __('teams/index.team_members_table.table_dropdown.invite_members') }}"
+            modalButton="{{ __('teams/index.team_members_table.table_dropdown.invite_fields.invite_button') }}"
+            modalButtonColor="bg-midnight-blue"
+            formAction="{{ route('teams.invite') }}">
+            <div class="flex flex-col items-start space-y-2">
+                <label class="ml-1 text-sm font-semibold text-gray-600" for="invite_email">
+                    {{ __('teams/index.team_members_table.table_dropdown.invite_fields.email') }}
+                </label>
+                <input type="text" name="invite_email" id="invite_email" required
+                    class="w-full p-2 rounded-lg text-sm placeholder:text-gray-200 placeholder:text-sm border-[1px] focus:ring-sky-blue" />
+            </div>
+        </x-modal>
+
+        @if (request()->has('role_type'))
+            @if ($users->count() === 0)
+                <div class="flex items-center justify-center w-full h-full">
+                    <div class="flex flex-row space-x-1">
+                        <p class="text-md font-semibold">
+                            {{ __('teams/index.team_members_table.table_filter.no_users') }}</p>
+                        <p class="text-md font-semibold underline">{{ ucfirst(request('role_type')) }}</p>
+                    </div>
+                </div>
+            @endif
+        @endif
+
         @if ($users->count() > 0)
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                 @foreach ($users as $user)
@@ -83,6 +114,7 @@
                             <x-modal modalId="uitnodigen-modal" method="POST"
                                 modalHeader="{{ __('teams/index.team_members_table.table_dropdown.invite_members') }}"
                                 modalButton="{{ __('teams/index.team_members_table.table_dropdown.invite_fields.invite_button') }}"
+                                modalButtonColor="bg-midnight-blue"
                                 formAction="{{ route('teams.invite') }}">
                                 <div class="flex flex-col items-start space-y-2">
                                     <label class="ml-1 text-sm font-semibold text-gray-600" for="invite_email">
@@ -96,6 +128,7 @@
                             <x-modal modalId="remove-user-{{ $user->id }}" method="DELETE"
                                 modalHeader="{{ __('teams/index.team_members_table.table_dropdown.remove_user') }}"
                                 modalButton="{{ __('teams/index.team_members_table.table_dropdown.remove_user_button') }}"
+                                modalButtonColor="bg-red-500"
                                 formAction="{{ route('team.members.destroy', $user->id) }}">
                                 <div class="flex flex-col items-start space-y-2">
                                     <label class="ml-1 text-sm font-semibold text-gray-600" for="remove_user_confirm">
@@ -107,6 +140,7 @@
                             <x-modal modalId="leave-team-modal" method="POST"
                                 modalHeader="{{ __('teams/index.team_members_table.table_dropdown.leave_team') }}"
                                 modalButton="{{ __('teams/index.team_members_table.table_dropdown.leave_team_button') }}"
+                                modalButtonColor="bg-red-500"
                                 formAction="{{ route('teams.leave', auth()->user()->id) }}">
                                 <div class="flex flex-col items-start space-y-2">
                                     <label class="ml-1 text-sm font-semibold text-gray-600" for="leave_team_confirm">
@@ -118,6 +152,7 @@
                             <x-modal modalId="create-survey-modal" method="POST"
                                 modalHeader="{{ __('teams/index.team_members_table.table_dropdown.create_survey_header') }}"
                                 modalButton="{{ __('teams/index.team_members_table.table_dropdown.create_survey_button') }}"
+                                modalButtonColor="bg-emerald-600"
                                 formAction="{{ route('teams.create.survey') }}">
                                 <div class="flex flex-col items-start space-y-2">
                                     <label class="ml-1 text-sm font-semibold text-gray-600" for="">
@@ -136,6 +171,19 @@
                                             {{ __('teams/index.team_members_table.table_dropdown.create_survey_no_surveys') }}
                                         </p>
                                     @endif
+
+                                    <x-modal modalId="remove-user-{{ $user->id }}" method="DELETE"
+                                        modalHeader="{{ __('teams/index.team_members_table.table_dropdown.remove_user') }}"
+                                        modalButton="{{ __('teams/index.team_members_table.table_dropdown.remove_user_button') }}"
+                                        modalButtonColor="bg-red-500"
+                                        formAction="{{ route('team.members.destroy', $user->id) }}">
+                                        <div class="flex flex-col items-start space-y-2">
+                                            <label class="ml-1 text-sm font-semibold text-gray-600"
+                                                for="remove_user_confirm">
+                                                {{ __('teams/index.team_members_table.table_dropdown.remove_user_confirm') }}
+                                            </label>
+                                        </div>
+                                    </x-modal>
                                 </div>
                             </x-modal>
                         </div>
@@ -149,3 +197,4 @@
         </div>
     </div>
 </x-app-layout>
+

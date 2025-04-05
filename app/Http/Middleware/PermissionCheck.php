@@ -16,11 +16,23 @@ class PermissionCheck
     public function handle(Request $request, Closure $next, ?string $ability = null): Response
     {
         if (! $ability) {
-            return redirect()->route('teams')->with('toast', 'Permission not specified.');
+            return redirect()->back()->with(
+                'toast',
+                [
+                    'message' => 'You don\'t have the ability to do this.',
+                    'type' => 'error',
+                ]
+            );
         }
 
         if (! auth()->user()->hasPermission($ability)) {
-            return redirect()->route('teams')->with('toast', 'You do not have the permission to do this.');
+            return redirect()->back()->with(
+                'toast',
+                [
+                    'message' => 'You don\'t have the permission to do this.',
+                    'type' => 'error',
+                ]
+            );
         }
 
         return $next($request);
