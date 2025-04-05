@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\TemporaryImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ImageHolderService
 {
@@ -27,7 +28,14 @@ class ImageHolderService
                     return $folder;
                 }
             } catch (\Exception $e) {
-                throw new \Exception('Error storing temporary image: ' . $e->getMessage());
+                // Log the error
+                Log::error('Error storing temporary image: ' . $e->getMessage());
+
+                // Return an HTTP response that FilePond can understand
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error storing file: ' . $e->getMessage()
+                ], 500)->send();
             }
         }
 

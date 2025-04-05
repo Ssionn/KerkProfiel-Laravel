@@ -9,7 +9,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-
 class TeamSettingsController extends Controller
 {
     public function edit(Team $team): View
@@ -30,8 +29,6 @@ class TeamSettingsController extends Controller
             'message' => "Teamgegevens zijn succesvol bijgewerkt",
             'type' => 'success'
         ]);
-
-
     }
 
     public function deleteTeam(Team $team)

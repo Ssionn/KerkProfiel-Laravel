@@ -37,21 +37,19 @@
                 </form>
             </div>
 
-            @can('delete team')
-                <div id="delete-team-section" class="mt-8 pt-4 border-t border-gray-200">
-                    <h2 class="text-xl font-medium text-gray-900 mb-4">Team Verwijderen</h2>
-                    <form id="delete-team-form" action="{{ route('teams.team.delete', $team) }}" method="POST" class="space-y-4">
-                        @csrf
-                        <p class="text-red-600">Weet je zeker dat je het team wilt verwijderen? Deze actie kan niet ongedaan gemaakt worden.</p>
-                        <div class="flex justify-end">
-                            <button type="button" data-modal-toggle="delete-team"
-                                class="bg-red-500 text-white rounded-full px-4 py-1 font-medium">
-                                {{ __('settings/team.delete.delete_button') }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            @endcan
+            <div id="delete-team-section" class="mt-8 pt-4 border-t border-gray-200">
+                <h2 class="text-xl font-medium text-gray-900 mb-4">Team Verwijderen</h2>
+                <form id="delete-team-form" action="{{ route('teams.team.delete', $team) }}" method="POST" class="space-y-4">
+                    @csrf
+                    <p class="text-red-600">Weet je zeker dat je het team wilt verwijderen? Deze actie kan niet ongedaan gemaakt worden.</p>
+                    <div class="flex justify-end">
+                        <button type="button" data-modal-toggle="delete-team"
+                            class="bg-red-500 text-white rounded-full px-4 py-1 font-medium">
+                            {{ __('settings/team.delete.delete_button') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

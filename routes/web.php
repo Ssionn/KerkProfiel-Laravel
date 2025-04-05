@@ -40,10 +40,13 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
         Route::post('/create-survey', [TeamsController::class, 'createSurvey'])->name('teams.create.survey');
 
         Route::middleware('PermissionCheck:edit team')->group(function () {
+
+            //Andy
             Route::get('/edit/{team}', [TeamSettingsController::class, 'edit'])->name('teams.edit');
 
             Route::post('/update/{team}', [TeamSettingsController::class, 'updateTeam'])->name('teams.team.update');
             Route::post('/delete/{team}', [TeamSettingsController::class, 'deleteTeam'])->name('teams.team.delete');
+            //Andy
         });
 
         Route::middleware('PermissionCheck:create team')->group(function () {
@@ -72,12 +75,14 @@ Route::middleware('auth', 'UserActivityCheck')->group(function () {
         Route::post('/{survey}/answers', [SurveysController::class, 'storeAnswer'])->name('survey.answer');
     });
 
+    //Andy
     Route::prefix('settings')->group(function () {
         Route::get('/', [SettingsController::class, 'index'])->name('settings');
         Route::post('/profile/update', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
         Route::post('/password/update', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
         Route::post('/account/delete', [SettingsController::class, 'deleteAccount'])->name('settings.account.delete');
     });
+    //Andy
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
